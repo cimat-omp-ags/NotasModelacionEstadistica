@@ -12,6 +12,17 @@ Optimización y Modelación de Procesos del **CIMAT**.
 | 3 | Distribución Conjunta y Esperanza |
 | 4 | Introducción a la Inferencia Estadística |
 
+## Descargas
+
+::: {.grid}
+::: {.g-col-6}
+[Descargar PDF](Modelacion-Estadistica.pdf){.btn .btn-primary style="width:100%"}
+:::
+::: {.g-col-6}
+[Descargar Word](Modelacion-Estadistica.docx){.btn .btn-outline-primary style="width:100%"}
+:::
+:::
+
 ## Cómo usar estas notas
 
 Cada capítulo combina teoría con código **R base** ejecutable directamente
