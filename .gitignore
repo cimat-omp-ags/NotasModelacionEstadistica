@@ -1,18 +1,38 @@
+# ── Quarto — salidas compiladas ───────────────────────────────────────────────
 _book/
 _book-pdf/
 _book-docx/
-_freeze/
 /.quarto/
 **/*_cache/
 **/*_files/
+**/*.quarto_ipynb
+
+# ── Quarto freeze ─────────────────────────────────────────────────────────────
+# El freeze acelera el CI evitando re-ejecutar chunks sin cambios.
+# Se recomienda SUBIR _freeze/ a git para que GitHub Actions lo reutilice.
+# Si prefieres no subirlo, descomenta la siguiente línea:
+# _freeze/
+
+# ── R ─────────────────────────────────────────────────────────────────────────
 .Rhistory
 .RData
+.Ruserdata
 .Rproj.user/
 *.Rproj
+
+# ── Librería R — archivos compilados ──────────────────────────────────────────
+libreria/src/*.o
+libreria/src/*.so
+libreria/src/*.dll
+libreria/Meta/
+libreria/doc/
+
+# ── Sistema operativo ─────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# ── Editores ──────────────────────────────────────────────────────────────────
 .vscode/
 *.swp
-
-**/*.quarto_ipynb
+*.swo
