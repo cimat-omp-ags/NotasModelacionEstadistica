@@ -59,7 +59,7 @@ NotasModelacionEstadistica/
 │   └── portada-docx.md         # Portada del Word (OpenXML)
 │
 ├── 📁 capitulos/
-│   ├── parte1/                 # Parte I — Probabilidad y Distribuciones
+│   ├── parte1/                 # Parte I — Probabilidad y Variables Aleatorias
 │   │   ├── cap01-intro-estadistica.qmd
 │   │   ├── cap02-distribuciones.qmd
 │   │   └── cap03-distribucion-conjunta.qmd
@@ -90,19 +90,19 @@ NotasModelacionEstadistica/
 
 ## Contenido del libro
 
-### Parte I — Probabilidad y Distribuciones
+### Parte I — Probabilidad y Variables Aleatorias
 
 | Capítulo | Tema |
 |---|---|
-| Cap. 1 | Introducción a la Estadística |
-| Cap. 2 | Distribuciones de Probabilidad |
-| Cap. 3 | Distribución Conjunta |
+| Cap. 1 | Nociones de Probabilidad |
+| Cap. 2 | Variable Aleatoria Discreta |
+| Cap. 3 | Variable Aleatoria Continua |
 
-### Parte II — Inferencia Estadística
+### Parte II — Distribuciones Muestrales e Inferencia
 
 | Capítulo | Tema |
 |---|---|
-| Cap. 4 | Inferencia Estadística |
+| Cap. 4 | Distribuciones Muestrales |
 
 ---
 

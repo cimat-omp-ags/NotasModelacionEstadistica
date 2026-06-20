@@ -5,7 +5,7 @@ project:
 book:
   title: "Modelacion Estadistica"
   subtitle: "Notas del Curso - Maestria OMP, CIMAT"
-  author: "Catedraticos CIMAT"
+  author: "Dr. Sergio M. Nava Munoz, Dr. Magin Zuniga Estrada, Dr. Humberto Martinez Bautista"
   date: today
   date-format: "MMMM YYYY"
 
@@ -31,12 +31,12 @@ book:
 
   chapters:
     - index.qmd
-    - part: "Parte I - Probabilidad y Distribuciones"
+    - part: "Parte I - Probabilidad y Variables Aleatorias"
       chapters:
         - capitulos/parte1/cap01-intro-estadistica.qmd
         - capitulos/parte1/cap02-distribuciones.qmd
         - capitulos/parte1/cap03-distribucion-conjunta.qmd
-    - part: "Parte II - Inferencia Estadistica"
+    - part: "Parte II - Distribuciones Muestrales e Inferencia"
       chapters:
         - capitulos/parte2/cap04-inferencia.qmd
     - referencias.qmd
@@ -49,7 +49,7 @@ format:
     theme: materia
     css: estilos-cimat.css
     toc: true
-    toc-depth: 3
+    toc-depth: 4
     toc-title: "En este capitulo"
     number-sections: true
     code-fold: true

@@ -7,10 +7,10 @@ Optimización y Modelación de Procesos del **CIMAT**.
 
 | Capítulo | Tema |
 |----------|------|
-| 1 | Introducción a la Estadística y Probabilidad |
-| 2 | Distribuciones de Probabilidad |
-| 3 | Distribución Conjunta y Esperanza |
-| 4 | Introducción a la Inferencia Estadística |
+| 1 | Nociones de Probabilidad |
+| 2 | Variable Aleatoria Discreta |
+| 3 | Variable Aleatoria Continua |
+| 4 | Distribuciones Muestrales |
 
 ## Descargas
 

@@ -1,0 +1,1170 @@
+---
+title: "Unidad 3: Variable Aleatoria Continua"
+author: "Alberto Hernández Vargas"
+date: '2026-02-21'
+output: 
+  html_document:
+    toc: true              
+    toc_depth: 5           
+    toc_float: 
+      collapsed: false       
+      smooth_scroll: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Ciertos fenómenos originan resultados en un espectro continuo. En la modelación analítica y la simulación de procesos, podríamos estar interesados en estudiar el tiempo de espera de un paciente en la sala de urgencias de un hospital, la duración de una llamada en una línea telefónica de atención, o el tiempo exacto que toma el proceso de pintado de un automóvil en una línea de ensamblaje. Este tipo de variable aleatoria, que puede tomar cualquier valor dentro de un intervalo (o unión de intervalos), se denomina *continua*.
+
+# 3.1 Variable aleatoria continua
+
+**Ejemplo:** Consideremos que se tiene la siguiente rueda de la fortuna:
+
+```{r figura1, echo=TRUE, warning=FALSE, message=FALSE}
+library(ggplot2)
+
+df_rueda <- data.frame(
+  sector = factor(1:10),
+  valor = rep(1, 10)
+)
+
+ggplot(df_rueda, aes(x = "", y = valor, fill = sector)) +
+  geom_bar(stat = "identity", width = 1, color = "white") +
+  coord_polar("y", start = 0) +
+  theme_void() +
+  theme(legend.position = "none") +
+  geom_text(aes(y = cumsum(valor) - 0.5, label = sector), color = "black", size = 5) +
+  annotate("segment", x = 1.6, xend = 1.4, y = 5.5, yend = 5.5, 
+           arrow = arrow(length = unit(0.3, "cm")), linewidth = 1.2) +
+  labs(title = "Figura 1.")
+```
+
+Supongamos que el punto de partida, tras girar la rueda, está definido como el punto señalado por la flecha. Ahora bien, ¿cuántos puntos de partida hay?.
+
+La rueda puede estar, como en este caso, dividida en 10 sectores y el punto de partida puede estar definido como el número más cercano a la flecha. Pero a su vez, cada sector podría ser posteriormente dividido en 10 sectores para dar 100 puntos de partida y así sucesivamente. Es evidente que no hay un número finito de puntos de partida y la variable aleatoria, en este caso la flecha, tiene infinitos valores posibles.
+
+Si se quisiera calcular la probabilidad, desde el enfoque clásico, de que el punto de partida sea el 6, no existiría un número para el denominador, pues el espacio muestral contempla infinitos puntos posibles.
+
+A diferencia de las variables aleatorias discretas, que asumen un número contable de valores, las variables aleatorias continuas pueden asumir los infinitos valores correspondientes a los puntos de un intervalo de la recta real.
+
+**Ejemplo:** Consideremos un experimento donde se registra el tiempo (en minutos) que una pieza metálica permanece en un taller de tornos para su rectificación. Supongamos que, por las características de la maquinaria, el tiempo mínimo es de 1 minuto y el máximo es de 4 minutos. ¿Cuántos posibles tiempos exactos de permanencia hay en el intervalo [1, 4]?
+
+El tiempo de permanencia podría ser 2.1 minutos, 2.15 minutos, 2.153 minutos, etc. Es evidente que, limitados únicamente por la precisión de nuestros instrumentos de medición, existe una infinidad de valores posibles.
+
+Debido a que hay un número infinito de valores posibles, no podemos asignar una probabilidad positiva a cada uno de ellos y lograr que la suma de las probabilidades sea 1. De hecho, en la teoría formal de la probabilidad, la probabilidad de que una variable aleatoria continua asuma cualquier valor particular es exactamente 0. En símbolos, si $Y$ es una variable aleatoria continua:
+
+$$P(Y=y)=0 \text{ para todo valor específico de } y$$
+
+> **Definición:** Una variable aleatoria $Y$ se dice que es *continua* si su función de distribución acumulada $F(y)$ es continua para todo $y \in \mathbb{R}$. Esto implica que la variable puede tomar cualquier valor en un intervalo y la probabilidad de observar cualquier punto específico es nula.
+
+Visualización de puntos en el intervalo [1,4]:
+
+```{r comparacion_puntos, echo=TRUE, fig.width=8, fig.height=4}
+# Comparación de dominios: Discreto vs Continuo
+par(mfrow=c(1,2))
+
+# Izquierda: Dominio discreto (ej. número de piezas defectuosas)
+plot(1:4, rep(0, 4), pch=19, xlim=c(0.5, 4.5), ylim=c(-0.1, 0.1), 
+     yaxt='n', xlab="Valores discretos {1, 2, 3, 4}", ylab="", main="V.A. Discreta")
+abline(h=0, col="gray")
+
+# Derecha: Dominio continuo (ej. tiempo de torneado)
+plot(NA, xlim=c(1, 4), ylim=c(-0.1, 0.1), yaxt='n', 
+     xlab="Intervalo de tiempo [1, 4]", ylab="", main="V.A. Continua")
+rect(1, -0.02, 4, 0.02, col="skyblue", border=NA)
+abline(h=0, col="gray")
+```
+
+De lo anterior se concluye que en las variables continuas, el interés no recae en calcular la probabilidad de valores aislados, sino en encontrar la probabilidad de que la variable caiga en un rango de valores.
+
+## 3.1.1 Función de densidad de probabilidad
+
+Dado que para una variable aleatoria continua $Y$, $P(Y=y) = 0$, no es posible utilizar una función de probabilidad puntual como en el caso discreto. En su lugar, se emplea una **función de densidad de probabilidad**, denotada comúnmente como $f(y)$.
+
+La probabilidad de que $Y$ caiga en el intervalo $[a, b]$ corresponde geométricamente al área bajo la curva de densidad $f(y)$ entre $a$ y $b$:
+
+$$P(a \le Y \le b) = \int_{a}^{b} f(y)dy \quad (1)$$
+
+Para que una función matemática $f(y)$ sea una función de densidad de probabilidad válida, debe cumplir con dos propiedades teóricas fundamentales:
+
+1.  $f(y) \ge 0$ para todo $y$ (la función no puede ser negativa).
+2.  $\int_{-\infty}^{\infty} f(y)dy = 1$ (el área total bajo la curva debe ser exactamente igual a 1).
+
+```{r figura2_area, echo=TRUE, fig.width=6, fig.height=4}
+# Probabilidad vista como un área bajo la curva f(y)
+y_vals <- seq(0, 5, length.out = 100)
+f_y <- function(y) dgamma(y, shape=2, rate=1) # Curva de ejemplo típica para tiempos
+
+plot(y_vals, f_y(y_vals), type="l", lwd=2, ylim=c(0, 0.4), 
+     xlab="Y", ylab="f(y)", main="Probabilidad como área bajo la curva f(y)")
+polygon(c(1.5, seq(1.5, 3.5, length.out=50), 3.5), 
+        c(0, f_y(seq(1.5, 3.5, length.out=50)), 0), col="gray80")
+text(2.5, 0.1, "P(a <= Y <= b)")
+axis(1, at=c(1.5, 3.5), labels=c("a", "b"))
+```
+
+Para calcular el valor exacto de esta probabilidad en la mayoría de las distribuciones teóricas, se recurre a la integración matemática. Sin embargo, en ciertos casos, el área puede encontrarse usando fórmulas de geometría elemental.
+
+**Ejemplo:**
+
+Supongamos que en un modelo de simulación en la recepción de un hotel, la variable aleatoria $Y$ representa la proporción de tiempo durante un turno de 8 horas en que el empleado de recepción está ocupado atendiendo huéspedes de forma ininterrumpida. Al ser una proporción, la variable $Y$ solo puede tomar valores entre 0 y 1 ($0 \le Y \le 1$).
+
+Asumamos que la función de densidad de probabilidad asociada a $Y$ está dada por:
+
+$$f(y) = 2y \quad \text{ para } 0 \le y \le 1; \quad \text{y } f(y) = 0 \text{ en cualquier otro lugar.}$$
+
+Primero, verifiquemos geométricamente que el área total bajo la curva es 1. La figura geométrica formada es un triángulo rectángulo con base 1 y altura $f(1) = 2(1) = 2$.
+
+El área del triángulo es: $\frac{\text{base} \times \text{altura}}{2} = \frac{1 \times 2}{2} = 1$. Se cumple la segunda propiedad de las funciones de densidad.
+
+Ahora, si queremos calcular la probabilidad de que la proporción de tiempo de ocupación en la recepción sea menor o igual a 0.5, es decir $P(Y \le 0.5)$, debemos calcular el área bajo la curva en el intervalo $[0, 0.5]$:
+
+-   La base del nuevo triángulo es $0.5$.
+-   La altura evaluada en $y=0.5$ es $f(0.5)=2(0.5)=1$.
+-   El área es: $\frac{0.5 \times 1}{2} = 0.25$.
+
+Por lo tanto, la probabilidad de que el recepcionista esté ocupado menos de la mitad del tiempo de su turno es del 25%.
+
+```{r ejemplo_geometria, echo=TRUE, fig.width=6, fig.height=4}
+# Gráfica de la función f(y) = 2y y el área calculada
+y_tri <- c(0, 1)
+fy_tri <- c(0, 2)
+
+plot(y_tri, fy_tri, type="l", lwd=2, xlim=c(0, 1.2), ylim=c(0, 2.2),
+     xlab="y (Proporción de tiempo ocupado)", ylab="f(y)", 
+     main="Función de densidad f(y) = 2y")
+segments(1, 0, 1, 2, lty=2)
+
+# Sombreado del área P(Y <= 0.5)
+polygon(c(0, 0.5, 0.5), c(0, 1, 0), col="lightblue")
+text(0.35, 0.4, "P(Y <= 0.5)\n= 0.25", font=2)
+points(c(0.5, 1), c(1, 2), pch=19, col="red")
+```
+
+## 3.1.2Función de probabilidad acumulada
+
+Es una función que acumula probabilidades. Para esto considere que la variable aleatoria $X$ está definida en el intervalo $[a, b]$ y sea $x$ un valor tal que se encuentra entre $a$ y $b$, es decir $a \le x \le b$, entonces la función de probabilidad acumulada o también conocida como función de distribución ($F(x)$) se define como:
+
+$$P(X \le x) = F(x) \quad (2)$$
+
+La ecuación 2 se refiere a acumular la probabilidad desde el valor $a$ hasta el valor $x$.
+
+El miembro izquierdo de la ecuación (2), es solo una notación que indica: la probabilidad de que la variable aleatoria sea menor o igual a $x$.
+
+-   Si $x=a$ el valor de $P(X \le a) = F(a) = 0$
+-   Si $x=b$ el valor de $P(X \le b) = F(b) = 1$
+-   Si $x$ está entre $a$ y $b$ pero sin tocar estos dos últimos $P(X \le x) = F(x)$ oscila entre 0 y 1, sin tocar estos últimos.
+
+*La función de probabilidad acumulada es siempre no decreciente, esto es, crece o se mantiene constante.*
+
+Considerando la función de densidad: $$
+\mathbf{f}(x) =
+\begin{cases}
+\frac{1}{2} x & \text{si } 0 \le x \le 2\\
+0 & \text{en otro caso}
+\end{cases}
+$$ La figura 6 ilustra el caso en que debemos calcular $F(X \le 1/2)$ o equivalentemente $F(X \le 0.5)$.
+
+```{r figura6, echo=TRUE, fig.width=6, fig.height=4}
+# Figura 6. Cálculo de F(X <= 0.5)
+x_val <- c(0, 2)
+y_val <- c(0, 1)
+
+plot(x_val, y_val, type="l", lwd=2, xlim=c(0, 2.5), ylim=c(0, 1.2),
+     xlab="x", ylab="f(x)", main="Figura 6. F(X <= 0.5)")
+segments(2, 0, 2, 1, lty=2)
+
+# Sombreado del área hasta 0.5
+polygon(c(0, 0.5, 0.5), c(0, 0.25, 0), col="lightblue")
+text(0.35, 0.08, "Área =\n0.0625", font=2, cex=0.8)
+```
+
+En este caso el valor de la base es: $\text{base} = 0.5 - 0 = 0.5$ y el de la altura: $h = \frac{1}{2} * 0.5 = 0.25$.
+
+$$P(X \le 0.5) = F(0.5) = \frac{0.5 * 0.25}{2} = 0.0625$$
+
+Para este caso: $\text{base} = (1 - 0) = 1$ y el de la altura: $h = \frac{1}{2} * 1 = 0.5$.
+
+$$P(X \le 1) = F(1) = \frac{1 * 0.5}{2} = 0.25$$
+
+Como se puede ver de los cálculos de probabilidades anteriores $F(X \le x)$ siempre crece y se mantiene en 1 para $x \ge 2$, se tiene: $\text{base} = (2 - 0) = 2$ y la altura: $h = \frac{1}{2} * 2 = 1$.
+
+$$F(2) = \frac{2 * 1}{2} = 1$$
+
+$$F(2.5) = P(X \le 2.5) = P(X \le 2) = \frac{2 * 1}{2} = 1$$
+
+Para $P(X \le 2.5)$ la probabilidad acumulada será 1, ya que contiene al espacio muestral.
+
+Ahora bien, si deseamos calcular la probabilidad de que $X$ tome valores entre un valor $a$ y un valor $b$ genéricos, siendo $a < b$, tenemos:
+
+$$P(a \le X \le b) \quad (3)$$
+
+Esta probabilidad puede ser calculada como la diferencia entre la probabilidad acumulada hasta el valor $b$ menos la probabilidad acumulada hasta el valor $a$. Podemos representar gráficamente esta situación como los muestra la figura 7.
+
+```{r figura7, echo=TRUE, fig.width=6, fig.height=4}
+# Figura 7. Cálculo de P(a <= X <= b) = F(b) - F(a)
+x_gen <- seq(0, 5, length.out=100)
+# Usamos una curva normal genérica para ilustrar el concepto
+y_gen <- dnorm(x_gen, mean=2.5, sd=1) 
+
+plot(x_gen, y_gen, type="l", lwd=2, xlab="X", ylab="f(x)", 
+     main="Figura 7. P(a <= X <= b)", yaxt='n')
+
+# Sombreado del área entre a y b
+a <- 1.5
+b <- 3.5
+x_poly <- seq(a, b, length.out=50)
+y_poly <- dnorm(x_poly, mean=2.5, sd=1)
+polygon(c(a, x_poly, b), c(0, y_poly, 0), col="lightgreen")
+axis(1, at=c(a, b), labels=c("a", "b"))
+text(2.5, 0.15, "P(a <= X <= b)", font=2)
+```
+
+Entonces, el cálculo de la probabilidad de la ecuación queda establecida de la siguiente manera:
+
+$$P(a \le X \le b) = P(X \le b) - P(X \le a) = F(b) - F(a) \quad (4)$$
+
+Si reconsideramos el caso de calcular la probabilidad de que $x$ esté entre 0 y 1, como se muestra en la figura 9, pero ahora empleando la función de probabilidad acumulada, tenemos:
+
+```{r figura9, echo=TRUE, fig.width=6, fig.height=4}
+# Figura 9. Cálculo de P(0 <= X <= 1)
+x_val <- c(0, 2)
+y_val <- c(0, 1)
+
+plot(x_val, y_val, type="l", lwd=2, xlim=c(0, 2.5), ylim=c(0, 1.2),
+     xlab="x", ylab="f(x)", main="Figura 9. P(0 <= X <= 1)")
+segments(2, 0, 2, 1, lty=2)
+
+# Sombreado del área entre 0 y 1
+polygon(c(0, 1, 1), c(0, 0.5, 0), col="salmon")
+text(0.65, 0.15, "Área = 0.25", font=2)
+```
+
+Probabilidad de interés: $$P(0 \le X \le 1) = F(1) - F(0)$$
+
+$$F(1) = \frac{1 * 0.5}{2} = 0.25$$
+
+$$P(X \le 0) = F(0) = \frac{0 * 0}{2} = 0$$
+
+La variable aleatoria $X$ sólo está definida entre 0 y 2, de modo que, en el caso $X \le 0$ el valor de la variable aleatoria es cero por la definición de la f.d.p.
+
+Entonces: $$P(0 \le X \le 1) = \frac{1}{4} - 0 = \frac{1}{4} = 0.25$$
+
+La esperanza matemática y la varianza de variables aleatorias continuas se obtienen integrando y se definen de la siguiente manera:
+
+$$E[X] = \int_{S_x} x f(x) dx \quad (5)$$
+
+$$Var(X) = \int_{S_x} (x - E[X])^2 f(x) dx \quad (6)$$
+
+Donde $\int$ es el símbolo de una integral y $S_x$ se conoce con el soporte de la v.a $X$.
+
+Tomando en cuenta todo el dominio de los números reales, la función de probabilidad acumulada completa se define a trozos de la siguiente manera:
+
+$$
+F(x) = 
+\begin{cases} 
+0 & \text{si } x < 0 \\
+\frac{1}{4}x^2 & \text{si } 0 \le x \le 2 \\
+1 & \text{si } x > 2 
+\end{cases}
+$$
+
+A diferencia de la función de densidad (que era una línea recta), la función de probabilidad acumulada en este caso es una curva cuadrática que crece desde 0 hasta 1.
+
+```{r figura 10 grafica_acumulada, echo=TRUE, fig.width=6, fig.height=4}
+# Definición de la función de probabilidad acumulada F(x)
+F_x <- function(x) {
+  ifelse(x < 0, 0, 
+         ifelse(x <= 2, 0.25 * x^2, 1))
+}
+
+# Secuencia de valores para el eje x
+x_vals <- seq(-0.5, 2.5, length.out = 100)
+
+# Creación del gráfico
+plot(x_vals, F_x(x_vals), type="l", lwd=2, col="blue",
+     xlim=c(-0.5, 2.5), ylim=c(0, 1.1),
+     xlab="x", ylab="F(x) = P(X <= x)", 
+     main="Figura 10: Función de Probabilidad Acumulada F(x)")
+
+# Añadir líneas de referencia
+abline(h=0, col="gray")
+abline(h=1, col="gray", lty=2)
+segments(2, 0, 2, 1, lty=2, col="black")
+points(c(0, 1, 2), c(0, 0.25, 1), pch=19, col="blue")
+```
+
+Las variables aleatorias continuas más comúnmente utilizadas son: la variable aleatoria uniforme, variable aleatoria normal, variable aleatoria exponencial, variable aleatoria Ji-cuadrada, variable aleatoria t de Student y la variable aleatoria F de Fisher o de Snedecor.
+
+```{r figura11, echo=TRUE, warning=FALSE, message=FALSE, fig.align='center'}
+library(DiagrammeR)
+
+grViz("
+  digraph cuadro_conceptual {
+    graph [layout = dot, rankdir = TB]
+    
+    # Configuración de los nodos
+    node [shape = box, style = filled, fillcolor = LightBlue, fontname = Helvetica, penwidth = 1.5]
+    
+    # Nodo principal
+    Raiz [label = 'Variables Aleatorias\\nContinuas', fillcolor = '#2C3E50', fontcolor = white, fontsize = 14]
+    
+    U [label = 'Uniforme']
+    N [label = 'Normal']
+    E [label = 'Exponencial']
+    J [label = 'Ji-cuadrada']
+    T [label = 't de Student']
+    F [label = 'F de Fisher\\n(Snedecor)']
+    
+    #Conexiones
+    Raiz -> {U N E J T F}
+  }
+")
+```
+
+<p align="center">
+
+<b>Figura 11. Principales variables aleatorias continuas.</b>
+
+</p>
+
+En primer lugar, haremos revisión de la variable aleatoria uniforme y luego trataremos de manera especial la variable aleatoria normal. *La variable aleatoria normal tiene alta importancia, debido a que una gran parte de las metodologías de estadísticas inferenciales la emplean como base.*
+
+# 3.2 Distribución uniforme continua
+
+Una de las distribuciones continuas más simples e intuitivas es la distribución uniforme continua. Decimos que una variable aleatoria $Y$ tiene una distribución uniforme en el intervalo $[a, b]$ si su probabilidad es constante para cualquier subintervalo de la misma longitud dentro de ese rangoEstadistica_Matematica_con_Aplicaciones.pdf]. En otras palabras, la función de densidad de probabilidad es plana y constante sobre el intervalo de valores posibles.
+
+**Función de densidad de probabilidad** Si una variable aleatoria $Y$ tiene una distribución de probabilidad uniforme en el intervalo $[a, b]$, entonces la función de densidad de probabilidad se define comoEstadistica_Matematica_con_Aplicaciones.pdf]:
+
+$$f(y) = \begin{cases} \frac{1}{b - a} & \text{para } a \le y \le b \\ 0 & \text{en cualquier otro caso} \end{cases}$$
+
+Donde: \* $a$ es el valor mínimo (límite inferior). \* $b$ es el valor máximo (límite superior). \* La altura constante $\frac{1}{b - a}$ asegura que el área total bajo la curva (que forma un rectángulo) sea exactamente 1, cumpliendo con la propiedad de las funciones de densidad.
+
+Para esta distribución continua, la esperanza matemática (media) y la varianza están dadas por las siguientes expresiones:
+
+$$E[Y] = \frac{a +b}{2}$$ $$Var(Y) = \frac{(b - a)^2}{12}$$
+
+------------------------------------------------------------------------
+
+**Ejemplo**
+
+Suponga que el tiempo que un estudiante debe esperar en la parada para que llegue un autobús universitario está distribuido uniformemente entre 0 y 20 minutosEstadistica_Matematica_con_Aplicaciones.pdf]. Considere la variable aleatoria $Y$ como el tiempo de espera del estudiante.
+
+En este caso, $Y \sim U(0, 20)$, donde los parámetros de la distribución son $a = 0$ y $b = 20$.
+
+La función de densidad de probabilidad del tiempo de espera es:
+
+$$f(y) = \begin{cases} \frac{1}{20} & \text{si } 0 \le y \le 20 \\ 0 & \text{en cualquier otro caso} \end{cases}$$
+
+```{r figura_uniforme, echo=TRUE, fig.width=6, fig.height=4, warning=FALSE}
+# Gráfica de la función de densidad para Y ~ U(0, 20)
+library(ggplot2)
+
+df_tiempo <- data.frame(
+  x = c(-5, 0, 0, 20, 20, 25),
+  y = c(0, 0, 1/20, 1/20, 0, 0)
+)
+
+ggplot(df_tiempo, aes(x = x, y = y)) +
+  geom_line(color = "darkblue", linewidth = 1) +
+  geom_area(data = subset(df_tiempo, x >= 0 & x <= 20), fill = "lightblue", alpha = 0.5) +
+  scale_x_continuous(breaks = seq(0, 20, by = 5)) +
+  scale_y_continuous(breaks = c(0, 1/20), labels = c("0", "1/20")) +
+  theme_minimal() +
+  labs(
+    title = "Función de densidad: Tiempo de espera U(0, 20)",
+    x = "Tiempo de espera Y (minutos)",
+    y = "f(y)"
+  ) +
+  theme(plot.title = element_text(face = "bold", hjust = 0.5))
+```
+
+**Cálculo de la Esperanza y Varianza**
+
+¿Cuál es el tiempo promedio esperado de espera del estudiante? $$E[Y] = \frac{0 + 20}{2} = 10 \text{ minutos}$$
+
+¿Y la varianza de dicho tiempo? $$Var(Y) = \frac{(20 - 0)^2}{12} = \frac{400}{12} \approx 33.33 \text{ minutos}^2$$
+
+La desviación estándar, que mide la dispersión, es $\sigma = \sqrt{33.33} \approx 5.77 \text{ minutos}$.
+
+**Cálculo de Probabilidad Acumulada**
+
+Supongamos que el estudiante desea calcular la probabilidad de que el autobús llegue en un lapso de entre 5 y 10 minutos.
+
+Podemos calcular esta probabilidad obteniendo geométricamente el área del rectángulo delimitado en el intervalo de $y = 5$ a $y = 10$:
+
+$$P(5 \le Y \le 10) = \int_{5}^{10} f(y) dy = (10 - 5) \cdot \frac{1}{20} = 5 \cdot \frac{1}{20} = \frac{1}{4} = 0.25$$
+
+Por lo tanto, existe un 25% de probabilidad de que el tiempo de espera oscile entre los 5 y 10 minutos.
+
+```{r figura_prob_acumulada, echo=TRUE, fig.width=6, fig.height=4, warning=FALSE}
+# Gráfica del área correspondiente a la probabilidad calculada
+df_area <- data.frame(
+  x = c(5, 5, 10, 10),
+  y = c(0, 1/20, 1/20, 0)
+)
+
+ggplot(df_tiempo, aes(x = x, y = y)) +
+  geom_line(color = "darkblue", linewidth = 1) +
+  geom_polygon(data = df_area, aes(x = x, y = y), fill = "salmon", alpha = 0.7) +
+  scale_x_continuous(breaks = seq(0, 20, by = 5)) +
+  scale_y_continuous(breaks = c(0, 1/20), labels = c("0", "1/20")) +
+  theme_minimal() +
+  labs(
+    title = "Probabilidad de P(5 ≤ Y ≤ 10)",
+    x = "Tiempo de espera Y (minutos)",
+    y = "f(y)"
+  ) +
+  annotate("text", x = 7.5, y = 0.025, label = "Área = 0.25", fontface = "bold") +
+  theme(plot.title = element_text(face = "bold", hjust = 0.5))
+```
+
+# 3.3 Distribución normal
+
+Cuando nace un bebé, el médico lo lleva a la balanza y observa que pesa 3.5 kg. Lo primero que dirá, casi con certeza, es que tiene un peso normal. Luego, cuando el niño comienza su vida escolar, es probable que alguna psicopedagoga luego de efectuar un test informe a la maestra que tiene una inteligencia normal. Cuando ya adolescente asista a un colegio secundario y termine el año con 5 amonestaciones, la madre probablemente tratará de justificarlo diciendo que es un chico normal. Si al llegar a adulto se dedica a sembrar papas y dice que ha obtenido un rendimiento de 10000 kg por ha seguramente pensará que eso es lo normal.
+
+Ahora bien, ¿Qué queremos expresar cuando decimos que es normal?
+
+Lo que queremos decir es que, a la mayoría de las personas, en situaciones similares a las del joven en el ejemplo anterior, les pasa lo mismo. Podemos pensar, por ejemplo, que 95% de los bebés que nacen pesan entre 3 kg y 4 kg, que el mismo porcentaje de niños tienen un coeficiente de inteligencia entre 95 y 105, que 95% de los adolescentes terminan un año escolar con una cantidad de amonestaciones entre 3 y 7. Pero, como toda regla tiene excepciones, siempre habrá un porcentaje mínimo de nacimientos prematuros, de niños superdotados, de adolescentes que son bien portados y no presentan amonestaciones. Un razonamiento lógico nos lleva a concluir que todas estas situaciones tienen una baja probabilidad de ocurrir.
+
+La ilustración probabilística de los anteriores fenómenos sería como la siguiente:
+
+Si un médico se tomara el trabajo de pesar, por ejemplo, a 500 niños recién nacidos. Registrar estos valores en una base de datos, después construir con ellos intervalos de clase y calcular las frecuencias absolutas en dichos intervalos; por último, graficar los datos por medio de un histograma, es muy probable que obtenga la siguiente distribución.
+
+Si unimos los puntos medios de los rectángulos de este histograma podemos dibujar una línea curva bastante parecida a una campana simétrica como se muestra a continuación:
+
+```{r figura14_15, echo=TRUE, fig.width=8, fig.height=4, warning=FALSE, message=FALSE}
+# Figuras 14 y 15 combinadas para ilustración didáctica: Histograma y Curva
+library(ggplot2)
+set.seed(123)
+
+# Simulamos el peso de 500 bebés con media 3.5 kg y desviación 0.5 kg
+pesos_bebes <- data.frame(peso = rnorm(500, mean = 3.5, sd = 0.5))
+
+ggplot(pesos_bebes, aes(x = peso)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 15, fill = "lightblue", color = "black", alpha = 0.7) +
+  geom_density(color = "darkblue", linewidth = 1.2) +
+  theme_minimal() +
+  labs(
+    title = "Figuras 14 y 15. Histograma y Curva de densidad de los pesos al nacer",
+    x = "Peso (kg)",
+    y = "Densidad / Frecuencia Relativa"
+  )
+```
+
+Esta curva, obtenida empíricamente, se asemeja a una curva teórica unimodal y perfectamente simétrica que caracteriza a una distribución de probabilidad conocida como distribución normal o también llamada *campana de Gauss*.
+
+La distribución normal presenta un valor de mayor frecuencia en el centro y, a partir de él, decae hacia ambos lados con una simetría perfecta. Esta simetría hace que, a valores situados a igual distancia del valor central, por izquierda y por derecha de la distribución, les corresponda la misma probabilidad.
+
+Considerando la situación del médico y el peso de los 500 niños, podemos pensar que existe una gran cantidad de bebés que tienen un peso de 3.5 kg y a partir de este valor las frecuencias disminuyen a ambos lados respetando la perfecta simetría de la distribución normal.
+
+Para una variable aleatoria $X$ su función de densidad de probabilidad es:
+
+$$f(x) = \frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{1}{2}\left(\frac{x - \mu}{\sigma}\right)^2} \quad \text{para } -\infty < x < \infty \quad (14)$$
+
+Geométricamente $f(x)$ se visualiza como la línea en forma de campana.
+
+Siendo $\mu$ y $\sigma$, los dos parámetros que caracterizan a una distribución normal donde: \* $\mu$: media aritmética \* $\sigma$: desviación estándar
+
+Además, $\pi \approx 3.1416$ y $e \approx 2.71828$ son dos constantes en matemáticas.
+
+La función de probabilidad acumulada de la variable aleatoria normal $X$ es la siguiente:
+
+$$F(x) = \int_{-\infty}^{x} \frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{1}{2}\left(\frac{t - \mu}{\sigma}\right)^2} dt \quad \text{para } -\infty < x < \infty$$
+
+Al evaluar un valor $x$ en $F(x)$ se obtiene el área bajo la curva, desde $-\infty$ hasta $x$.
+
+En símbolos matemáticos se dice que la variable aleatoria $X$ tiene distribución normal con media $\mu$ y desviación estándar $\sigma$ de la siguiente forma: $$X \sim N(\mu, \sigma)$$
+
+También se puede expresar como: $X$ tiene distribución normal con media $\mu$ y varianza $\sigma^2$ de la siguiente forma: $$X \sim N(\mu, \sigma^2)$$
+
+Por ser la distribución perfectamente simétrica, la media coincide con la mediana y la moda, estos tres conceptos se encuentran en un mismo punto en el eje de abscisas que divide a la distribución de la variable aleatoria en dos partes iguales. La media es un parámetro de localización, esto le permite desplazarse sobre el eje de las $x$ a la distribución. En la figura 18 se observan tres distribuciones normales con diferentes medias.
+
+La figura 18 se podría ajustar a un ejemplo hipotético donde se estudia el diámetro promedio de las plantas de agave en tres distintas parcelas de una misma región geográfica. Asumiendo que la variabilidad sea muy parecida en los tres lugares de la experimentación, dado que se encuentran en la misma región y que es el mismo tipo de agave, pero las medias puede que sean diferentes debido a que algunos productores invierten más en el cuidado que otros, obteniéndose distintos rendimientos.
+
+```{r}
+# Figura 18. Tres poblaciones normales con distintas medias, pero iguales varianzas.
+x_vals <- seq(-5, 15, length.out = 300)
+
+df_medias <- data.frame(
+  x = rep(x_vals, 3),
+  y = c(dnorm(x_vals, mean = 0, sd = 1.5),
+        dnorm(x_vals, mean = 5, sd = 1.5),
+        dnorm(x_vals, mean = 10, sd = 1.5)),
+  Distribucion = factor(rep(c("Mu 1", "Mu 2", "Mu 3"), each = 300))
+)
+
+ggplot(df_medias, aes(x = x, y = y, color = Distribucion)) +
+  geom_line(linewidth = 1.2) +
+  theme_minimal() +
+  labs(
+    title = "Figura 18. Poblaciones normales con distintas medias, iguales varianzas",
+    subtitle = expression(mu[1] ~ "<" ~ mu[2] ~ "<" ~ mu[3]), # Corrección aquí
+    x = "x",
+    y = "f(x)"
+  ) +
+  theme(legend.position = "bottom")
+```
+
+
+
+La desviación estándar $\sigma$, medida de variabilidad de la distribución de la variable aleatoria, determina la mayor o menor dispersión de los datos alrededor de $\mu$. Cuando $\sigma$ crece, la curva se achata. El parámetro $\sigma$ es un parámetro de forma.
+
+Un ejemplo de lo expresado en el gráfico 19 podría ser que $\sigma_1$ fuera la desviación estándar de los pesos de niños de 10 años de edad en escuelas privadas de clase social alta, con similar estado nutricional; $\sigma_2$ la de los pesos de los niños de 10 años de escuelas públicas y privadas, de clase social media y alta, con estado nutricional más variable; y $\sigma_3$ la medida de variabilidad correspondiente al peso de niños de 10 años de edad de escuelas públicas en general, donde se observa una gran variabilidad respecto del estado nutricional de los alumnos.
+
+En síntesis, se observa que un cambio en el valor de $\mu$, desplaza toda la distribución normal pero no altera su forma. Por el contrario, si analizamos la Figura 19 vemos que un cambio en el valor de $\sigma$ no desplaza la curva, sino que altera su forma, haciéndola más estrecha a medida que disminuye su valor.
+
+```{r figura19, echo=TRUE, fig.width=8, fig.height=4, warning=FALSE}
+# Figura 19. Poblaciones normales con distintas varianzas (misma media).
+x_vals_var <- seq(-10, 10, length.out = 300)
+
+df_varianzas <- data.frame(
+  x = rep(x_vals_var, 3),
+  y = c(dnorm(x_vals_var, mean = 0, sd = 1),
+        dnorm(x_vals_var, mean = 0, sd = 2),
+        dnorm(x_vals_var, mean = 0, sd = 3)),
+  Distribucion = factor(rep(c("Sigma 1", "Sigma 2", "Sigma 3"), each = 300))
+)
+
+ggplot(df_varianzas, aes(x = x, y = y, color = Distribucion)) +
+  geom_line(linewidth = 1.2) +
+  theme_minimal() +
+  labs(
+    title = "Figura 19. Poblaciones normales con distintas varianzas",
+    subtitle = expression(sigma[1] ~ "<" ~sigma[2] ~"<" ~ sigma[3]),
+    x = "x",
+    y = "f(x)"
+  ) +
+  theme(legend.position = "bottom")
+```
+
+
+### 3.3.1 Característica de la distribución normal
+
+-   El área total bajo la curva normal es igual a 1, por ser una función de distribución de probabilidad, es decir: $$P(-\infty < X < \infty) = 1$$
+
+-   La normal es simétrica con respecto a $\mu= \frac{1}{2}$ de las observaciones se encuentran por debajo de la media $\mu$ y $\frac{1}{2}$ por encima de ella. $$P(-\infty < X < \mu) = 0.50 \quad \text{y} \quad P(\mu < X < \infty) = 0.50$$
+
+-   En el intervalo $(\mu - \sigma; \mu + \sigma)$ se encuentra aproximadamente el 68.2% de las observaciones. $$P(\mu - \sigma < X < \mu + \sigma) = 0.682$$
+
+-   En el intervalo $(\mu - 2\sigma; \mu + 2\sigma)$ se encuentra el 95.4% de las observaciones. $$P(\mu - 2\sigma < X < \mu + 2\sigma) = 0.954$$
+
+-   En el intervalo $(\mu - 3\sigma; \mu + 3\sigma)$ se encuentra el 99.8% de las observaciones. $$P(\mu - 3\sigma < X < \mu + 3\sigma) = 0.998$$
+
+Contextualizando las variables, sea la variable continua "altura de niños" de una determinada edad en la ciudad de Aguascalientes, Ags. Cuya media ($\mu = 1.30 \text{ m}$) y desviación estándar ($\sigma = 0.12 \text{ m}$). Si la distribución de la variable "altura de niños" proviene de una variable aleatoria normal se podrían aplicar las últimas tres propiedades:
+
+1.  El 68.2% de los niños mide entre $(1.30 - 0.12)$ y $(1.30 + 0.12)$, es decir, 68.2% de estos niños tendrán una altura comprendida en el intervalo: $(1.18; 1.42)$.
+2.  El 95.4% de los niños tiene una altura comprendida en el intervalo $(1.06; 1.54)$.
+3.  El 99.8% de los niños tiene una altura comprendida en el intervalo $(0.94; 1.66)$.
+
+Visualmente tenemos lo siguiente:
+
+```{r regla_empirica, echo=TRUE, fig.width=9, fig.height=5, warning=FALSE, message=FALSE}
+# Parámetros de la distribución
+mu <- 1.30
+sigma <- 0.12
+
+# Crear un rango de valores para X (de mu - 4*sigma a mu + 4*sigma)
+x_vals <- seq(mu - 4*sigma, mu + 4*sigma, length.out = 1000)
+
+# Calcular la densidad de probabilidad para cada valor de X
+y_vals <- dnorm(x_vals, mean = mu, sd = sigma)
+
+# Crear el Data Frame
+df_altura <- data.frame(x = x_vals, y = y_vals)
+
+# Puntos de corte de las desviaciones estándar
+cortes_x <- c(mu - 3*sigma, mu - 2*sigma, mu - sigma, mu, 
+              mu + sigma, mu + 2*sigma, mu + 3*sigma)
+
+# Etiquetas personalizadas para el eje X
+etiquetas_x <- c("0.94\n(-3σ)", "1.06\n(-2σ)", "1.18\n(-1σ)", "1.30\n(μ)", 
+                 "1.42\n(+1σ)", "1.54\n(+2σ)", "1.66\n(+3σ)")
+
+# Generar la gráfica
+ggplot(df_altura, aes(x = x, y = y)) +
+  # Área de +/- 1 Sigma (68.2%)
+  geom_area(data = subset(df_altura, x >= cortes_x[3] & x <= cortes_x[5]), 
+            fill = "#4DAF4A", alpha = 0.6) +
+  # Área de +/- 2 Sigma (95.4% - el 68.2% ya coloreado)
+  geom_area(data = subset(df_altura, x >= cortes_x[2] & x <= cortes_x[3]), 
+            fill = "#377EB8", alpha = 0.5) +
+  geom_area(data = subset(df_altura, x >= cortes_x[5] & x <= cortes_x[6]), 
+            fill = "#377EB8", alpha = 0.5) +
+  # Área de +/- 3 Sigma (99.8% - el 95.4% ya coloreado)
+  geom_area(data = subset(df_altura, x >= cortes_x[1] & x <= cortes_x[2]), 
+            fill = "#E41A1C", alpha = 0.4) +
+  geom_area(data = subset(df_altura, x >= cortes_x[6] & x <= cortes_x[7]), 
+            fill = "#E41A1C", alpha = 0.4) +
+  
+  # Línea principal de la curva normal
+  geom_line(color = "black", linewidth = 1) +
+  
+  # Líneas verticales discontinuas para demarcar los intervalos
+  geom_vline(xintercept = cortes_x, linetype = "dashed", color = "gray30", alpha = 0.7) +
+  
+  # Anotaciones de los porcentajes fraccionados
+  annotate("text", x = mu, y = 1.5, label = "68.2%", size = 6, fontface = "bold", color = "white") +
+  annotate("text", x = mu - 1.5*sigma, y = 0.5, label = "13.6%", size = 4.5, color = "black") +
+  annotate("text", x = mu + 1.5*sigma, y = 0.5, label = "13.6%", size = 4.5, color = "black") +
+  annotate("text", x = mu - 2.5*sigma, y = 0.1, label = "2.2%", size = 4, color = "black") +
+  annotate("text", x = mu + 2.5*sigma, y = 0.1, label = "2.2%", size = 4, color = "black") +
+  
+  # Segmentos explicativos en la parte superior para mostrar las reglas
+  annotate("segment", x = cortes_x[2], xend = cortes_x[6], y = 3.6, yend = 3.6, 
+           arrow = arrow(ends = "both", length = unit(0.2, "cm"))) +
+  annotate("text", x = mu, y = 3.75, label = "95.4% de los datos", size = 4.5, fontface = "bold") +
+  
+  annotate("segment", x = cortes_x[1], xend = cortes_x[7], y = 4.0, yend = 4.0, 
+           arrow = arrow(ends = "both", length = unit(0.2, "cm"))) +
+  annotate("text", x = mu, y = 4.15, label = "99.8% de los datos", size = 4.5, fontface = "bold") +
+
+  # Ajustar límites y escalas
+  scale_x_continuous(breaks = cortes_x, labels = etiquetas_x) +
+  coord_cartesian(ylim = c(0, 4.3)) + # Aumentar el límite y para que quepan las anotaciones
+  
+  # Personalización de la gráfica
+  theme_minimal() +
+  labs(
+    title = "Distribución Normal: Altura de niños en Aguascalientes",
+    subtitle = expression("Demostración de la Regla Empírica (" * mu == 1.30 ~ "m," ~ sigma == 0.12 ~ "m)"),
+    x = "Altura en metros",
+    y = "Densidad de probabilidad"
+  ) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14, hjust = 0.5),
+    plot.subtitle = element_text(size = 12, hjust = 0.5, margin = margin(b = 15)),
+    axis.text.x = element_text(size = 10, face = "bold")
+  )
+```
+
+# 3.4 Distribución normal estándar
+
+A menudo, calcular las probabilidades asociadas a una distribución normal arbitraria $X \sim N(\mu, \sigma)$ implica resolver una integral compleja. Para simplificar esto, se recurre a un proceso llamado **estandarización**. 
+
+Una variable aleatoria normal estandarizada, comúnmente denotada como $Z$, es aquella que tiene una media de cero ($\mu = 0$) y una varianza de uno ($\sigma^2 = 1$).
+
+La función de densidad de probabilidad de una variable aleatoria normal estándar $Z$ es:
+
+$$f(z) = \frac{1}{\sqrt{2\pi}} e^{-\frac{z^2}{2}} \quad \text{para } -\infty < z < \infty \quad (15)$$
+
+La función de probabilidad acumulada de $Z$ es:
+
+$$P(Z \le z_0) = F_Z(z_0) = \int_{-\infty}^{z_0} \frac{1}{\sqrt{2\pi}} e^{-\frac{z^2}{2}} dz \quad (16)$$
+
+Vemos que nuevamente aparece el símbolo de integral ($\int$), que como ya hemos dicho, sirve para calcular el área bajo la curva hasta un cierto valor $z_0$. La representación gráfica de la función de densidad de probabilidad de una variable normal estandarizada es la siguiente:
+
+```{r figura_normal_estandar, echo=TRUE, fig.width=7, fig.height=4, warning=FALSE}
+# Representación de la Distribución Normal Estándar Z ~ N(0,1)
+library(ggplot2)
+
+z_vals <- seq(-4, 4, length.out = 300)
+df_z <- data.frame(
+  z = z_vals,
+  fz = dnorm(z_vals)
+)
+
+ggplot(df_z, aes(x = z, y = fz)) +
+  geom_line(color = "darkblue", linewidth = 1.2) +
+  geom_vline(xintercept = 0, linetype = "dashed", color = "red") +
+  scale_x_continuous(breaks = -3:3) +
+  theme_minimal() +
+  labs(
+    title = "Función de densidad de probabilidad de Z ~ N(0, 1)",
+    x = "Valores de Z",
+    y = "f(z)"
+  ) +
+  annotate("text", x = 1.2, y = 0.35, label = expression(mu == 0 ~ "," ~ sigma == 1), color = "red")
+```
+
+
+Como podemos observar, la función de densidad de probabilidad de una variable estandarizada $Z$ es perfectamente simétrica con respecto al valor $\mu = 0$.
+
+Al trabajar con una variable normal estandarizada también se cumple la regla empírica de manera directa, ya que las desviaciones estándar equivalen exactamente a los valores de $z$:
+* $P(-1 < Z < 1) = 0.6826 \approx 0.683$
+* $P(-2 < Z < 2) = 0.9544 \approx 0.954$
+* $P(-3 < Z < 3) = 0.9974 \approx 0.998$
+
+---
+
+**Estandarización de una variable normal**
+
+Cualquier variable aleatoria normal $X$ con media $\mu$ y desviación estándar $\sigma$ puede ser transformada en una variable normal estándar $Z$ mediante la siguiente fórmula de tipificación:
+
+$$Z = \frac{X - \mu}{\sigma}$$
+
+Esta transformación nos dice a cuántas desviaciones estándar ($\sigma$) se encuentra un valor $X$ por encima o por debajo de la media $\mu$. Al hacer esto, podemos usar las tablas de la normal estándar (o software estadístico) para calcular probabilidades para **cualquier** distribución normal.
+
+**Ejemplo**
+
+Suponga que los puntajes de un examen de aptitud a nivel nacional están distribuidos normalmente con una media $\mu = 400$ y una desviación estándar $\sigma = 50$. 
+
+**Pregunta 1:** ¿Cuál es la probabilidad de que un estudiante elegido al azar obtenga un puntaje mayor a 450?
+
+Queremos calcular $P(X > 450)$. Primero, estandarizamos el valor $x = 450$:
+
+$$z = \frac{x - \mu}{\sigma} = \frac{450 - 400}{50} = \frac{50}{50} = 1$$
+
+Por lo tanto, la probabilidad requerida es equivalente a encontrar la probabilidad en la normal estándar para $Z > 1$:
+$$P(X > 450) = P(Z > 1)$$
+
+Sabiendo que la distribución es simétrica y el área total es 1, usando las propiedades o una tabla, determinamos que $P(Z > 1) \approx 0.1587$. Es decir, hay un 15.87% de probabilidad de que el estudiante obtenga más de 450 puntos.
+
+```{r ejemplo_wackerly_1, echo=TRUE, fig.width=7, fig.height=4, warning=FALSE}
+# Gráfica del ejemplo: Área a la derecha de Z = 1
+z_vals <- seq(-4, 4, length.out = 300)
+df_z <- data.frame(
+  z = z_vals,
+  fz = dnorm(z_vals))
+ggplot(df_z, aes(x = z, y = fz)) +
+  geom_line(color = "darkblue", linewidth = 1) +
+  geom_area(data = subset(df_z, z >= 1), fill = "salmon", alpha = 0.7) +
+  scale_x_continuous(breaks = -3:3) +
+  theme_minimal() +
+  labs(
+    title = "P(Z > 1) equivalente a P(X > 450)",
+    x = "Puntaje estandarizado (Z)",
+    y = "f(z)"
+  ) +
+  annotate("text", x = 1.8, y = 0.05, label = "Área = 0.1587", fontface = "bold")
+```
+
+**Pregunta 2:** ¿Cuál es la probabilidad de que un estudiante obtenga un puntaje entre 300 y 450?
+
+Queremos calcular $P(300 < X < 450)$. Estandarizamos ambos límites:
+
+Para $x_1 = 300$:
+$$z_1 = \frac{300 - 400}{50} = \frac{-100}{50} = -2$$
+
+Para $x_2 = 450$:
+$$z_2 = \frac{450 - 400}{50} = \frac{50}{50} = 1$$
+
+La probabilidad buscada es:
+$$P(300 < X < 450) = P(-2 < Z < 1)$$
+
+Calculando el área entre $Z = -2$ y $Z = 1$ (que es $F(1) - F(-2)$):
+$$P(-2 < Z < 1) = 0.8413 - 0.0228 = 0.8185$$
+
+El 81.85% de los estudiantes obtendrán puntajes entre 300 y 450.
+
+```{r ejemplo_wackerly_2, echo=TRUE, fig.width=7, fig.height=4, warning=FALSE}
+# Gráfica del ejemplo: Área entre Z = -2 y Z = 1
+z_vals <- seq(-4, 4, length.out = 300)
+df_z <- data.frame(
+  z = z_vals,
+  fz = dnorm(z_vals)
+)
+ggplot(df_z, aes(x = z, y = fz)) +
+  geom_line(color = "darkblue", linewidth = 1) +
+  geom_area(data = subset(df_z, z >= -2 & z <= 1), fill = "lightblue", alpha = 0.7) +
+  scale_x_continuous(breaks = -3:3) +
+  theme_minimal() +
+  labs(
+    title = "P(-2 < Z < 1) equivalente a P(300 < X < 450)",
+    x = "Puntaje estandarizado (Z)",
+    y = "f(z)"
+  ) +
+  annotate("text", x = -0.5, y = 0.15, label = "Área = 0.8185", fontface = "bold")
+```
+
+### 3.4.1. Uso de tablas
+
+Para calcular probabilidades de la variable aleatoria normal deberíamos aplicar la operación integral a la función de densidad, reemplazando los parámetros $\mu$ y $\sigma$ por los valores de alguna combinación en particular. Teniendo en cuenta que la expresión matemática de la función de densidad de una variable normalmente distribuida no tiene una antiderivada de forma cerrada (como bien señala la teoría estadística clásica), calcular probabilidades con base en ella mediante integración analítica es imposible, requiriendo métodos numéricos. Por este motivo, se ilustra el uso de tablas estadísticas estandarizadas.
+
+La tabla de probabilidades normales está construida considerando una distribución normal con media $\mu = 0$ y desviación estándar $\sigma = 1$, o lo que es lo mismo, para la variable que hemos denominado variable normal estandarizada $Z$. Esta tabla puede ser usada para obtener probabilidades asociadas con cualquier distribución normal, siempre que la media y la varianza sean conocidas.
+
+Para obtener las probabilidades de una variable aleatoria normal $X$ con el uso de las tablas, primero debemos estandarizar dicha variable mediante el teorema fundamental:
+$$Z = \frac{X - \mu}{\sigma}$$
+
+La tabla para calcular probabilidades de una distribución normal estandarizada está construida considerando probabilidades acumuladas, en otras palabras:
+$$P(Z \le z_0) = F(z_0)$$
+Esta es la probabilidad acumulada desde $-\infty$ hasta $z_0$, donde este último es un valor particular de la variable $Z$.
+
+> **Nota:** En las distribuciones de probabilidad continuas, la probabilidad de que la variable aleatoria asuma exactamente un valor particular es cero ($P(X = x) = 0$). Por lo tanto, los signos de desigualdad estricta ($<$, $>$) o no estricta ($\le$, $\ge$) son probabilísticamente equivalentes. Es decir, $P(X \le x) = P(X < x)$.
+
+**Ejemplo:**
+El peso de los niños al nacer en la localidad de Tequila tiene el comportamiento de una variable aleatoria normal con media $\mu = 3.5 \text{ kg}$ y desviación estándar $\sigma = 1 \text{ kg}$. 
+
+Con base en este ejemplo, estudiaremos cómo calcular probabilidades bajo diferentes escenarios usando la estandarización $Z$. $X$ se distribuye normal y se denota como $X \sim N(3.5, 1^2)$.
+
+---
+
+**Caso 1: Probabilidad de que $X$ sea menor a un valor dado**\\
+**¿Cuál es la probabilidad de que un recién nacido tenga un peso menor a 3.9 kg?**
+
+La probabilidad de interés es $P(X < 3.9)$. Como $X$ es continua, la probabilidad acumulada se calcula indistintamente como $P(X \le 3.9) = F(3.9)$.
+
+Estandarizando la variable:
+$$P(X < 3.9) = P\left(\frac{X - \mu}{\sigma} \le \frac{3.9 - 3.5}{1}\right) = P(Z \le 0.4)$$
+
+En la tabla de la normal estándar, buscamos el valor $0.4$ en la primera columna (enteros y primer decimal) y $.00$ en la primera fila (segundo decimal). En su intersección encontramos la probabilidad:
+$$F(3.9) = P(X \le 3.9) = P(Z \le 0.4) = 0.6554$$
+
+```{r caso1_z04, echo=TRUE, fig.width=6, fig.height=4, warning=FALSE}
+# Figura 23. Probabilidad de Z acumulada al valor 0.4
+library(ggplot2)
+z_vals <- seq(-4, 4, length.out = 300)
+df_z <- data.frame(z = z_vals, fz = dnorm(z_vals))
+
+ggplot(df_z, aes(x = z, y = fz)) +
+  geom_line(color = "darkblue", linewidth = 1) +
+  geom_area(data = subset(df_z, z <= 0.4), fill = "lightblue", alpha = 0.6) +
+  geom_vline(xintercept = 0.4, linetype = "dashed", color = "red") +
+  theme_minimal() +
+  labs(title = "Caso 1: P(Z \u2264 0.4)", x = "Z", y = "f(z)") +
+  annotate("text", x = -1, y = 0.15, label = "Área = 0.6554", fontface = "bold")
+```
+
+---
+
+**Caso 2: Probabilidad de que $Z$ exceda un valor positivo**
+**Encontrar la probabilidad de que un niño presente un peso de más de 3.9 kg.**
+
+Esto se traduce en encontrar $P(Z > 0.4)$. La tabla normal acumula desde $-\infty$, por lo que para buscar la "cola superior" o derecha, usamos la propiedad del complemento (toda el área vale 1):
+
+$$P(Z > 0.40) = 1 - P(Z \le 0.40) = 1 - F(0.40) = 1 - 0.6554 = 0.3446$$
+
+```{r caso2_z04_mayor, echo=TRUE, fig.width=6, fig.height=4, warning=FALSE}
+# Figura 24. Probabilidad de Z para valores mayores a 0.40.
+library(ggplot2)
+z_vals <- seq(-4, 4, length.out = 300)
+df_z <- data.frame(z = z_vals, fz = dnorm(z_vals))
+
+ggplot(df_z, aes(x = z, y = fz)) +
+  geom_line(color = "darkblue", linewidth = 1) +
+  geom_area(data = subset(df_z, z >= 0.4), fill = "salmon", alpha = 0.6) +
+  geom_vline(xintercept = 0.4, linetype = "dashed", color = "red") +
+  theme_minimal() +
+  labs(title = "Caso 2: P(Z > 0.4)", x = "Z", y = "f(z)") +
+  annotate("text", x = 1.5, y = 0.08, label = "Área = 0.3446", fontface = "bold")
+```
+
+---
+
+**Caso 3: Probabilidad menor a un número negativo**
+**El médico quiere conocer la probabilidad de que un niño pese menos de 2.1 kg al nacer.**
+
+$$P(X < 2.1) = P\left(\frac{X - 3.5}{1} \le \frac{2.1 - 3.5}{1}\right) = P(Z \le -1.4) = F(-1.4)$$
+
+Aplicando la **propiedad de simetría** de la curva normal (Mendenhall et al.), la cola izquierda en $-1.4$ es exactamente igual a la cola derecha en $+1.4$:
+$$P(Z \le -1.4) = P(Z \ge 1.4) = 1 - P(Z \le 1.4)$$
+
+Buscamos $1.4$ en la tabla: $P(Z \le 1.4) = 0.9192$.
+$$P(Z \le -1.4) = 1 - 0.9192 = 0.0808$$
+
+```{r caso3_z14_negativo, echo=TRUE, fig.width=6, fig.height=4, warning=FALSE}
+# Figura 25. Probabilidad de Z en cola izquierda por simetría.
+library(ggplot2)
+z_vals <- seq(-4, 4, length.out = 300)
+df_z <- data.frame(z = z_vals, fz = dnorm(z_vals))
+
+ggplot(df_z, aes(x = z, y = fz)) +
+  geom_line(color = "darkblue", linewidth = 1) +
+  geom_area(data = subset(df_z, z <= -1.4), fill = "purple", alpha = 0.5) +
+  geom_area(data = subset(df_z, z >= 1.4), fill = "salmon", alpha = 0.2) + # Reflejo
+  theme_minimal() +
+  labs(title = "Caso 3: Simetría P(Z \u2264 -1.4) = P(Z \u2265 1.4)", x = "Z", y = "f(z)") +
+  annotate("text", x = -2.5, y = 0.05, label = "0.0808", fontface = "bold")
+```
+
+---
+
+**Caso 4: Intervalo entre dos valores positivos**
+**Calcular la probabilidad de que un niño pese entre 3.6 kg y 4.0 kg.**
+
+Estandarizamos los dos límites del intervalo:
+$$P(3.6 \le X \le 4) = P\left(\frac{3.6 - 3.5}{1} \le Z \le \frac{4 - 3.5}{1}\right) = P(0.1 \le Z \le 0.5)$$
+
+Para encontrar el área de este "corte central", restamos el área acumulada del límite inferior al área del límite superior:
+$$P(0.1 \le Z \le 0.5) = F(0.5) - F(0.1)$$
+$$= 0.6915 - 0.5398 = 0.1517$$
+
+```{r caso4_intervalo_pos, echo=TRUE, fig.width=6, fig.height=4, warning=FALSE}
+# Figura 26. Probabilidad de Z dado un intervalo positivo.
+library(ggplot2)
+z_vals <- seq(-4, 4, length.out = 300)
+df_z <- data.frame(z = z_vals, fz = dnorm(z_vals))
+
+ggplot(df_z, aes(x = z, y = fz)) +
+  geom_line(color = "darkblue", linewidth = 1) +
+  geom_area(data = subset(df_z, z >= 0.1 & z <= 0.5), fill = "lightgreen", alpha = 0.6) +
+  theme_minimal() +
+  labs(title = "Caso 4: P(0.1 \u2264 Z \u2264 0.5)", x = "Z", y = "f(z)") +
+  annotate("text", x = 1.2, y = 0.1, label = "Área = 0.1517", fontface = "bold")
+```
+
+---
+
+**Caso 5: Intervalo entre dos valores negativos**
+**La probabilidad de que un niño al nacer pese entre 2 kg y 2.5 kg.**
+
+$$P(2 \le X \le 2.5) = P\left(\frac{2 - 3.5}{1} \le Z \le \frac{2.5 - 3.5}{1}\right) = P(-1.5 \le Z \le -1)$$
+
+Por la propiedad de simetría respecto de $\mu = 0$, este intervalo a la izquierda es idéntico a su contraparte positiva en la derecha:
+$$P(-1.5 \le Z \le -1) = P(1 \le Z \le 1.5) = F(1.5) - F(1)$$
+$$= 0.9332 - 0.8413 = 0.0919$$
+
+```{r caso5_intervalo_neg, echo=TRUE, fig.width=6, fig.height=4, warning=FALSE}
+# Figura 27a. Probabilidad para Z1 y Z2 < 0.
+library(ggplot2)
+z_vals <- seq(-4, 4, length.out = 300)
+df_z <- data.frame(z = z_vals, fz = dnorm(z_vals))
+
+ggplot(df_z, aes(x = z, y = fz)) +
+  geom_line(color = "darkblue", linewidth = 1) +
+  geom_area(data = subset(df_z, z >= -1.5 & z <= -1), fill = "orange", alpha = 0.6) +
+  theme_minimal() +
+  labs(title = "Caso 5: P(-1.5 \u2264 Z \u2264 -1)", x = "Z", y = "f(z)") +
+  annotate("text", x = -2.2, y = 0.1, label = "0.0919", fontface = "bold")
+```
+
+---
+
+**Caso 6: Intervalo que incluye al 0 (media)**
+**La probabilidad de que un niño pese al nacer entre 3 kg y 4 kg.**
+
+$$P(3 \le X \le 4) = P\left(\frac{3 - 3.5}{1} \le Z \le \frac{4 - 3.5}{1}\right) = P(-0.5 \le Z \le 0.5)$$
+
+Calculamos usando las acumuladas:
+$$P(-0.5 \le Z \le 0.5) = F(0.5) - F(-0.5)$$
+
+Usando simetría para resolver $F(-0.5)$, sabemos que $F(-0.5) = 1 - F(0.5)$. Sustituyendo:
+$$= F(0.5) - [1 - F(0.5)]$$
+$$= 2F(0.5) - 1$$
+$$= 2(0.6915) - 1 = 1.3830 - 1 = 0.3830$$
+
+```{r caso6_intervalo_cero, echo=TRUE, fig.width=6, fig.height=4, warning=FALSE}
+# Figura 27b. Probabilidad que cruza el cero.
+library(ggplot2)
+z_vals <- seq(-4, 4, length.out = 300)
+df_z <- data.frame(z = z_vals, fz = dnorm(z_vals))
+
+ggplot(df_z, aes(x = z, y = fz)) +
+  geom_line(color = "darkblue", linewidth = 1) +
+  geom_area(data = subset(df_z, z >= -0.5 & z <= 0.5), fill = "cyan", alpha = 0.5) +
+  theme_minimal() +
+  labs(title = "Caso 6: P(-0.5 \u2264 Z \u2264 0.5)", x = "Z", y = "f(z)") +
+  annotate("text", x = 0, y = 0.15, label = "Área = 0.3830", fontface = "bold")
+```
+
+# 3.5 Distribución exponencial
+
+La variable aleatoria exponencial surge en la práctica como el modelo para la probabilidad de la cantidad de tiempo u espacio que transcurre hasta que ocurre un evento de interés. Esta ocurrencia se da de manera independiente y a una tasa constante.
+
+**Ejemplos:**
+* La cantidad de tiempo (a partir de ahora) hasta que ocurre un terremoto.
+* La cantidad de tiempo (a partir de ahora) hasta que estalla una nueva guerra.
+* La cantidad de tiempo (a partir de ahora) hasta que una llamada telefónica que reciba resulte ser un número equivocado.
+
+También es utilizada para determinar el tiempo entre llegadas de clientes a una cola de un supermercado, el tiempo entre fallas de un componente electrónico o el tiempo entre accidentes en una autopista.
+
+> **Nota:** En la literatura estadística existen dos formas comunes de parametrizar la distribución exponencial. En muchos textos aplicados (y en este documento), se utiliza el parámetro de tasa $\lambda$ (número de ocurrencias por unidad de tiempo). Sin embargo, en algunos textos teóricos utilizan el parámetro de escala $\beta$, que representa el **tiempo promedio** de espera entre eventos, donde $\beta = \frac{1}{\lambda}$. Ambas formas son equivalentes, pero es crucial identificar cuál se está utilizando al resolver problemas.
+
+Utilizando la parametrización por tasa ($\lambda$), la función de densidad de probabilidad de una variable exponencial $X$, denotada como $X \sim \text{Exp}(\lambda)$, está dada por:
+
+$$f(x) = \begin{cases} \lambda e^{-\lambda x} & \text{para } x \ge 0, \quad \lambda > 0 \\ 0 & \text{en otro caso} \end{cases} \quad (16)$$
+
+La forma de la distribución cambia de acuerdo con el valor de $\lambda$. En la figura 28 se presenta la función de densidad de probabilidad de la variable aleatoria exponencial para tres valores distintos de $\lambda$.
+
+```{r figura28_exponencial, echo=TRUE, fig.width=7, fig.height=4, warning=FALSE}
+# Figura 28. Distribución exponencial para tres valores de lambda
+library(ggplot2)
+
+x_vals <- seq(0, 5, length.out = 300)
+df_expo <- data.frame(
+  x = rep(x_vals, 3),
+  fx = c(dexp(x_vals, rate = 0.5),
+         dexp(x_vals, rate = 1),
+         dexp(x_vals, rate = 2)),
+  Lambda = factor(rep(c("0.5", "1", "2"), each = 300))
+)
+
+ggplot(df_expo, aes(x = x, y = fx, color = Lambda)) +
+  geom_line(linewidth = 1.2) +
+  theme_minimal() +
+  labs(
+    title = "Figura 28. Función de densidad Exponencial",
+    subtitle = "Comparación para distintos valores de la tasa (\u03bb)",
+    x = "x (Tiempo / Distancia)",
+    y = "f(x)"
+  ) +
+  theme(legend.position = "bottom")
+```
+
+
+
+La esperanza matemática (valor esperado) y la varianza de la variable aleatoria exponencial son:
+
+$$E[X] = \frac{1}{\lambda}$$
+$$Var(X) = \frac{1}{\lambda^2}$$
+
+La función de probabilidad acumulada (que nos da el área a la izquierda de un valor $x$) es:
+
+$$F(x) = P(X \le x) = 1 - e^{-\lambda x} \quad \text{para } x \ge 0 \quad (17)$$
+
+---
+
+**Ejemplo 1: Servicio de asistencia técnica**
+
+Un servicio de asistencia técnica en carretera ha comprobado que en las mañanas de los fines de semana el número de llamadas que recibe es de 3 llamadas cada hora. Un operario comienza su jornada de sábado a las 8 de la mañana. Suponiendo que las llamadas se realizan de manera independiente y con tasa constante:
+
+**¿Cuál es la probabilidad de que reciba la primera llamada antes de las 8:15 am?**
+
+Sea $X$ una variable aleatoria que mide el tiempo transcurrido (a partir de las 8:00 am) hasta que ocurre una llamada. $X$ es una variable aleatoria exponencial con un parámetro de tasa $\lambda = 3$ (llamadas por hora). 
+
+La función de probabilidad acumulada (Ecuación 17) para esta variable es:
+$$F(x) = 1 - e^{-3x} \quad \text{para } x \ge 0$$
+
+Como el operario empieza a las 8:00 am, para las 8:15 am habrán pasado 15 minutos. Dado que la tasa $\lambda$ está en términos de horas, **es obligatorio** expresar el tiempo en las mismas unidades. Los 15 minutos equivalen a $15/60 = 0.25$ horas.
+
+La probabilidad de interés es:
+$$P(X \le 0.25) = F(0.25) = 1 - e^{-3(0.25)} = 1 - e^{-0.75} \approx 0.5276$$
+
+Existe aproximadamente un 52.8% de probabilidad de recibir la primera llamada en los primeros 15 minutos de la jornada.
+
+```{r ejemplo1_asistencia, echo=TRUE, fig.width=6, fig.height=4, warning=FALSE}
+# Gráfica del Ejemplo 1: P(X <= 0.25) con lambda = 3
+x_val_asist <- seq(0, 2, length.out = 300)
+df_asist <- data.frame(x = x_val_asist, fx = dexp(x_val_asist, rate = 3))
+
+ggplot(df_asist, aes(x = x, y = fx)) +
+  geom_line(color = "darkblue", linewidth = 1) +
+  geom_area(data = subset(df_asist, x <= 0.25), fill = "lightblue", alpha = 0.7) +
+  theme_minimal() +
+  labs(
+    title = "Probabilidad de recibir llamada antes de 15 min (0.25 h)",
+    x = "Tiempo (horas)",
+    y = "f(x)"
+  ) +
+  annotate("text", x = 0.5, y = 1.5, label = "Área \u2248 0.528", fontface = "bold")
+```
+
+---
+
+**Ejemplo 2: Tiempo de revisión de motores**
+
+El tiempo de revisión del motor de un avión sigue una distribución exponencial con una media igual a 22 minutos.
+
+Primero, definimos la variable aleatoria:
+$X$: Tiempo de revisión del motor de un avión (en minutos).
+
+Se nos proporciona la esperanza matemática (media), $E[X] = 22$. Despejando el parámetro $\lambda$:
+$$E[X] = \frac{1}{\lambda} = 22 \implies \lambda = \frac{1}{22}$$
+
+De modo que la función de densidad y la función acumulada son:
+$$f(x) = \frac{1}{22} e^{-\frac{x}{22}} \quad \text{y} \quad F(x) = 1 - e^{-\frac{x}{22}} \quad \text{para } x \ge 0$$
+
+**Inciso a) Encontrar la probabilidad de que el tiempo de revisión sea menor a 10 minutos.**
+
+Buscamos $P(X \le 10)$:
+$$P(X \le 10) = 1 - e^{-\frac{10}{22}} \approx 1 - 0.6348 = 0.3652$$
+
+**Inciso b) ¿Cuál es el tiempo de revisión de un motor que ha superado el 10% de los tiempos de revisión más largos?**
+
+*Nota: Estar en el 10% de los tiempos más largos significa que el tiempo de reparación deja al 90% de los casos por debajo de él o al 10% por encima. A este punto lo denotaremos como $x_{0.10}$.*
+
+La ecuación de interés es:
+$$P(X \ge x_{0.10}) = 1 - P(X \le x_{0.10}) = 1 - \left(1 - e^{-\frac{x_{0.10}}{22}}\right) = 0.10$$
+
+Simplificando y despejando $x_{0.10}$:
+$$e^{-\frac{x_{0.10}}{22}} = 0.10$$
+Aplicando logaritmo natural a ambos lados:
+$$-\frac{x_{0.10}}{22} = \ln(0.10)$$
+$$x_{0.10} = -22 \cdot \ln(0.10) \approx -22 \cdot (-2.3025) \approx 50.66 \text{ minutos}$$
+
+**Inciso c) El costo de revisión es de 200 unidades monetarias fijas, a lo que se suman 10 unidades por el tiempo que dure la revisión. Encontrar la media del costo.**
+
+Simbolizamos el costo total con $C$:
+$$C = 200 + 10X$$
+
+Aplicando las propiedades de la esperanza matemática:
+$$E[C] = E[200 + 10X] = 200 + 10 \cdot E[X] = 200 + 10(22) = 200 + 220 = 420$$
+La media del costo de revisión es de 420 unidades monetarias.
+
+---
+
+**Propiedad fundamental: Falta de memoria**
+
+La distribución exponencial es la **única** distribución de probabilidad continua que carece de memoria. ¿Qué quiere decir esto? Significa que la probabilidad condicional de que un evento ocurra en el futuro depende únicamente del tiempo restante y no del tiempo que ya ha transcurrido. Matemáticamente:
+
+$$P(X > s + t \mid X > t) = P(X > s) \quad \text{para toda } s, t \ge 0 \quad (18)$$
+
+Esto significa que si la probabilidad de tener que esperar 10 minutos *adicionales* para una llamada telefónica, **dado que ya hemos esperado 30 minutos sin éxito**, es exactamente la misma que la probabilidad de haber esperado 10 minutos desde el instante inicial cero.
+
+$$P(X > 40 \mid X > 30) = P(X > 10 + 30 \mid X > 30) = P(X > 10)$$
+
+*Cuidado:* Esto no significa que los eventos $X > 40$ y $X > 30$ sean estadísticamente independientes. Si lo fueran, se cumpliría que $P(X > 40 \mid X > 30) = P(X > 40)$, lo cual es falso. Lo que es independiente es el *tiempo adicional*.
+
+**Ejemplo:**
+
+Si el operario lleva 10 minutos sin recibir una llamada: ¿Cuál es la probabilidad de que reciba una nueva llamada en los **próximos 15 minutos** (es decir, en menos de 25 minutos en total)?
+
+Buscamos: $P(X < 25 \mid X > 10)$
+
+Empleando el complemento de la Ecuación 18 de la falta de memoria, el tiempo ya transcurrido ($t=10$) se "olvida" y solo nos interesa el intervalo futuro ($s=15$):
+$$P(X < 15 + 10 \mid X > 10) = P(X < 15)$$
+
+Recordando que $\lambda = 3$ llamadas/hora y que 15 minutos son $0.25$ horas, calculamos:
+$$P(X < 0.25 \text{ horas}) = 1 - e^{-3(0.25)} = 1 - e^{-0.75} \approx 0.528$$
+
+Es exactamente la misma probabilidad calculada en el Ejemplo 1 al inicio del turno. El sistema "no recuerda" que el operario ya llevaba 10 minutos esperando.
+
+## Resumen
+
+#### 1. Conceptos Fundamentales
+
+A diferencia de las variables discretas, una **variable aleatoria continua** puede tomar infinitos valores dentro de un intervalo en la recta real (ej. tiempo, peso, distancia). 
+
+* **Probabilidad puntual:** La probabilidad de que la variable asuma un valor exacto y específico es cero:
+  $$P(X=x) = 0$$
+* **Función de Densidad de Probabilidad (f.d.p.), $f(x)$:** Sustituye a la probabilidad puntual. Geométricamente, la probabilidad de que la variable caiga en un intervalo $[a, b]$ es el área bajo la curva de $f(x)$ en ese intervalo, calculada mediante integración:
+  $$P(a \le X \le b) = \int_{a}^{b} f(x)dx$$
+* **Función de Probabilidad Acumulada, $F(x)$:** Acumula el área bajo la curva desde $-\infty$ hasta un valor $x$.
+  $$F(x) = P(X \le x)$$
+
+***
+
+### 2. Distribución Uniforme Continua
+
+Modela fenómenos donde todos los subintervalos de la misma longitud dentro de un rango $[a, b]$ tienen exactamente la misma probabilidad de ocurrir. Su f.d.p. forma un rectángulo. Se denota como $X \sim U(a, b)$.
+
+* **Función de densidad:** $$f(x) = \frac{1}{b - a} \quad \text{para } a \le x \le b$$
+* **Esperanza y Varianza:** $$E[X] = \frac{a+b}{2} \quad \text{y} \quad Var(X) = \frac{(b-a)^2}{12}$$
+* **Aplicación típica:** Tiempos de espera aleatorios con límites conocidos y equiprobables.
+
+***
+
+### 3. Distribución Normal
+
+Es la distribución más importante en la estadística inferencial. Su gráfica tiene forma de campana (Campana de Gauss), es asintótica al eje horizontal y perfectamente simétrica. Se denota como $X \sim N(\mu, \sigma^2)$.
+
+* **Parámetros:** Está definida por su **media** ($\mu$, que determina su centro/localización) y su **desviación estándar** ($\sigma$, que determina su amplitud/forma).
+* **Regla Empírica:** 
+  * Aproximadamente el **68.2%** de los datos cae en el intervalo $\mu \pm 1\sigma$.
+  * El **95.4%** cae en el intervalo $\mu \pm 2\sigma$.
+  * El **99.8%** cae en el intervalo $\mu \pm 3\sigma$.
+
+***
+
+### 4. Distribución Normal Estándar y Uso de Tablas
+
+Dado que la f.d.p. de la distribución normal no tiene una integral analítica sencilla, se utiliza un proceso de **estandarización** para transformar cualquier variable normal $X$ en una variable normal estándar $Z$, la cual tiene media $\mu=0$ y varianza $\sigma^2=1$.
+
+* **Fórmula de tipificación:** $$Z = \frac{X - \mu}{\sigma}$$
+  Esta fórmula indica a cuántas desviaciones estándar se encuentra un valor $X$ respecto a la media.
+* **Cálculo de probabilidades:** Se utilizan tablas estandarizadas (o software) que contienen las áreas acumuladas $P(Z \le z)$. Para intervalos o "colas derechas", se aplican propiedades matemáticas de la probabilidad (como el complemento $1 - P(Z \le z)$) y la **propiedad de simetría** de la campana.
+
+***
+
+### 5. Distribución Exponencial
+
+Se utiliza para modelar el tiempo o la distancia que transcurre hasta que ocurre un evento de interés (ej. tiempo entre fallas, tiempo hasta recibir una llamada), asumiendo una tasa de ocurrencia constante ($\lambda$). Se denota como $X \sim \text{Exp}(\lambda)$.
+
+* **Función de densidad:** $$f(x) = \lambda e^{-\lambda x} \quad \text{para } x \ge 0$$
+* **Esperanza:** (El tiempo promedio de espera)
+  $$E[X] = \frac{1}{\lambda}$$
+* **Propiedad de Falta de Memoria (Memoryless):** Es la única distribución continua con esta propiedad. Establece que la probabilidad condicional de que un evento ocurra en el futuro depende solo del tiempo restante, "olvidando" el tiempo que ya ha transcurrido: 
+  $$P(X > s+t \mid X > t) = P(X > s)$$
+
+

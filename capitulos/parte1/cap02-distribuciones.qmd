@@ -1,417 +1,1602 @@
-# Distribuciones de Probabilidad {#cap-distribuciones}
+# Variable Aleatoria Discreta {#cap-distribuciones}
 
-## Definición de Variable Aleatoria {#sec-va-def}
+**Introducción al análisis estadístico**
 
-::: {.callout-important}
-## Definición
+**Objetivo general**
 
-Una **variable aleatoria** $X$ es una función $X: \Omega \to \mathbb{R}$ que
-asigna un número real a cada resultado del espacio muestral.
-:::
+Al término de este curso, el participante conocerá los fundamentos de la probabilidad, las  características de las distribuciones de probabilidades discretas y continuas más utilizadas, así como,  conceptos básicos de inferencia estadística y las distribuciones derivadas del muestreo más  frecuentes en la modelación estadística. 
 
-### Función de Distribución Acumulada (FDA)
+## 2.1 Variable aleatoria
 
-$$F(x) = P(X \leq x), \quad x \in \mathbb{R}$$
+Se denominan ___variables___ a las características particulares de cualquier elemento de alguna población o muestra que se tenga, dicha variable puede tomar distintos valores y, en general, hay dos tipos de variables (Cualitativa [Edad] y Cuantitativa [Género]). Se dice que son ___aleatorias___ porque el valor observado no se conoce hasta la realización del experimento, aunque sí se sabe cuáles son los posibles resultados
 
-Propiedades: $F$ es no decreciente, continua por la derecha,
-$\lim_{x\to-\infty}F(x)=0$ y $\lim_{x\to+\infty}F(x)=1$.
 
-```{r}
-#| label: fig-fda-ejemplo
-#| fig-cap: "FDA de Binomial(10, 0.4)"
+__Nota__:
+Una variable aleatoria (v.a) es aquella cuyos valores son números reales asignados a los resultados de un experimento aleatorio.
 
-x   <- 0:10
-cdf <- pbinom(x, size = 10, prob = 0.4)
+:::: {.callout-note icon=false}
+Ejemplo 2.1.1:
+Una moneda ordinaria cuenta con dos posibles resultados a: águila y c: sol. El experimento consiste en lanzar al mismo tiempo tres monedas y observar las caras que aparecen, el procedimiento se realiza 8 veces, entonces el espacio 
+muestral (S) es el siguiente:
+          S={(a,a,a),(a,c,a),(a,a,c),(c,a,a),(c,c,a),(c,a,c),(a,c,c),(c,c,c)}
+Donde:
+1. (a,c,a) es el resultado donde la primer cara es águila, la segunda sol y la tercera águila
+2. (a,a,c) es el resultado donde la primer y la segunda cara resultó ser águila y la tercera sol
 
-plot(x, cdf, type = "s", lwd = 2, col = "#4472C4",
-     main = "FDA — Binomial(10, 0.4)",
-     xlab = "x", ylab = "F(x) = P(X ≤ x)",
-     ylim = c(0, 1))
-points(x, cdf, pch = 16, col = "#4472C4")
-abline(h = c(0, 1), lty = 3, col = "grey70")
+Ahora definamos la variable aleatoria X como el número de águilas que aparecen tras lanzar tres monedas, en consecuencia, a esta variable le podemos asociar los valores de 0, 1, 2 y 3. Tendremos lo siguiente:
+X= 0, no aparece ninguna águila (c,c,c)
+X= 1, sólo aparece un águila (a,c,c), (c,a,c), (c,c,a)
+X=2, aparecen dos águilas (a,a,c), (a,c,a), (c,a,a)
+X=3, aparecer puras águilas (a,a,a)
+::::
+Es importante mencionar que en el ejemplo 2.1.1 se supone que es posible distinguir cuál es la moneda 1, la moneda 2 y la moneda 3.
+
+La importancia de definir una variable aleatoria rádica en que los eventos que nos interesa estudiar (que se encuentran en el espacio muestral) van a ser trasladados a los números reales y, en este espacio ya nos va a ser posible realizar operaciones matemáticas e incluso a cada valor de la variable aleatoria asignarle una función de densidad de probabilidad con la cual cada valor de la variable aleatoria tendrá asociado una probabilidad de ocurrencia.
+
+
+## 2.2 Variable aleatoria discreta
+El común de los fenómenos aleatorios discretos tiende a comportarse bajo determinadas características generales, por lo que se han desarrollado algunas distribuciones discretas de probabilidad.
+
+__Nota__: 
+En el ejemplo anterior la v.a. proviene de un experimento con espacio muestral discreto, es decir, tiene _espacio muestral finito_ o _infinito numerable_
+
+A continuación explicamos a lo que se refieren los anteriores conceptos.
+
+__Experimentos aleatorios con espacio muestral finito:__
+
+Algunos ejemplos de este tipo son: lanzamiento de un dado y ver la cara que aparece resultante, el resultado de un partido de futbol, el género de un individuo, números de pacientes curados al aplicar un medicamente en n pacientes seleccionados, etcétera.
+
+__Experimentos aleatorios con espacio muestral infinito contable__
+
+Un ejemplo de este tipo es el número de errores ortográficos que pueden existir en un libro, los errores ortográficos pueden ser
+0, 1, 2, … ; por supuesto que, en la vida real, no hay infinitos números de errores en un libro, pero si el libro es grande (su tamaño tiende a infinito) el número de errores posibles sería muy grande y considerarse infinito.
+
+:::: {.callout-note icon=false}
+Ejemplo:
+El número de terremotos que pueden ocurrir en un periodo de tiempo de 15 años se puede denotar con una variable aleatoria discreta con un espacio muestral infinito contable. Si denotamos con X la 
+variable aleatoria el número de terremotos la variable aleatoria puede considerar los siguientes 
+valores 
+
+X=1, 2, 3, 4, …
+::::
+
+### 2.2.1 Función de probabilidad y función de probabilidad acumulada
+La asignación de valores reales a cada evento del espacio completo de eventois lo hemos llamado _variable aleatoria_; como vimos, a cada evento del espacio completo de eventos le corresponde una probabilidad determinada, a este conjunto de probabilidades le llamaremos la ___distribuición de probabilidad___, esto quiere decir que existe un rango de valores que puede tomar, por lo tanto, cualquier fenómeno aleatorio puede tomar valores en el intervalo (0,1).
+
+__Ejemplo 2.2.1__:
+Considerando el ejemplo anterior de las monedas y que cada resultado tiene la misma probabilidad de ocurrir, definimos la v.a X: Número de águilas en los lanzamientos. Tenemos la siguiente tabla:
+
+
+__Tabla 1:__
+
+
+| x |         Resultado         | Probabilidad P(X=x) |
+|:-:|:-------------------------:|:-------------------:|
+| 0 |          (c,c,c)          |   P(X=0)=1/8=0.125  |
+| 1 | (a,c,c), (c,a,c), (c,c,a) |   P(X=1)=3/8=0.375  |
+| 2 | (a,a,c), (a,c,a), (c,a,a) |   P(X=2)=3/8=0.375  |
+| 3 |          (a,a,a)          |   P(X=3)=1/8=0.125  |
+
+
+Gráficamente podemos hacer lo siguiente:
+
+**Gráfica de Probabilidad: Lanzamiento de Monedas**
+
+Para representar gráficamente una variable aleatoria discreta (como el número de águilas obtenidas al lanzar 3 monedas), lo más adecuado es utilizar un diagrama de barras o un gráfico de bastones (lollipop chart) que muestre la función de masa de probabilidad $P(X=x)$.
+
+```{r grafica_monedas, echo=TRUE, fig.align='center', fig.width=6, fig.height=4, warning=FALSE, message=FALSE}
+# Cargar la librería ggplot2
+library(ggplot2)
+
+# 1. Crear el Data Frame con los datos de la Tabla 1
+df_monedas <- data.frame(
+  x = c(0, 1, 2, 3),
+  probabilidad = c(0.125, 0.375, 0.375, 0.125)
+)
+
+# 2. Generar el gráfico de barras para la probabilidad discreta
+ggplot(df_monedas, aes(x = factor(x), y = probabilidad)) +
+  geom_bar(stat = "identity", fill = "steelblue", color = "black", width = 0.5, alpha = 0.8) +
+  geom_text(aes(label = probabilidad), vjust = -0.8, fontface = "bold", color = "black") +
+  theme_minimal() +
+  labs(
+    title = "Figura 1: Distribución de Probabilidad Discreta",
+    subtitle = "Variable Aleatoria X = Número de águilas en 3 lanzamientos",
+    x = "Número de águilas (x)",
+    y = "Probabilidad P(X = x)"
+  ) +
+  coord_cartesian(ylim = c(0, 0.45)) + # Ajustamos el eje Y para que los textos no se corten
+  theme(
+    plot.title = element_text(face = "bold", size = 14, hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5),
+    axis.text.x = element_text(size = 12, face = "bold")
+  )
 ```
 
----
+*(Nota didáctica: Observa cómo la gráfica es perfectamente simétrica. Esto ocurre porque la probabilidad de obtener "águila" o "sello" en una moneda justa es la misma ($p=0.5$), y al ser 3 lanzamientos, la distribución Binomial resultante alcanza su punto máximo en los valores centrales 1 y 2).*
 
-## Variables Aleatorias Discretas {#sec-va-discretas}
 
-::: {.callout-important}
-## Función de Masa de Probabilidad (FMP)
 
-$$p(x_i) = P(X = x_i) \geq 0, \qquad \sum_i p(x_i) = 1$$
-:::
+Nótese que la última columna de la tabla 1 proporciona la probabilidad de ocurrencia para cada valor de la variable aleatoria, a dicha columna se le denomina __Función de masa de probabilidad (fmp)__ o __función de densidad de probabilidad  (pdf)__. La función masa de probabilidad es aquella que surge al asignar probabilidades a cada uno de los valores de una variable aleatoria y se denota como $P(X)$.
 
-### Valor esperado y varianza
+De la tabla 1 es fácil percibir que la suma de las probabilidades correspondientes a todos los valores posibles que toma la variable aleatoria es igual a $1$, esto siempre ocurrirá para cualquier variable aleatoria, y se debe a que la probabilidad en el espacio muestral es $1%, $P(S)=1$.
+También se puede acumular la probabilidad del valor mínimo de la variable aleatoria X hasta un determinado valor de esta misma. Esto se ilustra en la tabla 2 considerando nuevamente el ejemplo 2.1.1.
 
-$$\mathrm{E}[X] = \sum_i x_i\, p(x_i)$$
+__Tabla 2:__
 
-$$\mathrm{Var}(X) = \mathrm{E}[X^2] - (\mathrm{E}[X])^2$$
+| x |         P(X=x)         | Función de probabilidad acumulada F(X) |
+|:-:|:-------------------------:|:-------------------:|
+| 0 | P(X=0)=1/8=0.125 |  0.125   |
+| 1 | P(X=1)=3/8=0.375 |  0.5   |
+| 2 | P(X=2)=3/8=0.375 |  0.875   |
+| 3 | P(X=3)=1/8=0.125 |  1.00   |
 
-```{r}
-#| label: va-discreta-calculo
+```{r grafica_acumulada_monedas, echo=TRUE, fig.align='center', fig.width=7, fig.height=4, warning=FALSE, message=FALSE}
+# Crear el Data Frame con los segmentos de la función escalonada
+df_acumulada <- data.frame(
+  x_inicio = c(-1, 0, 1, 2, 3),
+  x_fin    = c(0, 1, 2, 3, 4),
+  F_x      = c(0, 0.125, 0.500, 0.875, 1.000)
+)
 
-# FMP de X ~ Binomial(5, 0.4)
-x <- 0:5
-p <- dbinom(x, size = 5, prob = 0.4)
-
-# Esperanza y varianza manuales
-(mu    <- sum(x * p))
-(sigma2 <- sum(x^2 * p) - mu^2)
-
-cat("E[X] =", mu, "  (teórico: np =", 5*0.4, ")\n")
-cat("Var(X) =", sigma2, "  (teórico: np(1-p) =", 5*0.4*0.6, ")\n")
+# Generar el gráfico de función escalonada (Step function)
+ggplot(df_acumulada) +
+  # Dibujar las líneas horizontales de cada "escalón"
+  geom_segment(aes(x = x_inicio, xend = x_fin, y = F_x, yend = F_x), 
+               color = "darkblue", linewidth = 1.2) +
+  
+  # Añadir punto abierto (excluyente) al final de cada escalón
+  geom_point(aes(x = x_fin, y = F_x), shape = 21, fill = "white", color = "darkblue", size = 3, stroke = 1.2) +
+  
+  # Añadir punto cerrado (incluyente) al inicio de cada escalón (excepto el primero que viene de -infinito)
+  geom_point(data = subset(df_acumulada, x_inicio >= 0),
+             aes(x = x_inicio, y = F_x), shape = 19, color = "darkblue", size = 3) +
+  
+  # Personalización del gráfico
+  scale_x_continuous(breaks = -1:4, limits = c(-0.5, 3.5)) +
+  scale_y_continuous(breaks = c(0, 0.125, 0.500, 0.875, 1.000)) +
+  theme_minimal() +
+  labs(
+    title = "Figura 2: Función de Distribución Acumulada F(x)",
+    subtitle = "Variable Aleatoria X = Número de águilas en 3 lanzamientos",
+    x = "Número de águilas (x)",
+    y = "F(x) = P(X \u2264 x)"
+  ) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14, hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5, margin = margin(b = 15)),
+    axis.text.x = element_text(size = 12, face = "bold"),
+    axis.text.y = element_text(size = 10, face = "bold"),
+    panel.grid.minor = element_blank()
+  )
 ```
 
----
+La última columna de la __Tabla 2__ proporciona la probabilidad de ocurrencia acumulada para cada valor de la variable aleatoria, a dicha columna se le denomina función de probabilidad acumulada y se denota como $F(X)$.
 
-## Distribuciones Discretas {#sec-dist-discretas}
+Recordad que una distribución de probabilidad siempre está dada en el intervalo $(0,1)$
 
-### Uniforme Discreta  $X \sim \text{Unif}\{1,\ldots,N\}$
+### 2.2.2 Valor esperado de una variable aleatoria discreta
 
-$$p(x) = \frac{1}{N}, \quad x=1,\ldots,N \qquad \mathrm{E}[X]=\frac{N+1}{2}, \quad \mathrm{Var}(X)=\frac{N^2-1}{12}$$
+La esperanza matemática, valor esperado o media de una variable aleatoria discreta ($E(X)$) corresponde al valor esperado de que un cierto evento ocurra. Se calcula como la suma de los productos de cada valor que toma la variable aleatoria por su respectivo valor de probabilidad:
 
-### Binomial  $X \sim \text{Bin}(n,p)$
 
-$$p(x) = \binom{n}{x}p^x(1-p)^{n-x} \qquad \mathrm{E}[X]=np, \quad \mathrm{Var}(X)=np(1-p)$$
+ $\mu = E[X] = \sum_{i=1}^{k}x_i*P(x_i)$
 
-### Poisson  $X \sim \text{Poisson}(\lambda)$
+La varianza de una variable aleatoria discreta se define como la suma de los desvíos de cada valor que toma la variable aleatoria con respecto a su media, elevados al cuadrado y multiplicado por su respectiva probabilidad. Esto nos indíca qué tan dispersos llegan a estar nuestros datos con respecto de nuestro promedio o media.
 
-$$p(x) = \frac{e^{-\lambda}\lambda^x}{x!}, \; x=0,1,2,\ldots \qquad \mathrm{E}[X]=\mathrm{Var}(X)=\lambda$$
+ $V(X) = \sum_{i=0}^{k}(x_i-E[X])*P(x_i)$
 
-### Geométrica  $X \sim \text{Geom}(p)$
 
-$$p(x) = (1-p)^{x-1}p, \; x=1,2,\ldots \qquad \mathrm{E}[X]=\frac{1}{p}, \quad \mathrm{Var}(X)=\frac{1-p}{p^2}$$
+___EJemplo 2.1.2:___
 
-### Binomial Negativa  $X \sim \text{BinNeg}(r,p)$
+Si el número de accidentes en una jornada laboral, en cierta zona industrial sigue el comportamiento:
 
-$$p(x)=\binom{x-1}{r-1}p^r(1-p)^{x-r}, \; x=r,r+1,\ldots \qquad \mathrm{E}[X]=\frac{r}{p}$$
+|      x= Número de accidentes      |  0  |  1  |  2  |  3  |
+|:---------------------------------:|:---:|:---:|:---:|:---:|
+| P(X=x: Probabilidad de accidentes | 1/6 | 1/3 | 1/3 | 1/6 |
 
-### Hipergeométrica  $X \sim \text{Hiper}(N,K,n)$
 
-$$p(x)=\frac{\binom{K}{x}\binom{N-K}{n-x}}{\binom{N}{n}} \qquad \mathrm{E}[X]=\frac{nK}{N}$$
+¿Cuál es el número esperado de accidentes por jornada? ¿Cuál es la varianza?
 
-### Multinomial
+___Solución:___
 
-$$p(x_1,\ldots,x_k)=\frac{n!}{x_1!\cdots x_k!}\,p_1^{x_1}\cdots p_k^{x_k}$$
+El número esperado de accidentes está dado por:
 
-### Comparativa en R base
+$E[X] = \sum_{i=0}^{3}x_i*P(x_i) =$ 
+$ 0*\dfrac{1}{6} + 1*\dfrac{1}{3}+ 2*\dfrac{1}{3} + 3*\dfrac{1}{6} = \dfrac{1}{3} + \dfrac{2}{3} + \dfrac{1}{2} = \dfrac{3}{2} = 1.5  $
+
+Por lo tanto, se esperan alrededor de 2 accidentes por jornada laboral. Veamos la varianza:
+
+$V(X) = \sum_{i=0}^{k}(x_i-E[X])*P(x_i) = (0-1.5)^2*\dfrac{1}{6} + (1-1.5)^2*\dfrac{1}{3} + (2-1.5)^2*\dfrac{1}{3} + (3-1.5)^2*\dfrac{1}{6} = 0.375 + 0.83 + 0.083 + 0.375 = 0.916$
+
+Entonces la variación es de 1 accidente por jornada laboral.
+
+__Nota:__ 
+
+La raíz cuadrada de la varianza:$\sqrt[2]{V[X]}$, se le conoce como desciación estándar.
+
+__Ejemplo 2.2.2__
+
+Los estudiantes de psicología en general manifiestan que tienen mayor dificultad en los cursos que involucren conceptos matemáticos. Experimentos anteriores han consistido en exponer 5 palabras y 5 números ante los estudiantes durante 10 segundos al comienzo de la clase y luego preguntar por ellos al final de la clase, los resultados se muestran a continuación.
+
+$X$: Denota la variable aleatoria que recoge información respecto a la cantidad de palabras que recuerda.
+
+$Y$: Denota la variable aleatoria que recoge información respecto a la cantidad de números que recuerda.
+
+Acomodándolo en una tabla:
+
+__Tabla de distribución de la variable aleatoria X__
+
+|        | x=0  | x=1 | x=2 | x=3  | x=4  | x=5  |
+|--------|------|-----|-----|------|------|------|
+| P(X=x) | 0.15 | 0.2 | 0.3 | 0.05 | 0.05 | 0.2 |
+
+
+__Tabla de distribución de la variable aleatoria Y__
+
+|        | y=0 | y=1  | y=2 | y=3 | y=4 | y=5  |
+|--------|-----|------|-----|-----|-----|------|
+| P(Y=y) | 0.1 | 0.35 | 0.2 | 0.2 | 0.1 | 0.05 |
+
+Ahora nos hacemos la pregunta, _¿qué es más probable que recuerden? ¿Al menos tres palabras o al menos 3 números?_
+
+La probabilidad de que un estudiante de psicología recuerdfe al menos tres palabras es:
+
+ $P(X>=x)$$= P(X=3) + P(X=4)+ P(X=5)$ =$  0.05 + 0.05 + 0.2 $= $0.3 $
+ 
+ Este proceso puede hacerse de manera similar aplicando lo siguiente: $P(X\geq x) =  1-P(X<x)$, similarmente, $P(X\leq x) =  1-P(X>x)$
+
+Como ejemplo podemos considerar lo siguiente:
+
+$P(X \geq 3) = 0.35$
+
+Lo invitamos a hacer las cuentas del resultado.
+
+El valor de la media de palabras es:
+
+$E[X]$=$0*0.15+1*0.2+2*0.3+3*0.05+4*0.05+5*0.2$=$2$
+
+Por lo tanto, los estudiantes recuerdan, en promedio, alrededor de 2 palabras.
+
+Lo invitamos a calcular $E[X]$, así como las correspondientes varianzas de cada variable.
+
+## 2.3 Familia de distribuciones de probabilidad discretas
+
+Dada la naturaleza de ciertos eventos, como lanzar una moneda, arrojar un dado, seleccionar de manera indistinta a una persona de un grupo, se desarrollaron ciertos procedimientos para analizar esos casos, pues en cada ejemplo cada uno de los valores de las posibles variables aleatorias tiene la misma probabilidad de ocurrir
+
+### 2.3.1 Distribución aleatoria discreta Uniforme
+
+Sea el experimento que consiste en lanzar un dado. El resultado de interés es el número de la cara del dado, la cual se denota con la variable aleatoria X. En un dado existen 6 caras, por lo que la variable aleatoria puede tomar valores de 1 a 6 y si se asume que cada cara tiene la misma probabilidad de aparecer, entonces la función masa de probabilidad de la variable aleatoria X es la mostrada en la tabla 7.
+
+
+__Tabla de función masa de probabilidad de la variable aleatoria de las caras de un dado:__
+
+| x | P(X=x) |
+|:-:|:------:|
+| 1 |   1/6  |
+| 2 |   1/6  |
+| 3 |   1/6  |
+| 4 |   1/6  |
+| 5 |   1/6  |
+| 6 |   1/6  |
+
+La función masa de probabilidad presentada en la tabla se puede expresar mediante la siguiente forma:
+
+$P(X=x)=\dfrac{1}{6}$ ; $x=1,2,3,..., 6$
+
+Como todos los eventos son equiprobables, se puede generalizar de la siguiente manera:
+
+$P(X=x)=\dfrac{1}{n}$ ; Si $X=x_1,x_2,x_3,..., x_n$
+
+Donde $n$ indica el número de eventos que se pueden considerar.
+
+¿Cuál es la probabilidad de que aparezcan caras menores o igual a la cara 3?
+
+$F(X≤3)$=$P(X=1)+P(X=2)+P(X=3)$=$\dfrac{1}{6} + \dfrac{1}{6} + \dfrac{1}{6}$ 
+
+Donde $F(X≤3)$ en este caso calcula la probabilidad acumulada a partir de la cara 1 hasta la cara 3. La función de distribución acumulada de la variable discreta X es:
+
+__Tabla de probabilidad acumulada:__
+
+| x | $F(X\leq x)$ |
+|:-:|:---------:|
+| 1 |    1/6    |
+| 2 |    2/6    |
+| 3 |    3/6    |
+| 4 |    4/6    |
+| 5 |    5/6    |
+| 6 |    6/6=1   |
+
+De manera general, la función de probabilidad acumulada de una variable aleatoria discreta uniforme queda:
+
+$$F(X \le x) = \sum_{i=1}^{n}P(X=x_i)$$
+si $X=x_1, x_2, \dots, x_n$
+
+La esperanza matemática o media (EX) de una variable aleatoria discreta uniforme X se define como las sumas de productos de los valores que puede tomar dicha variable aleatoria y su correspondiente probabilidad de ocurrencia. En símbolos matemáticos:
+
+ $$\mu = E[X] = \sum_{i=1}^{n}x_i \cdot P(X=x_i)$$
+
+Como se ha estado trabajando en los ejemplos anteriores. Usando el ejemplo de los dados:
+
+| x | P(X=x) | F(X\leqx) |
+|:-:|--------|:---------:|
+| 1 | 1/6    |    1/6    |
+| 2 | 1/6    |    2/6    |
+| 3 | 1/6    |    3/6    |
+| 4 | 1/6    |    4/6    |
+| 5 | 1/6    |    5/6    |
+| 6 | 1/6    |    6/6    |
+
+```{r grafica_pmf_dado, echo=TRUE, fig.align='center', fig.width=6, fig.height=4, warning=FALSE, message=FALSE}
+# Cargar librería
+library(ggplot2)
+
+# Crear Data Frame con los valores del dado y sus probabilidades
+df_dado <- data.frame(
+  x = 1:6,
+  probabilidad = rep(1/6, 6) # 1/6 para cada cara
+)
+
+# Generar el gráfico de barras
+ggplot(df_dado, aes(x = factor(x), y = probabilidad)) +
+  geom_bar(stat = "identity", fill = "mediumseagreen", color = "black", width = 0.5, alpha = 0.8) +
+  # Etiquetas sobre las barras formateadas como fracción
+  geom_text(aes(label = "1/6"), vjust = -0.8, fontface = "bold", color = "black") +
+  theme_minimal() +
+  labs(
+    title = "Función Masa de Probabilidad",
+    subtitle = "Variable Aleatoria X = Cara del dado (Distribución Uniforme Discreta)",
+    x = "Número de la cara (x)",
+    y = "Probabilidad P(X = x)"
+  ) +
+  coord_cartesian(ylim = c(0, 0.22)) + # Margen superior para los textos
+  theme(
+    plot.title = element_text(face = "bold", size = 14, hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5),
+    axis.text.x = element_text(size = 12, face = "bold")
+  )
+```
+```{r grafica_cdf_dado, echo=TRUE, fig.align='center', fig.width=7, fig.height=5, warning=FALSE, message=FALSE}
+# Crear el Data Frame con los segmentos de la función escalonada
+df_acumulada_dado <- data.frame(
+  x_inicio = c(0, 1, 2, 3, 4, 5, 6),
+  x_fin    = c(1, 2, 3, 4, 5, 6, 7),
+  F_x      = c(0, 1/6, 2/6, 3/6, 4/6, 5/6, 1)
+)
+
+# Etiquetas para el eje Y
+etiquetas_y <- c("0", "1/6", "2/6", "3/6", "4/6", "5/6", "1")
+
+# Generar el gráfico de función escalonada
+ggplot(df_acumulada_dado) +
+  # Segmentos horizontales
+  geom_segment(aes(x = x_inicio, xend = x_fin, y = F_x, yend = F_x), 
+               color = "darkgreen", linewidth = 1.2) +
+  
+  # Punto abierto al final del intervalo (límite no incluido)
+  geom_point(aes(x = x_fin, y = F_x), shape = 21, fill = "white", color = "darkgreen", size = 3, stroke = 1.2) +
+  
+  # Punto cerrado al inicio del intervalo (límite incluido)
+  geom_point(data = subset(df_acumulada_dado, x_inicio >= 1),
+             aes(x = x_inicio, y = F_x), shape = 19, color = "darkgreen", size = 3) +
+  
+  # Anotación explicativa para F(X <= 3)
+  annotate("segment", x = 3, xend = 3, y = 0, yend = 3/6, color = "red", linetype = "dashed") +
+  annotate("text", x = 3.2, y = 0.25, label = "F(3) = 3/6", color = "red", fontface = "bold", hjust = 0) +
+  
+  # Personalización
+  scale_x_continuous(breaks = 0:7, limits = c(0, 7.5)) +
+  scale_y_continuous(breaks = df_acumulada_dado$F_x, labels = etiquetas_y) +
+  theme_minimal() +
+  labs(
+    title = "Función de Probabilidad Acumulada F(x)",
+    subtitle = "Variable Aleatoria X = Cara del dado",
+    x = "Número de la cara (x)",
+    y = "F(x) = P(X \u2264 x)"
+  ) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14, hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5, margin = margin(b = 15)),
+    axis.text.x = element_text(size = 12, face = "bold"),
+    axis.text.y = element_text(size = 11, face = "bold"),
+    panel.grid.minor = element_blank()
+  )
+```
+
+Por lo tanto: $E[X] = (1+2+3+4+5+6) * \dfrac{1}{6}$ = $3.5$
+
+Similarmente, la varianza para una distribución uniforme está dada por:
+
+ $V[X] = \sum_{i=1}^{n}(x_i-E[X])^2*P(X=x_i) $
+ 
+ En estos casos, es factible tener una tabla como la siguiente para no perder de vista nuestros datos:
+ 
+ | x | P(X=x) | F(X\leqx) | (x_i-E[X])^2 | (x_i-E[X])^2*P(X=x_i) |
+|:-:|:------:|:---------:|:------------:|:---------------------:|
+| 1 |   1/6  |    1/6    |     6.25     |         1.041         |
+| 2 |   1/6  |    2/6    |     2.25     |         0.375         |
+| 3 |   1/6  |    3/6    |     0.25     |          0.41         |
+| 4 |   1/6  |    4/6    |     0.25     |          0.41         |
+| 5 |   1/6  |    5/6    |     2.25     |         0.375         |
+| 6 |   1/6  |    6/6    |     6.25     |         1.041         |
+
+Entonces, $V[X]= (1-3.5)^2 +(2-3.5)^2+(3-3.5)^2+(4-3.5)^2+(5-3.5)^2+(6-3.5)^2*\dfrac{1}{6}$
+=$2.91$
+ 
+ 
+### 2.3.2 Distribución aleatoria discreta Bernoulli
+
+Es la distribucipon mpas sencilla que podemos contruir, y es aquella cuyo espacio de eventos está compuesto por dos eventos complementarios, donde a uno de ellos lo designamos por el evento de éxito y el otro por el de fracaso; lo cual implica que en la realización de un solo experimento se podrá presentar uno u otro, pero no ambos. 
+
+En pocas palabras, representaremos como $p$ a la probabilidad de éxito y a $1-p$ la probabilidad de fracaso.
+
+Su función de probabilidad (de que un solo experimento ocurra x éxito), está dada por:
+
+$P(X=x) = p^x(1-p)^{1-x}$
+
+Cabe destacar que $x$ solo toma los valores de 0 o 1, también se puede interpretar como verdadero o falso.
+
+
+La esperanza de ésta distribución es:
+
+$E[X] = p $
+
+Y su varianza:
+
+$V[X] = p(1-p) $
+
+
+__Ejemplo__
+
+En una empresa se tiene el área de llenado. Las botellas defectuosas en el área de llenado son aquellas cuyas botellas no se llenan completamente (menor a 248 mL) y no defectuosas aquellas que son llenadas completamente (en un intervalo de 250 y 248 mL). 
+
+Si se sabe que en el área de llenado 95% de las botellas son no defectuosas y el restante 5% son defectuosas. Proporcionar la función masa de probabilidad del resultado del llenado para una botella.
+Si X denota la variable aleatoria del resultado de llenado de una botella. Entonces:
+
+- $X=0$ denota botella no defectuosa
+- $X=1$ denota botella defectuosa. 
+
+Sea p la probabilidad de que la botella sea defectuosa. De modo que la función masa de probabilidad es:
+
+- $$P(X)=0=1-p=0.95$$    
+- $$P(X)=1=p=0.05$$
+
+ __Ejemplo:__
+
+Se observa un insecto en el lugar donde se aplicó un insecticida, y se registra si está vivo o muerto. Por ejemplo, si se piensa que el insecticida es eficaz en 90% y no eficaz en 10%. Indique la función masa de probabilidad para un espécimen seleccionado.
+
+Si X denota la variable aleatoria de la situación de un individuo.
+X=0 el individuo está muerto y X=1 el individuo está vivo. Se define a p como la probabilidad de que el individuo esté vivo, el insecticida no fue eficaz. De modo que la función masa de probabilidad es:
+
+- $$PX=0=1-p=1-0.10=0.90 $$
+- $$PX=1=p=0.10 $$
+
+
+## 2.4 Muestreo
+
+En la mayoría de los problemas en lugar de observar una sola unidad se observan un número n de unidades experimentales, posteriormente se clasifican en una de dos categorías. En esta parte se hace una reflexión sobre la manera de seleccionar unidades experimentales en cada repetición del experimento aleatorio.
+
+
+___Ejemplo:___
+
+Supongamos que se cuenta con una bolsa que tiene en su interior 10 bolas negras y 20 bolas blancas. Un experimento aleatorio consiste en extraer sucesivamente bolas de esta bolsa.
+En cada repetición del experimento se extrae una bola, se registra y se devuelve a la bolsa.
+
+La probabilidad de extraer una bola negra en la primera extracción será de
+$\dfrac{10}{30} = \dfrac{1}{3}$
+
+
+En la segunda extracción, la probabilidad de extraer una bola negra también será de $\dfrac{10}{30} = \dfrac{1}{3}$ ya que luego de realizar la primera extracción se devolvió la bola seleccionada a la bolsa.
+En síntesis, devolviendo la bola extraída a la bolsa después de cada extracción, la probabilidad de extraer bolas negras o blancas permanece inalterada de prueba a prueba. Entonces, si nuestro éxito es la extracción de una bola negra, la probabilidad de éxito p = 1/3 y se mantiene constante a través de las n repeticiones del experimento. Ante situaciones como la planteada, se dice que el muestreo se hace con reemplazo.
+
+### 2.4.1 Muestreo aleatorio con reemplazo
+
+El concepto de muestreo con reemplazo implica que las extracciones son independientes porque la ocurrencia de un evento en particular en una prueba del experimento no modifica la probabilidad de ocurrencia del evento en la prueba siguiente.
+Consideremos ahora el caso en que se extraen unidades experimentales de un conjunto y que ellas también pueden asignarse a solo dos categorías diferentes, como en el ejemplo anterior: bola blanca y bola negra, pero con la diferencia de que la bola extraída no se devuelve a la bolsa que las contiene.
+
+La probabilidad de extraer una bola negra en la primera extracción seguirá siendo $p = \dfrac{1}{3}$, pero si la bola no se vuelve a integrar al conjunto original la probabilidad de extraer otra bola negra en la segunda extracción se habrá modificado, y será ahora de $\dfrac{9}{29}$ ya que en la bolsa quedan solo 9 bolas negras y 29 bolas en total. En este caso se dice que el muestreo se realiza sin reemplazo.
+
+```{r grafica_muestreo, echo=TRUE, fig.align='center', fig.width=8, fig.height=5, warning=FALSE, message=FALSE}
+# Cargar librería
+library(ggplot2)
+
+# Crear los datos basados en el ejemplo (Población inicial: 10 Negras, 20 Blancas, Total 30)
+df_extraccion <- data.frame(
+  Escenario = factor(c(
+    rep("1. Con Reemplazo\n(Independiente)", 2),
+    rep("2. Sin Reemplazo\n(Si la 1ra fue Negra)", 2),
+    rep("3. Sin Reemplazo\n(Si la 1ra fue Blanca)", 2)
+  )),
+  Color_Extraido = factor(c("Negra", "Blanca", "Negra", "Blanca", "Negra", "Blanca"), 
+                          levels = c("Negra", "Blanca")),
+  Probabilidad = c(
+    10/30, 20/30,  # Con reemplazo: Vuelve a ser 10/30 y 20/30
+    9/29,  20/29,  # Sin reemplazo (salió negra): Quedan 9 negras y 20 blancas de 29
+    10/29, 19/29   # Sin reemplazo (salió blanca): Quedan 10 negras y 19 blancas de 29
+  ),
+  Etiquetas = c(
+    "10/30\n(33.3%)", "20/30\n(66.7%)",
+    "9/29\n(31.0%)", "20/29\n(69.0%)",
+    "10/29\n(34.5%)", "19/29\n(65.5%)"
+  )
+)
+
+# Generar el gráfico de barras agrupadas
+ggplot(df_extraccion, aes(x = Escenario, y = Probabilidad, fill = Color_Extraido)) +
+  geom_bar(stat = "identity", position = "dodge", color = "black", linewidth = 0.8) +
+  geom_text(aes(label = Etiquetas), position = position_dodge(width = 0.9), 
+            vjust = -0.5, fontface = "bold", size = 4) +
+  scale_fill_manual(values = c("Negra" = "gray20", "Blanca" = "gray90")) +
+  theme_minimal() +
+  labs(
+    title = "Efecto del Muestreo Con y Sin Reemplazo",
+    subtitle = "Probabilidades en la SEGUNDA extracción partiendo de 10 Negras y 20 Blancas",
+    x = "Condición de la Extracción",
+    y = "Probabilidad"
+  ) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1), limits = c(0, 0.8)) +
+  theme(
+    plot.title = element_text(face = "bold", size = 14, hjust = 0.5),
+    plot.subtitle = element_text(size = 11, hjust = 0.5, margin = margin(b = 15)),
+    axis.text.x = element_text(size = 11, face = "bold"),
+    legend.position = "top",
+    legend.title = element_blank()
+  )
+```
+
+### 2.4.1 Muestreo aleatorio sin reemplazo
+
+El **muestreo con reemplazo** es un procedimiento en el que cada unidad experimental extraída del conjunto original **se devuelve antes de realizar la siguiente extracción**.  
+Esto implica que **todas las extracciones son independientes**, ya que la ocurrencia de un evento en una prueba del experimento **no modifica** la probabilidad de ocurrencia del mismo evento en la prueba siguiente.
+
+En términos probabilísticos, la independencia significa que la **distribución de probabilidad se mantiene constante** en cada repetición del experimento aleatorio.
+
+
+
+Ahora consideremos el caso en que se extraen unidades experimentales de un conjunto y que dichas unidades pueden clasificarse en **dos categorías**, como en el ejemplo clásico de una urna que contiene **bolas blancas y bolas negras**, pero con una diferencia fundamental:  
+**la bola extraída no se devuelve a la bolsa**.
+
+Supongamos que la urna contiene inicialmente:
+
+- 10 bolas negras  
+- 20 bolas blancas  
+
+por lo que el total es de 30 bolas.
+
+
+
+**Primera extracción**
+
+La probabilidad de extraer una bola negra en la **primera extracción** es
+
+$$
+P(\text{Negra}_1) = \frac{10}{30}
+$$
+
+ya que todas las bolas están aún en la urna.
+
+
+
+**Segunda extracción (sin reemplazo)**
+
+Si la bola extraída **no se devuelve a la bolsa**, la composición del conjunto cambia.  
+En particular, si en la primera extracción se obtuvo una bola negra, entonces:
+
+- quedan 9 bolas negras  
+- quedan 29 bolas en total  
+
+Por lo tanto, la probabilidad de extraer una bola negra en la **segunda extracción**, condicionada a que la primera fue negra, es
+
+$$
+P(\text{Negra}_2 \mid \text{Negra}_1) = \frac{9}{29}
+$$
+
+
+
+En este caso se dice que el **muestreo se realiza sin reemplazo**.
+
+> **Observación:**  
+> El muestreo sin reemplazo implica que las extracciones **no son independientes**, ya que la ocurrencia de un evento en una prueba del experimento **modifica la probabilidad** de ocurrencia del evento en la prueba siguiente.
+
+En el lenguaje estadístico, afirmar que los ensayos o repeticiones de un experimento aleatorio son **independientes** equivale a decir que la **distribución de probabilidad es la misma en cada ensayo**.  
+Cuando esta condición no se cumple, como en el muestreo sin reemplazo, las repeticiones son **dependientes**.
+
+
+
+```{r, message=FALSE, warning=FALSE}
+# Probabilidades
+probabilidades <- data.frame(
+  Extraccion = c("Primera extracción", "Segunda extracción\n(dado Negra en la primera)"),
+  Probabilidad = c(10/30, 9/29)
+)
+
+# Gráfica
+barplot(
+  probabilidades$Probabilidad,
+  names.arg = probabilidades$Extraccion,
+  ylim = c(0, 0.4),
+  col = c("gray70", "gray40"),
+  ylab = "Probabilidad",
+  main = "Cambio en la probabilidad al muestrear sin reemplazo"
+)
+
+# Etiquetas numéricas
+text(
+  x = c(0.7, 1.9),
+  y = probabilidades$Probabilidad + 0.02,
+  labels = round(probabilidades$Probabilidad, 3)
+)
+```
+
+**Extracciones con y sin reemplazo**
+
+Consideremos una urna que contiene **30 bolas**, de las cuales **10 son negras** y **20 son de otro color**. Se realizan **tres extracciones sucesivas**, y definimos el siguiente evento:
+
+**Evento $E$:**  
+> *El resultado de la extracción $i$ es una bola negra.*
+
+Nuestro objetivo es calcular la **probabilidad de obtener tres bolas negras consecutivas** bajo dos esquemas de muestreo distintos: **con reemplazo** y **sin reemplazo**.
+
+
+
+**Muestreo con reemplazo**
+
+Cuando el muestreo es **con reemplazo**, cada bola extraída se devuelve a la urna antes de la siguiente extracción.  
+Esto implica que:
+
+- La composición de la urna **no cambia**.
+- Las extracciones son **independientes** entre sí.
+
+La probabilidad de extraer una bola negra en cualquier extracción es:
+
+$$
+P(E) = \frac{10}{30} = \frac{1}{3}
+$$
+
+Por lo tanto, la probabilidad de obtener **tres bolas negras en tres extracciones** es:
+
+$$
+P(E)\,P(E \mid E)\,P(E \mid EE)
+$$
+
+Dado que hay independencia entre las extracciones, esta expresión se simplifica a:
+
+$$
+P(E)\,P(E)\,P(E)
+= \frac{1}{3} \times \frac{1}{3} \times \frac{1}{3}
+$$
+
+
+
+**Observación:**  
+El muestreo con reemplazo genera **ensayos independientes**, lo que permite aplicar directamente el **Principio Básico de Conteo** y multiplicar probabilidades iguales en cada repetición.
+
+
+
+**Muestreo sin reemplazo**
+
+Ahora supongamos que el muestreo es **sin reemplazo**, es decir, cada bola extraída **no se devuelve** a la urna.
+
+En este caso:
+
+- La composición de la urna **cambia** después de cada extracción.
+- Las extracciones **no son independientes**.
+
+La probabilidad de obtener tres bolas negras consecutivas se expresa como:
+
+$$
+P(E)\,P(E \mid E)\,P(E \mid EE)
+$$
+
+pero ahora cada probabilidad condicional es distinta:
+
+$$
+P(E)\,P(E \mid E)\,P(E \mid EE)
+=
+\frac{10}{30} \times \frac{9}{29} \times \frac{8}{28}
+$$
+
+
+
+**Anotación:**  
+Obsérvese que, al no haber reemplazo, la probabilidad de éxito **disminuye en cada extracción**, ya que el número de bolas negras disponibles se reduce.
+
+
+
+**Modelos probabilísticos asociados**
+
+- Cuando las extracciones se realizan **con reemplazo en poblaciones finitas**, o **sin reemplazo en poblaciones infinitas** (como se verá más adelante), los ensayos son independientes y el experimento se modela mediante una **variable aleatoria binomial**, al tratarse de repeticiones de un ensayo tipo Bernoulli.
+
+- En cambio, cuando las extracciones se realizan **sin reemplazo en poblaciones finitas**, las probabilidades cambian en cada repetición, por lo que el experimento se modela mediante una **variable aleatoria hipergeométrica**.
+
+
+### 2.3.3 Distribución aleratoria discreta Binomial
+
+Un **experimento de tipo Bernoulli** surge cuando se selecciona al azar una unidad experimental y, con base en una característica de interés, dicha unidad se clasifica en **una de dos categorías mutuamente excluyentes**, comúnmente denominadas **éxito** o **fracaso**.
+
+Un ejemplo típico de una variable aleatoria Bernoulli es el caso de un **biólogo** que toma una planta y la clasifica de acuerdo con si **presenta floración o no**.
+
+- **Éxito (F):** la planta tiene flores  
+- **Fracaso (Fᶜ):** la planta no tiene flores  
+
+Cada observación individual constituye un **experimento Bernoulli**.
+
+
+
+**Repetición del experimento**
+
+Supongamos que este biólogo toma una **muestra de 3 plantas** y procede de la siguiente manera:
+
+a) Toma al azar una primera planta y la clasifica de acuerdo con si tiene floración o no.  
+b) Repone la planta previamente seleccionada, selecciona una segunda planta de manera aleatoria y la clasifica de acuerdo con si presenta floración o no.  
+c) Procede de la misma manera que en el inciso b) con la tercera selección.
+
+Cada vez que el biólogo observa una planta seleccionada, está realizando un **experimento de tipo Bernoulli**.
+
+
+
+**Condiciones del experimento**
+
+Replanteando los incisos anteriores:
+
+- Se realiza un experimento tipo Bernoulli.  
+- El resultado se clasifica en una de dos categorías mutuamente excluyentes: éxito o fracaso.  
+- La probabilidad de éxito, denotada por $ p $, **permanece constante** de prueba a prueba.  
+- El experimento se realiza un número fijo de veces $ n = 3 $, bajo las mismas condiciones.
+
+
+
+**Variable aleatoria binomial**
+
+Cuando un experimento cumple las condiciones anteriores y la variable aleatoria de interés se define como:
+
+> la **cantidad de veces que se presenta uno de los dos resultados posibles**, generalmente denominado *éxito*,
+
+se obtiene una **variable aleatoria discreta con distribución binomial**.
+
+Una variable aleatoria binomial se define como el número de éxitos observados en una serie finita de repeticiones independientes de un experimento Bernoulli.
+
+
+
+**Definición formal del ejemplo**
+
+Volviendo al ejemplo del biólogo:
+
+- $ F $: la planta tiene flores  
+- $ F^c $: la planta no tiene flores  
+
+Definimos la variable aleatoria:
+
+$$
+X = \text{Número de plantas con flores (éxitos) en } n = 3 \text{ repeticiones}
+$$
+
+
+
+**Resultados posibles**
+
+En la tabla siguiente se muestran los resultados posibles tras realizar **tres extracciones con reemplazo**.
+
+**Tabla 12. Extracciones con reemplazo**
+
+| X   | F | Fᶜ |
+|-----|-----|------|
+| 3   | 3 | 0 |
+| 2 | 2 | 1 |
+| 1 | 1 | 2 |
+| 0 | 0 | 3 |
+
+En la columna $F$ (con flores), el primer renglón indica que se obtuvieron **3 plantas con flores** y, por tanto, **0 plantas sin flores**.
+
+Por ejemplo, cuando $ X = 3 $, el resultado observado es:
+
+$$
+FFF
+$$
+
+
+
+**Cálculo de probabilidades**
+
+Dado que los ensayos son independientes, se tiene:
+
+$$
+P(FFF) = P(F \cap F \cap F) = P(F)P(F)P(F)
+$$
+
+Denotemos:
+
+- $ p = P(F) $: probabilidad de éxito  
+- $ q = 1 - p $: probabilidad de fracaso  
+
+Entonces:
+
+$$
+P(X = 3) = p^3
+$$
+
+
+
+**Caso $ X = 2 $**
+
+Obtener dos plantas con flores puede ocurrir de las siguientes maneras:
+
+$$
+FF F^c,\quad F F^c F,\quad F^c FF
+$$
+
+Estas posibilidades son **mutuamente excluyentes**, por lo que:
+
+$$
+\begin{aligned}
+P(X = 2) &= P(FF F^c \cup F F^c F \cup F^c FF) \\
+&= p p q + p q p + q p p \\
+&= 3p^2 q
+\end{aligned}
+$$
+
+
+**Caso $ X = 1 $**
+
+De manera análoga:
+
+$$
+\begin{aligned}
+P(X = 1) &= P(F^c F^c F \cup F^c F F^c \cup F F^c F^c) \\
+&= q q p + q p q + p q q \\
+&= 3p q^2
+\end{aligned}
+$$
+
+
+**Caso $ X = 0 $**
+
+$$
+P(X = 0) = P(F^c F^c F^c) = q^3
+$$
+
+
+
+*Síntesis de probabilidades*
+
+**Tabla 13. Probabilidades para los valores de $X$**
+
+| $x$ | $P(X = x)$ |
+|-----:|-------------:|
+| 3 | $p^3$ |
+| 2 | $3p^2q$ |
+| 1 | $3pq^2$ |
+| 0 | $q^3$ |
+| **Suma** | **1** |
+
+La suma de las probabilidades es igual a 1, lo cual confirma que $P(X)$ es una **función masa de probabilidad**.
+
+
+
+**Función masa de probabilidad binomial**
+
+Para el ejemplo considerado, la función masa de probabilidad es:
+
+$$
+P(X = x) = \binom{3}{x} p^x q^{3-x}, \quad x = 0,1,2,3
+$$
+
+Por ejemplo:
+
+$$
+P(X = 2) = \binom{3}{2} p^2 q
+$$
 
 ```{r}
-#| label: fig-dist-discretas
-#| fig-cap: "Función de masa de probabilidad — distribuciones discretas"
-#| fig-width: 10
-#| fig-height: 8
+# Parámetros
+n <- 3
+p <- 0.5
+x <- 0:n
 
-par(mfrow = c(2, 3))
+# Probabilidades binomiales
+prob <- dbinom(x, size = n, prob = p)
 
-# Binomial(20, 0.4)
-x <- 0:20
-barplot(dbinom(x, 20, 0.4), names.arg = x, col = "#4472C4",
-        main = "Binomial(20, 0.4)", xlab = "x", ylab = "P(X=x)")
+# Gráfica
+barplot(
+  prob,
+  names.arg = x,
+  col = "lightblue",
+  ylim = c(0, max(prob) + 0.1),
+  xlab = "Número de plantas con flores (X)",
+  ylab = "P(X = x)",
+  main = "Distribución Binomial (n = 3, p = 0.5)"
+)
 
-# Poisson(5)
-x <- 0:18
-barplot(dpois(x, 5), names.arg = x, col = "#ED7D31",
-        main = "Poisson(5)", xlab = "x", ylab = "P(X=x)")
+text(
+  x = seq_along(prob),
+  y = prob,
+  labels = round(prob, 3),
+  pos = 3
+)
+```
 
-# Geométrica(0.3)
-x <- 1:15
-barplot(dgeom(x-1, 0.3), names.arg = x, col = "#70AD47",
-        main = "Geométrica(0.3)", xlab = "x", ylab = "P(X=x)")
+La **distribución binomial** modela el número de éxitos que ocurren al repetir un experimento de Bernoulli un número fijo de veces, bajo las siguientes condiciones:
 
-# Binomial Negativa(3, 0.4)
-x <- 3:20
-barplot(dnbinom(x-3, size=3, prob=0.4), names.arg = x, col = "#9B59B6",
-        main = "Bin. Negativa(3, 0.4)", xlab = "x", ylab = "P(X=x)")
+- Cada ensayo tiene solo dos posibles resultados: éxito o fracaso.
+- La probabilidad de éxito es constante e igual a $ p $.
+- Los ensayos son independientes entre sí.
 
-# Hipergeométrica(30, 10, 12)
+
+
+**Estructura de la función masa de probabilidad**
+
+La función masa de probabilidad de una variable aleatoria binomial se compone de dos partes fundamentales.
+
+**Término probabilístico $ p^x q^{n-x} $**
+
+Este término representa la probabilidad de una **secuencia específica** de resultados que contiene:
+
+- $ x $ éxitos, cada uno con probabilidad $ p $
+- $ n-x $ fracasos, cada uno con probabilidad $ q = 1-p $
+
+Por ejemplo, para el evento $ P(X = 2) $ con $ n = 3 $, se consideran secuencias con dos éxitos y un fracaso, lo que se expresa como:
+
+$$
+p^2 q
+$$
+
+**Coeficiente binomial**
+
+El coeficiente binomial
+
+$$
+\binom{n}{x} = \frac{n!}{x!(n-x)!}
+$$
+
+indica el número de formas mutuamente excluyentes en que pueden ordenarse los éxitos y fracasos.
+
+Para $ n = 3 $ y $ x = 2 $:
+
+$$
+\binom{3}{2} = 3
+$$
+
+Las secuencias posibles son:
+
+- $ EFF $
+- $ FEF $
+- $ FFE $
+
+Por tanto:
+
+$$
+P(X = 2) = \binom{3}{2} p^2 q = 3p^2 q
+$$
+
+Esto coincide con:
+
+$$
+\begin{aligned}
+P(X=2) &= P(EFF \cup FEF \cup FFE) \\
+&= P(EFF)+P(FEF)+P(FFE) \\
+&= pqp + qpp + ppq \\
+&= 3p^2 q
+\end{aligned}
+$$
+
+
+**Ejemplo:**
+
+Supóngase que la probabilidad de encontrar una planta con flores es:
+
+$$
+p = \frac{2}{3}, \qquad q = \frac{1}{3}
+$$
+
+La variable aleatoria $ X $ representa el número de plantas con flores en $ n = 3 $ observaciones.
+
+**Tabla 14. Función masa de probabilidad**
+
+| $x$ | $P(X=x)$ | Aproximación |
+|---|---|---|
+| 0 | $ (1/3)^3 = 1/27 $ | 0.037 |
+| 1 | $ 3(2/3)(1/3)^2 = 2/9 $ | 0.222 |
+| 2 | $ 3(2/3)^2(1/3) = 4/9 $ | 0.444 |
+| 3 | $ (2/3)^3 = 8/27 $ | 0.296 |
+
+
+```{r}
+x <- 0:3
+pmf <- dbinom(x, size = 3, prob = 2/3)
+
+barplot(
+  pmf,
+  names.arg = x,
+  col = "lightblue",
+  main = "Función masa de probabilidad",
+  xlab = "Número de plantas con flores",
+  ylab = "P(X = x)"
+)
+n <- 8
+p <- 0.15
+x <- 0:n
+
+pmf <- dbinom(x, n, p)
+cdf <- pbinom(x, n, p)
+
+tabla <- data.frame(
+  x = x,
+  P_X = round(pmf, 4),
+  F_X = round(cdf, 4)
+)
+
+tabla
+
+barplot(
+  pmf,
+  names.arg = x,
+  col = "lightgreen",
+  main = "Función masa de probabilidad (n=8, p=0.15)",
+  xlab = "Botellas defectuosas",
+  ylab = "P(X = x)"
+)
+
+plot(
+  x, cdf,
+  type = "s",
+  lwd = 2,
+  col = "darkred",
+  main = "Función acumulada",
+  xlab = "Botellas defectuosas",
+  ylab = "F(X ≤ x)"
+)
+
+
+```
+
+### 2.3.4 Distribución aleratoria discreta Hipergeométrica
+
+La **distribución hipergeométrica** surge en situaciones experimentales donde se extraen elementos de una **población finita**, sin reemplazo, y cada elemento puede clasificarse en una de **dos categorías mutuamente excluyentes**, denominadas **éxito** y **fracaso**.
+
+En la práctica, la mayoría de los muestreos reales se realizan sin reemplazo, ya que seleccionar un mismo individuo varias veces carece de sentido. Sin embargo, cuando el tamaño de la muestra es **muy pequeño en relación con el tamaño de la población**, el efecto de no reemplazar resulta despreciable y el experimento puede aproximarse mediante un **modelo binomial**.
+
+
+
+**Aproximación binomial en poblaciones grandes**
+
+Supóngase que se extrae una muestra de tamaño
+
+$$
+n = 100
+$$
+
+de una población de
+
+$$
+N = 1\,000\,000
+$$
+
+habitantes, de los cuales 600 000 son varones.
+
+La probabilidad de que el primer individuo extraído sea varón es:
+
+$$
+\frac{600\,000}{1\,000\,000} = 0.60
+$$
+
+La probabilidad de que el segundo individuo sea varón es:
+
+$$
+\frac{599\,999}{999\,999} \approx 0.5999
+$$
+
+La probabilidad de que el tercero sea varón es:
+
+$$
+\frac{599\,998}{999\,998} \approx 0.5999
+$$
+
+**Observación:**  
+Las probabilidades prácticamente no varían en cada extracción. En este caso es razonable adoptar un modelo de muestreo con reemplazo, es decir, una **variable aleatoria binomial**.
+
+
+
+**Muestreo sin reemplazo: necesidad del modelo hipergeométrico**
+
+Considérese ahora una cooperativa escolar con 20 personas, de las cuales 14 son mujeres. Se desea seleccionar un grupo de 5 personas.
+
+Definimos la variable aleatoria:
+
+$$
+X = \text{número de mujeres seleccionadas}
+$$
+
+Las probabilidades condicionadas son:
+
+- Primera mujer: $ 14/20 = 0.70 $
+- Segunda mujer: $ 13/19 \approx 0.684 $
+- Tercera mujer: $ 12/18 = 0.67 $
+
+**Observación:**  
+La probabilidad de éxito cambia significativamente en cada extracción. Por tanto, **no es adecuado utilizar un modelo binomial** y se debe emplear la **distribución hipergeométrica**.
+
+
+
+**Notación**
+
+- $ N $: tamaño de la población  
+- $ K $: número de éxitos en la población  
+- $ N-K $: número de fracasos en la población  
+- $ n $: tamaño de la muestra  
+- $ X $: número de éxitos en la muestra  
+- $ n-X $: número de fracasos en la muestra  
+
+
+
+**Función masa de probabilidad**
+
+La función masa de probabilidad de una variable aleatoria hipergeométrica es:
+
+$$
+P(X=x)=\frac{\binom{K}{x}\binom{N-K}{n-x}}{\binom{N}{n}},
+\quad x = 0,1,\dots,n
+$$
+
+La función de distribución acumulada es:
+
+$$
+F(X \le a) = \sum_{x=0}^{a} P(X=x)
+$$
+
+
+
+**Esperanza y varianza**
+
+La esperanza matemática es:
+
+$$
+E[X] = n\frac{K}{N}
+$$
+
+La varianza está dada por:
+
+$$
+V(X) = n\frac{K}{N}\frac{N-K}{N}\frac{N-n}{N-1}
+= npq\frac{N-n}{N-1}
+$$
+
+**Anotación:**  
+El factor $\frac{N-n}{N-1}$ se denomina **factor de corrección para poblaciones finitas**.
+
+
+
+**Ejemplo:**
+
+Un estudio contable cuenta con 18 secretarias:
+
+- 10 con menos de 6 años de antigüedad  
+- 8 con más de 6 años de antigüedad  
+
+Se seleccionan 4 secretarias al azar.
+
+Datos:
+
+- $ N = 18 $
+- $ K = 10 $
+- $ n = 4 $
+
+Se desea calcular:
+
+$$
+P(X = 2)
+$$
+
+$$
+P(X=2) = \frac{\binom{10}{2}\binom{8}{2}}{\binom{18}{4}} \approx 0.412
+$$
+
+La probabilidad de que haya **a lo más dos** secretarias con menos de 6 años es:
+
+$$
+P(X \le 2) = 0.023 + 0.183 + 0.412 \approx 0.618
+$$
+
+El valor esperado es:
+
+$$
+E[X] = 4\frac{10}{18} \approx 2.22 \approx 2
+$$
+
+
+
+**Ejemplo:**
+
+Un viajero transporta:
+
+- 6 tabletas de narcóticos  
+- 9 píldoras de vitamina  
+
+Un oficial selecciona 3 tabletas al azar.
+
+Datos
+
+- $ N = 15 $
+- $ K = 6 $
+- $ n = 3 $
+
+La probabilidad de arresto es:
+
+$$
+P(X \ge 1) = 0.816
+$$
+
+La probabilidad de no arresto es:
+
+$$
+P(X = 0) = 0.185
+$$
+
+El valor esperado es:
+
+$$
+E[X] = 3\frac{6}{15} = 1.2 \approx 1
+$$
+
+
+```{r}
+
+library(ggplot2)
+
+# Parámetros
+N <- 15
+K <- 6
+n <- 3
+
+# Valores posibles
+x <- 0:n
+pmf <- dhyper(x, K, N - K, n)
+
+# Data frame
+df <- data.frame(
+  x = factor(x),
+  Probabilidad = pmf
+)
+
+# Gráfica
+ggplot(df, aes(x = x, y = Probabilidad)) +
+  geom_col(fill = "steelblue", width = 0.7) +
+  geom_text(aes(label = round(Probabilidad, 3)),
+            vjust = -0.5, size = 4) +
+  labs(
+    title = "Función Masa de Probabilidad\nDistribución Hipergeométrica",
+    x = "Número de tabletas con narcóticos (X)",
+    y = "P(X = x)"
+  ) +
+  ylim(0, max(pmf) + 0.1) +
+  theme_minimal(base_size = 13)
+
+
+```
+
+### 2.3.5 Distribución aleratoria discreta Poisson
+
+
+La **variable aleatoria Poisson** puede estudiarse desde dos enfoques fundamentales:
+
+1. **Como el límite de la distribución binomial**, cuando el tamaño de la muestra es grande y la probabilidad de éxito es pequeña.
+2. **Como un modelo para el conteo de eventos** que ocurren en un intervalo fijo de tiempo o en una región determinada del espacio.
+
+Ambos enfoques serán analizados de manera progresiva y mediante ejemplos ilustrativos.
+
+
+
+**Caso 1: La distribución Poisson como límite de la binomial**
+
+En los ejemplos clásicos de la distribución binomial se suelen considerar tamaños muestrales pequeños, como 10 insectos o 12 pacientes, donde cada unidad experimental puede clasificarse en una de dos categorías mutuamente excluyentes (éxito o fracaso).
+
+Sin embargo, en muchos contextos reales:
+- el tamaño de la muestra es grande,
+- la probabilidad de éxito es pequeña,
+
+por lo que el uso directo de la distribución binomial se vuelve computacionalmente poco práctico. En estos casos, la **distribución Poisson** ofrece una excelente aproximación.
+
+**Función masa de probabilidad**
+
+Sea $ X $ una variable aleatoria Poisson con parámetro $ \lambda > 0 $. Su función masa de probabilidad está dada por:
+
+$$
+P(X = x) = \frac{e^{-\lambda}\lambda^x}{x!}, \quad x = 0,1,2,\ldots
+$$
+
+donde $ e \approx 2.71828 $ es la base del logaritmo natural.
+
+La función de distribución acumulada es:
+
+$$
+F(a) = P(X \le a) = \sum_{x=0}^{a} P(X=x)
+$$
+
+**Relación con la distribución binomial**
+
+La distribución binomial $ \text{Bin}(n,p) $ puede aproximarse por una distribución Poisson cuando:
+
+- $ n \to \infty $,
+- $ p \to 0 $,
+- $ \lambda = np $ permanece constante.
+
+En la práctica, esta aproximación es adecuada cuando $ np < 5 $.
+
+**Observación:**  
+En la distribución Poisson, el parámetro $ \lambda $ representa simultáneamente:
+- la **esperanza matemática**,
+- la **varianza** de la variable aleatoria.
+
+$$
+E(X) = V(X) = \lambda
+$$
+
+
+
+**Ejemplo:**
+
+Un agrónomo sabe que el **2% de las semillas** de cierta especie no germina. Se venden **100 semillas** a un agricultor. El comprador solicitará reembolso si **al menos 6 semillas no germinan**.
+
+**Definición del modelo**
+
+Sea $ X $ el número de semillas no germinadas.
+
+$$
+\lambda = np = 100(0.02) = 2
+$$
+
+Por tanto, $ X \sim \text{Poisson}(2) $.
+
+La probabilidad de interés es:
+
+$$
+P(X \ge 6) = 1 - P(X \le 5)
+$$
+
+Usando tablas de Poisson:
+
+$$
+P(X \le 5) = 0.9834
+$$
+
+$$
+P(X \ge 6) = 1 - 0.9834 = 0.0166
+$$
+
+**Conclusión:**  
+La probabilidad de que el agricultor solicite el reembolso es **1.66%**, lo que indica una baja probabilidad de reclamación.
+
+
+
+```{r}
+library(ggplot2)
+
 x <- 0:10
-barplot(dhyper(x, m=10, n=20, k=12), names.arg = x, col = "#E74C3C",
-        main = "Hipergeom.(30, 10, 12)", xlab = "x", ylab = "P(X=x)")
+lambda <- 2
+prob <- dpois(x, lambda)
 
-# Uniforme Discreta(1..6) — dado
-barplot(rep(1/6, 6), names.arg = 1:6, col = "#1ABC9C",
-        main = "Uniforme Discreta(1..6)", xlab = "x", ylab = "P(X=x)")
-abline(h = 1/6, lty = 2, col = "red")
+df <- data.frame(x, prob)
 
-par(mfrow = c(1, 1))
+ggplot(df, aes(x, prob)) +
+  geom_col(fill = "steelblue") +
+  geom_vline(xintercept = 6, linetype = "dashed", color = "red") +
+  labs(
+    title = "Distribución Poisson (λ = 2)",
+    subtitle = "Semillas no germinadas",
+    x = "Número de semillas",
+    y = "Probabilidad"
+  ) +
+  theme_minimal()
 ```
+
+**Caso 2: La distribución Poisson como modelo de conteo**
+
+En este enfoque, la variable aleatoria Poisson representa el número de eventos que ocurren por unidad de tiempo o espacio.
+
+Condiciones del modelo Poisson
+
+Una variable aleatoria Poisson es adecuada cuando:
+
+a) Los eventos que ocurren en intervalos disjuntos son independientes.
+b) La probabilidad de ocurrencia en un intervalo muy pequeño es proporcional a su longitud (o área).
+c) La probabilidad de que ocurran dos o más eventos en un intervalo muy pequeño es despreciable.
+
+Ejemplo espacial: Distribución de células de levadura
+
+Se estudia la distribución de células de levadura en 400 cuadrículas de un hemacitómetro. Los datos observados se resumen en la siguiente tabla:
+
+**Tabla de distribución de las células de levadura**
+
+Se estudia la distribución del número de células de levadura observadas en 400 cuadrículas de un hemacitómetro.  
+La siguiente tabla resume las frecuencias observadas.
 
 ```{r}
-#| label: calculos-discretas
+# Datos observados
+celulas <- 0:9
+frecuencia <- c(75, 103, 121, 54, 30, 13, 2, 1, 0, 1)
 
-# Funciones R base para distribuciones discretas
-cat("=== Binomial(20, 0.4) ===\n")
-cat("P(X=8) =",     round(dbinom(8, 20, 0.4), 6), "\n")
-cat("P(X<=10) =",   round(pbinom(10, 20, 0.4), 6), "\n")
-cat("Cuantil 90% =", qbinom(0.9, 20, 0.4), "\n\n")
+# Total de cuadrículas
+N <- sum(frecuencia)
 
-cat("=== Poisson(5) ===\n")
-cat("P(X=3) =",    round(dpois(3, 5), 6), "\n")
-cat("P(X>=8) =",   round(ppois(7, 5, lower.tail=FALSE), 6), "\n\n")
+# Frecuencia relativa
+frecuencia_relativa <- frecuencia / N
 
-cat("=== Hipergeom.(N=30, K=10, n=12) ===\n")
-cat("P(X=4) =",    round(dhyper(4, 10, 20, 12), 6), "\n")
+# Construcción del data frame
+tabla_levadura <- data.frame(
+  "Células por cuadrícula" = celulas,
+  "Frecuencia observada" = frecuencia,
+  "Frecuencia relativa" = round(frecuencia_relativa, 4)
+)
+
+# Mostrar tabla
+knitr::kable(
+  tabla_levadura,
+  caption = "Distribución de frecuencias de células de levadura por cuadrícula"
+)
+
+# Cálculo de lambda
+lambda <- sum(celulas * frecuencia) / N
+lambda
+
+# Probabilidades teóricas Poisson
+prob_poisson <- dpois(celulas, lambda)
+
+tabla_poisson <- data.frame(
+  "Células por cuadrícula" = celulas,
+  "Probabilidad Poisson" = round(prob_poisson, 4)
+)
+
+knitr::kable(
+  tabla_poisson,
+  caption = "Distribución Poisson teórica con λ = 1.8"
+)
 ```
 
-::: {.callout-note icon=false}
-## Ejercicio 2.1
-
-Una línea de producción genera 4% de artículos defectuosos. Si se inspecciona
-una muestra de 50 artículos:
-
-a) ¿Cuál es la distribución de $X$ = número de defectuosos?
-b) Calcula $P(X=2)$, $P(X \leq 3)$ y $P(X > 5)$.
-c) Calcula $\mathrm{E}[X]$ y $\mathrm{Var}(X)$.
-d) ¿Qué distribución usarías si la muestra es pequeña respecto al lote (sin reemplazo)?
-:::
-
----
-
-## Variables Aleatorias Continuas {#sec-va-continuas}
-
-::: {.callout-important}
-## Función de Densidad de Probabilidad (FDP)
-
-Una VA $X$ es **continua** si existe $f(x) \geq 0$ tal que:
-
-$$P(a \leq X \leq b) = \int_a^b f(x)\,dx, \qquad \int_{-\infty}^{\infty}f(x)\,dx=1$$
-:::
-
-Consecuencia: $P(X = x) = 0$ para todo $x$ puntual.
-
-### Valor esperado y varianza (continuo)
-
-$$\mathrm{E}[X] = \int_{-\infty}^{\infty} x\,f(x)\,dx$$
-
-$$\mathrm{Var}(X) = \mathrm{E}[X^2] - (\mathrm{E}[X])^2$$
 
 ```{r}
-#| label: fig-fdp-fda-continua
-#| fig-cap: "FDP y FDA de Normal(3, 1.5²)"
-#| fig-width: 10
-#| fig-height: 4
+x <- 0:9
+lambda <- 1.8
+prob <- dpois(x, lambda)
 
-mu <- 3; sigma <- 1.5
-x  <- seq(mu - 4*sigma, mu + 4*sigma, length.out = 400)
+df <- data.frame(x, prob)
 
-par(mfrow = c(1, 2))
+ggplot(df, aes(x, prob)) +
+  geom_col(fill = "darkgreen") +
+  labs(
+    title = "Distribución Poisson (λ = 1.8)",
+    subtitle = "Células de levadura por cuadrícula",
+    x = "Número de células",
+    y = "Probabilidad"
+  ) +
+  theme_minimal()
 
-# FDP
-plot(x, dnorm(x, mu, sigma), type = "l", lwd = 2, col = "#4472C4",
-     main = "Función de Densidad f(x)",
-     xlab = "x", ylab = "f(x)")
-polygon(c(x, rev(x)), c(dnorm(x, mu, sigma), rep(0, length(x))),
-        col = adjustcolor("#4472C4", 0.2), border = NA)
-abline(v = mu, lty = 2, col = "red")
-
-# FDA
-plot(x, pnorm(x, mu, sigma), type = "l", lwd = 2, col = "#ED7D31",
-     main = "FDA F(x) = P(X ≤ x)",
-     xlab = "x", ylab = "F(x)")
-abline(h = c(0.25, 0.5, 0.75), lty = 3, col = "grey60")
-
-par(mfrow = c(1, 1))
 ```
 
----
+## 2.5 Material complementario: distribuciones adicionales y distribuciones conjuntas
 
-## Distribuciones Continuas {#sec-dist-continuas}
+Esta sección incorpora, a partir de las diapositivas del curso, dos familias
+discretas adicionales (Geométrica y Binomial Negativa) y la teoría de
+distribuciones conjuntas para dos variables aleatorias discretas. Todas las
+gráficas se generan con código.
 
-### Uniforme Continua  $X \sim \text{Unif}(a,b)$
+### 2.5.1 Distribución Geométrica
 
-$$f(x)=\frac{1}{b-a}, \; a \leq x \leq b \qquad \mathrm{E}[X]=\frac{a+b}{2}, \quad \mathrm{Var}(X)=\frac{(b-a)^2}{12}$$
+Sea $X$ el número de fracasos antes de obtener el primer éxito en ensayos
+Bernoulli independientes, cada uno con probabilidad de éxito $p$. Su función
+de probabilidad y momentos son:
 
-### Normal  $X \sim \mathcal{N}(\mu,\sigma^2)$
+$$p(x; p) = (1-p)^x \cdot p = q^x p, \qquad x = 0, 1, 2, \ldots$$
+$$E(X) = \frac{1-p}{p}, \qquad Var(X) = \frac{1-p}{p^2}$$
 
-$$f(x)=\frac{1}{\sigma\sqrt{2\pi}}\exp\!\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)$$
+Una propiedad importante de esta distribución es la **falta de memoria**: no
+importa cuántos fracasos hayan ocurrido ya, la distribución de los fracasos
+restantes hasta el próximo éxito es siempre la misma.
 
-$$\mathrm{E}[X]=\mu, \quad \mathrm{Var}(X)=\sigma^2 \qquad \text{Estandarización: } Z=\frac{X-\mu}{\sigma}\sim\mathcal{N}(0,1)$$
+```{r geometrica, echo=TRUE, fig.align='center', fig.width=6, fig.height=4}
+#| label: fig-geometrica
+#| fig-cap: "Distribución Geométrica para distintos valores de p"
+library(ggplot2)
 
-**Propiedad reproductiva**: si $X_i \sim \mathcal{N}(\mu_i,\sigma_i^2)$ independientes,
-$\sum a_i X_i \sim \mathcal{N}\!\left(\sum a_i\mu_i,\sum a_i^2\sigma_i^2\right)$.
+x <- 0:15
+df_geom <- do.call(rbind, lapply(c(0.2, 0.5), function(p) {
+  data.frame(x = x, prob = dgeom(x, p), p = paste0("p = ", p))
+}))
 
-### Exponencial  $X \sim \text{Exp}(\lambda)$
-
-$$f(x)=\lambda e^{-\lambda x}, \; x\geq 0 \qquad \mathrm{E}[X]=\frac{1}{\lambda}, \quad \mathrm{Var}(X)=\frac{1}{\lambda^2}$$
-
-**Propiedad de falta de memoria**: $P(X > s+t \mid X > s) = P(X > t)$
-
-### Gamma  $X \sim \text{Gamma}(\alpha,\beta)$
-
-$$f(x)=\frac{\beta^\alpha}{\Gamma(\alpha)}x^{\alpha-1}e^{-\beta x}, \; x>0 \qquad \mathrm{E}[X]=\frac{\alpha}{\beta}, \quad \mathrm{Var}(X)=\frac{\alpha}{\beta^2}$$
-
-Casos especiales: $\text{Exp}(\lambda)=\text{Gamma}(1,\lambda)$; $\;\chi^2_\nu=\text{Gamma}(\nu/2,1/2)$.
-
-### Beta  $X \sim \text{Beta}(\alpha,\beta)$, soporte $(0,1)$
-
-$$f(x)=\frac{\Gamma(\alpha+\beta)}{\Gamma(\alpha)\Gamma(\beta)}x^{\alpha-1}(1-x)^{\beta-1} \qquad \mathrm{E}[X]=\frac{\alpha}{\alpha+\beta}$$
-
-### Gráfica comparativa
-
-```{r}
-#| label: fig-dist-continuas
-#| fig-cap: "Familias de distribuciones continuas"
-#| fig-width: 11
-#| fig-height: 9
-
-par(mfrow = c(2, 3))
-
-# Normal
-curve(dnorm(x, 0, 1), -4, 4, lwd=2, col="#4472C4",
-      main="Normal(μ, σ²)", ylab="f(x)", ylim=c(0,0.55))
-curve(dnorm(x, 0, 2), add=TRUE, lwd=2, col="#ED7D31", lty=2)
-curve(dnorm(x, 2, 1), add=TRUE, lwd=2, col="#70AD47", lty=3)
-legend("topright", c("N(0,1)","N(0,4)","N(2,1)"),
-       col=c("#4472C4","#ED7D31","#70AD47"), lty=1:3, lwd=2, cex=0.8)
-
-# Exponencial
-curve(dexp(x, 1),   0, 6, lwd=2, col="#4472C4",
-      main="Exponencial(λ)", ylab="f(x)")
-curve(dexp(x, 0.5), add=TRUE, lwd=2, col="#ED7D31", lty=2)
-curve(dexp(x, 2),   add=TRUE, lwd=2, col="#70AD47", lty=3)
-legend("topright", c("λ=1","λ=0.5","λ=2"),
-       col=c("#4472C4","#ED7D31","#70AD47"), lty=1:3, lwd=2, cex=0.8)
-
-# Gamma
-curve(dgamma(x, 1, 1), 0, 12, lwd=2, col="#4472C4",
-      main="Gamma(α, 1)", ylab="f(x)")
-curve(dgamma(x, 2, 1), add=TRUE, lwd=2, col="#ED7D31", lty=2)
-curve(dgamma(x, 5, 1), add=TRUE, lwd=2, col="#70AD47", lty=3)
-legend("topright", c("α=1","α=2","α=5"),
-       col=c("#4472C4","#ED7D31","#70AD47"), lty=1:3, lwd=2, cex=0.8)
-
-# Beta
-curve(dbeta(x, 2, 2),     0, 1, lwd=2, col="#4472C4",
-      main="Beta(α, β)", ylab="f(x)", ylim=c(0,3))
-curve(dbeta(x, 0.5, 0.5), add=TRUE, lwd=2, col="#ED7D31", lty=2)
-curve(dbeta(x, 5, 2),     add=TRUE, lwd=2, col="#70AD47", lty=3)
-legend("top", c("(2,2)","(0.5,0.5)","(5,2)"),
-       col=c("#4472C4","#ED7D31","#70AD47"), lty=1:3, lwd=2, cex=0.8)
-
-# Uniforme
-curve(dunif(x, 0, 1), -0.5, 1.5, lwd=2, col="#4472C4",
-      main="Uniforme(a, b)", ylab="f(x)", ylim=c(0, 1.5))
-curve(dunif(x, 0, 3), add=TRUE, lwd=2, col="#ED7D31", lty=2)
-legend("topright", c("U(0,1)","U(0,3)"),
-       col=c("#4472C4","#ED7D31"), lty=1:2, lwd=2, cex=0.8)
-
-# FDA Normal acumulada
-x_seq <- seq(-4, 4, 0.01)
-plot(x_seq, pnorm(x_seq), type="l", lwd=2, col="#4472C4",
-     main="FDA — Normal(0,1)", xlab="x", ylab="F(x)")
-abline(h=c(0.025,0.5,0.975), lty=3, col="grey60")
-abline(v=c(-1.96,0,1.96),    lty=3, col="grey60")
-
-par(mfrow = c(1, 1))
+ggplot(df_geom, aes(x = x, y = prob, fill = p)) +
+  geom_col(position = "dodge") +
+  scale_fill_manual(values = c("p = 0.2" = "#006341", "p = 0.5" = "#C8962E")) +
+  labs(title = "Distribución Geométrica", x = "Número de fracasos (x)",
+       y = "P(X = x)", fill = NULL) +
+  theme_minimal()
 ```
 
-```{r}
-#| label: calculos-continuas
+**Ejemplo:** cada intento de conexión tiene una probabilidad de éxito de
+$p = 0.2$. El número esperado de intentos hasta lograr la conexión es:
 
-# Normal N(100, 225) — puntajes
-cat("=== Normal(100, 15) ===\n")
-cat("P(X < 120) =",       round(pnorm(120, 100, 15), 4), "\n")
-cat("P(85 < X < 115) =",  round(diff(pnorm(c(85,115), 100, 15)), 4), "\n")
-cat("Percentil 95 =",     round(qnorm(0.95, 100, 15), 2), "\n\n")
-
-# Exponencial
-cat("=== Exp(λ=0.5) ===\n")
-cat("P(X > 3) =",  round(pexp(3, 0.5, lower.tail=FALSE), 4), "\n")
-cat("Mediana =",   round(qexp(0.5, 0.5), 4), "\n\n")
-
-# Falta de memoria
-cat("=== Falta de memoria Exp(1) ===\n")
-cat("P(X>5) =",               round(pexp(5, 1, lower.tail=FALSE), 4), "\n")
-cat("P(X>3+2 | X>2) =",       round(pexp(5,1,lower.tail=FALSE)/pexp(2,1,lower.tail=FALSE),4),"\n")
-cat("P(X>3) =",               round(pexp(3, 1, lower.tail=FALSE), 4), "\n")
+```{r geometrica_ejemplo, echo=TRUE}
+p <- 0.2
+cat("P(conectarse en menos de 4 intentos):", round(pgeom(2, p), 4), "\n")
+cat("Número esperado de fracasos antes del éxito, E(X):", (1 - p) / p, "\n")
+cat("Número esperado de intentos totales:", 1 / p, "\n")
 ```
 
-::: {.callout-note icon=false}
-## Ejercicio 2.2
+### 2.5.2 Distribución Binomial Negativa
 
-El tiempo de atención en una ventanilla sigue $\text{Exp}(\lambda=2)$ (en minutos).
+Generaliza a la Geométrica: $X$ representa el número de fracasos antes de
+alcanzar $k$ éxitos en ensayos Bernoulli con probabilidad de éxito $p$.
 
-a) ¿Cuál es la probabilidad de ser atendido en menos de 1 minuto?
-b) ¿Cuál es la probabilidad de esperar más de 3 minutos?
-c) Dado que ya esperaste 2 minutos, ¿cuál es la probabilidad de esperar
-   al menos 3 minutos más?
-d) Calcula el percentil 90 del tiempo de espera.
-:::
+$$p(x; k, p) = \binom{k + x - 1}{x} p^k (1-p)^x, \qquad x = 0, 1, 2, \ldots$$
+$$E(X) = \frac{k(1-p)}{p}, \qquad Var(X) = \frac{k(1-p)}{p^2}$$
 
----
+```{r binomial_negativa, echo=TRUE, fig.align='center', fig.width=6, fig.height=4}
+#| label: fig-binneg
+#| fig-cap: "Distribución Binomial Negativa (k = 3, p = 0.3)"
+x <- 0:25
+df_bn <- data.frame(x = x, prob = dnbinom(x, size = 3, prob = 0.3))
 
-## Distribuciones Muestrales {#sec-dist-muestrales}
-
-Las distribuciones muestrales describen el comportamiento de estadísticos
-calculados a partir de muestras aleatorias de poblaciones normales.
-
-### Chi-cuadrada  $\chi^2(\nu)$
-
-Si $Z_1,\ldots,Z_\nu \overset{iid}{\sim} \mathcal{N}(0,1)$:
-
-$$\chi^2_\nu = \sum_{i=1}^\nu Z_i^2 \qquad \mathrm{E}[\chi^2_\nu]=\nu, \quad \mathrm{Var}(\chi^2_\nu)=2\nu$$
-
-Relación con varianza muestral: $\dfrac{(n-1)S^2}{\sigma^2}\sim\chi^2(n-1)$
-
-### t de Student  $t(\nu)$
-
-Si $Z\sim\mathcal{N}(0,1)$ y $V\sim\chi^2(\nu)$ independientes:
-
-$$t_\nu = \frac{Z}{\sqrt{V/\nu}} \qquad \text{Para } \nu\text{ grande: }t_\nu\approx\mathcal{N}(0,1)$$
-
-### F de Snedecor  $F(\nu_1,\nu_2)$
-
-Si $V_1\sim\chi^2(\nu_1)$ y $V_2\sim\chi^2(\nu_2)$ independientes:
-
-$$F = \frac{V_1/\nu_1}{V_2/\nu_2}$$
-
-```{r}
-#| label: fig-dist-muestrales
-#| fig-cap: "Distribuciones muestrales: Chi², t de Student y F"
-#| fig-width: 12
-#| fig-height: 4
-
-par(mfrow = c(1, 3))
-
-# Chi-cuadrada
-curve(dchisq(x, 1),  0, 30, lwd=2, col="#4472C4", ylim=c(0,0.5),
-      main="Chi-cuadrada(ν)", xlab="x", ylab="f(x)")
-curve(dchisq(x, 5),  add=TRUE, lwd=2, col="#ED7D31", lty=2)
-curve(dchisq(x, 10), add=TRUE, lwd=2, col="#70AD47", lty=3)
-legend("topright", c("ν=1","ν=5","ν=10"),
-       col=c("#4472C4","#ED7D31","#70AD47"), lty=1:3, lwd=2, cex=0.8)
-
-# t de Student
-curve(dt(x,1),  -5,5, lwd=2, col="#4472C4",
-      main="t de Student(ν)", xlab="x", ylab="f(x)")
-curve(dt(x,5),  add=TRUE, lwd=2, col="#ED7D31", lty=2)
-curve(dnorm(x), add=TRUE, lwd=2, col="#70AD47", lty=3)
-legend("topright", c("ν=1","ν=5","Normal"),
-       col=c("#4472C4","#ED7D31","#70AD47"), lty=1:3, lwd=2, cex=0.8)
-
-# F de Snedecor
-curve(df(x,2,10),  0,5, lwd=2, col="#4472C4",
-      main="F de Snedecor(ν₁,ν₂)", xlab="x", ylab="f(x)")
-curve(df(x,5,20),  add=TRUE, lwd=2, col="#ED7D31", lty=2)
-curve(df(x,10,50), add=TRUE, lwd=2, col="#70AD47", lty=3)
-legend("topright", c("(2,10)","(5,20)","(10,50)"),
-       col=c("#4472C4","#ED7D31","#70AD47"), lty=1:3, lwd=2, cex=0.8)
-
-par(mfrow = c(1, 1))
+ggplot(df_bn, aes(x = x, y = prob)) +
+  geom_col(fill = "#006341") +
+  labs(title = "Binomial Negativa (k = 3 éxitos, p = 0.3)",
+       x = "Número de fracasos (x)", y = "P(X = x)") +
+  theme_minimal()
 ```
 
-```{r}
-#| label: cuantiles-muestrales
+**Ejemplo:** la probabilidad de que una persona tenga un perro se estima en
+$p = 0.3$. La probabilidad de que la décima persona entrevistada sea la
+tercera que tiene un perro ($k = 3$ éxitos, $x = 7$ fracasos):
 
-cat("=== Cuantiles t(20) ===\n")
-cat("t_0.025 =", round(qt(0.025, 20), 4), "\n")
-cat("t_0.975 =", round(qt(0.975, 20), 4), "\n\n")
-
-cat("=== Cuantiles Chi²(10) ===\n")
-cat("χ²_0.025 =", round(qchisq(0.025, 10), 4), "\n")
-cat("χ²_0.975 =", round(qchisq(0.975, 10), 4), "\n\n")
-
-cat("=== Cuantil F(5,20) al 95% ===\n")
-cat("F_0.95 =", round(qf(0.95, 5, 20), 4), "\n")
+```{r binneg_ejemplo, echo=TRUE}
+k <- 3; p <- 0.3
+cat("p(7; 3, 0.3) =", round(dnbinom(7, size = k, prob = p), 4), "\n")
+cat("E(X) =", k * (1 - p) / p, "personas sin perro en promedio\n")
 ```
+
+### 2.5.3 Distribuciones discretas conjuntas
+
+La **función de probabilidad conjunta** de dos variables aleatorias discretas
+$X$ y $Y$ se define como $p(x,y) = P(X = x, Y = y)$, con $p(x,y) \ge 0$ y
+$\sum_x \sum_y p(x,y) = 1$. A partir de ella se obtienen:
+
+- **Función de probabilidad marginal:** $p_X(x) = \sum_y p(x,y)$ y $p_Y(y) = \sum_x p(x,y)$.
+- **Función de probabilidad condicional:** $p_{Y\mid X}(y \mid x) = p(x,y)/p_X(x)$.
+- **Independencia:** $X$ y $Y$ son independientes si $p(x,y) = p_X(x) \cdot p_Y(y)$ para todo par $(x,y)$.
+
+**Ejemplo (deducibles de seguros).** Sea $X$ el deducible de una póliza de
+auto (\$100 o \$250) y $Y$ el deducible de una póliza de casa (\$0, \$100 o
+\$200), con la siguiente función de probabilidad conjunta:
+
+```{r conjunta_discreta, echo=TRUE, fig.align='center', fig.width=6, fig.height=4.5}
+#| label: fig-conjunta-discreta
+#| fig-cap: "Función de probabilidad conjunta p(x,y): deducibles de auto y casa"
+library(ggplot2)
+
+tabla <- expand.grid(x = c(100, 250), y = c(0, 100, 200))
+tabla$p <- c(0.20, 0.05, 0.10, 0.15, 0.20, 0.30)
+
+ggplot(tabla, aes(x = factor(y), y = factor(x), fill = p)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = p), color = "white", fontface = "bold") +
+  scale_fill_gradient(low = "#C8962E", high = "#004D31") +
+  labs(title = "p(x, y): deducible auto (X) vs. deducible casa (Y)",
+       x = "Deducible casa (y)", y = "Deducible auto (x)", fill = "p(x,y)") +
+  theme_minimal()
+```
+
+```{r conjunta_marginales, echo=TRUE}
+# Probabilidades marginales y condicionales a partir de la tabla conjunta
+mat <- matrix(tabla$p, nrow = 2, byrow = TRUE,
+              dimnames = list(x = c("100", "250"), y = c("0", "100", "200")))
+p_x <- rowSums(mat)   # marginal de X
+p_y <- colSums(mat)   # marginal de Y
+cat("p_X(x):\n"); print(p_x)
+cat("\np_Y(y):\n"); print(p_y)
+
+# Independencia: ¿p(100,100) == p_X(100) * p_Y(100)?
+cat("\np(100,100) =", mat["100", "100"],
+    " vs.  p_X(100)*p_Y(100) =", p_x["100"] * p_y["100"], "\n")
+cat("Como no coinciden, X y Y NO son independientes.\n")
+```
+
+Como $p(100,100) = 0.10 \ne p_X(100) \cdot p_Y(100) = 0.50 \times 0.25 =
+0.125$, las variables $X$ y $Y$ no son independientes: conocer el deducible
+de una póliza aporta información sobre el deducible de la otra.
+                                              
