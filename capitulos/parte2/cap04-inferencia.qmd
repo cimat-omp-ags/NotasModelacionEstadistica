@@ -106,7 +106,7 @@ Un estimador es una función matemática expresada únicamente en términos de l
 
 La tabla siguiente muestra los parámetros que en esta lectura estudiaremos con sus correspondientes estimadores.
 
-**Ejemplo**
+#### Ejemplo
 
 Supongamos que una fábrica de componentes electrónicos produce un lote masivo de $N = 10,000$ resistencias eléctricas en un turno. El gerente de calidad está interesado en conocer tres **parámetros** fundamentales de esta población (lote completo):
 
@@ -398,7 +398,7 @@ $$\frac{(n-1)S^2}{\sigma^2} \sim \chi^2_{n-1} \quad (8)$$
 Esta relación es el núcleo de la inferencia para varianzas, pero depende fuertemente de la suposición de que la población original sea Normal. Si la población no es Normal, este estadístico no seguirá una distribución Chi-cuadrada.
 :::
 
-**Ejemplo:**
+#### Ejemplo
 
 Se considera una medición física realizada con un instrumento de precisión donde el interés se centra en la variabilidad de la lectura. Se sabe que la medición es una variable aleatoria con distribución Normal y desviación típica de 4 unidades (es decir, una varianza poblacional $\sigma^2 = 16$).
 
@@ -579,7 +579,7 @@ Sea $X_1, X_2, \dots, X_n$ una muestra aleatoria extraída de una distribución 
 
 **Varianza del estimador:** $$Var(\hat{P}) = \sigma_{\hat{P}}^2 = \frac{P \cdot Q}{n} \quad (19)$$ Donde $Q = 1 - P$.
 
-**Ejemplo:**
+#### Ejemplo
 
 Consideremos una población minúscula que consta de $N = 4$ familias. Nos interesa conocer qué familias alquilan una vivienda. En la Tabla 7 se expone la población y el cálculo del parámetro real.
 
@@ -623,7 +623,7 @@ $$\bar{X} \approx N\left(\mu, \frac{\sigma^2}{n}\right)$$
 
 **El TLC para el Estimador del Total (**$T$): El teorema también se aplica a la suma total de las observaciones $T = \sum_{i=1}^n X_i$. Si $n$ es grande: $$T \approx N\left( \mu_T = n\mu, \sigma_T^2 = n\sigma^2 \right)$$
 
-**Ejemplo:**
+#### Ejemplo
 
 Suponga que el peso de los paquetes de café de cierto tipo tiene una media de $\mu = 1 \text{ kg}$ y una desviación estándar de $\sigma = 0.05 \text{ kg}$ (distribución poblacional desconocida). En una caja se empacan $n = 64$ paquetes.
 
@@ -647,7 +647,7 @@ Dado que la proporción muestral $\hat{P}$ es, matemáticamente, un promedio de 
 
 Si $n$ es grande, el proceso de tomar muestras y estimar la proporción genera una distribución que se puede modelar con una curva Normal: $$\hat{P} \approx N\left( \mu_{\hat{P}} = P, \sigma_{\hat{P}}^2 = \frac{P(1-P)}{n} \right)$$
 
-**Ejemplo:**
+#### Ejemplo
 
 Un medicamento para el malestar estomacal tiene la advertencia de que puede causar reacciones adversas. Por estudios clínicos, se asume que el parámetro poblacional es $P = 0.03$ (el 3% de los usuarios presenta reacción).
 

@@ -982,7 +982,7 @@ P(X=2) &= P(EFF \cup FEF \cup FFE) \\
 $$
 
 
-**Ejemplo:**
+#### Ejemplo
 
 Supóngase que la probabilidad de encontrar una planta con flores es:
 
@@ -1171,7 +1171,7 @@ El factor $\frac{N-n}{N-1}$ se denomina **factor de corrección para poblaciones
 
 
 
-**Ejemplo:**
+#### Ejemplo
 
 Un estudio contable cuenta con 18 secretarias:
 
@@ -1210,7 +1210,7 @@ $$
 
 
 
-**Ejemplo:**
+#### Ejemplo
 
 Un viajero transporta:
 
@@ -1341,7 +1341,7 @@ $$
 
 
 
-**Ejemplo:**
+#### Ejemplo
 
 Un agrónomo sabe que el **2% de las semillas** de cierta especie no germina. Se venden **100 semillas** a un agricultor. El comprador solicitará reembolso si **al menos 6 semillas no germinan**.
 

@@ -6,8 +6,6 @@
 ### Principío básico de conteo
 
 
-#### Teoría
-
 Antes de estudiar las nociones básicas de probabilidad se inicia con las reglas o principios de conteo;
 las cuales, son indispensables para el cálculo de probabilidades. Las reglas de conteo proporcionan una 
 herramienta que nos ayuda a contar el número de configuraciones posibles al ordenar o agrupar un determinado 
@@ -237,8 +235,6 @@ Este procedimiento se conoce como **conteo con repetición** o **conteo con reem
 
 ### Permutaciones
 
-#### Teoría
-
 **Permutaciones**
 
 El concepto de **permutación** se refiere a las distintas formas en que se pueden **ordenar** los elementos de un conjunto cuando **el orden importa** y **no se permite repetición**. Consideremos los siguientes tres símbolos diferentes:
@@ -355,8 +351,6 @@ ggplot() +
 
 ### Grupos de tamaños $k$ de un total de $n$ elementos
 
-#### Teoría
-
 **Combinaciones y formación de comités**
 
 Con frecuencia es de interés determinar cuántos **grupos distintos** pueden formarse al seleccionar $k$ elementos de un conjunto de $n$ elementos, cuando **el orden no importa** y **no se permiten repeticiones**. Este tipo de selección se conoce como una **combinación**.
@@ -469,8 +463,6 @@ resultado
 
 
 
-#### Teoría
-
 **¿Qué es un experimento?**
 
 Un **experimento** es un proceso mediante el cual se genera una **observación** o una **medición**.  
@@ -554,8 +546,6 @@ barplot(
 ```
 
 ### Eventos y espacio muestral
-
-#### Teoría
 
 **Espacio muestral y eventos**
 
@@ -840,8 +830,6 @@ grid.draw(venn.plot)
 
 ```
 ### Definiciones de probabilidad
-
-#### Teoría
 
 **Probabilidad**
 
@@ -1269,8 +1257,6 @@ text(
 
 ### Probabilidad condicional
 
-#### Teoría
-
 La **probabilidad condicional** estudia la probabilidad de que ocurra un evento dentro de un experimento aleatorio **cuando ya se cuenta con información parcial** sobre dicho experimento.  
 Esta información previa reduce el conjunto de resultados posibles y, en consecuencia, modifica las probabilidades.
 
@@ -1398,8 +1384,6 @@ $$
 
 ### Regla de la multiplicación
 
-#### Teoría
-
 En esta sección se estudia una regla fundamental de la probabilidad que permite calcular la probabilidad de un evento cuya expresión tiene la forma:
 
 $$
@@ -1521,8 +1505,6 @@ Lucila tiene una probabilidad de **0.02 (2%)** de ganar la rifa.
 
 ### Eventos independientes
 
-#### Teoría
-
 En el apartado anterior se analizó que la probabilidad de ocurrencia de un evento $A$ puede verse afectada por el conocimiento previo de otro evento, digamos $B$. En ese caso, se trabaja con la probabilidad condicional $P(A \mid B)$.
 
 Sin embargo, existen situaciones en las que la ocurrencia de un evento $B$ **no modifica** la probabilidad de ocurrencia de otro evento $A$. Es decir, la probabilidad de que ocurra $A$ dado que ocurrió $B$ coincide con la probabilidad original de $A$:
@@ -1608,8 +1590,6 @@ Por lo tanto, los eventos $E$ y $F$ son **independientes**.
 
 ## Probabilidad de un evento de interés en términos de probabilidades condicionales
 ### Probabilidad total
-#### Teoría
-
 La regla de la probabilidad total es un resultado fundamental que permite calcular la probabilidad de un evento de interés $B$, descomponiéndolo a través de una **partición** del espacio muestral $S$.
 
 
@@ -1676,8 +1656,6 @@ Al seleccionar una caja y elegir una bola, la probabilidad de que esta sea de co
 
 ### Teorema de Bayes
 
-#### Teoría
-
 El Teorema de Bayes es una extensión de la probabilidad condicional que permite "invertir" las probabilidades. Es decir, nos permite calcular la probabilidad de que haya ocurrido una causa específica $A_i$, dado que ya hemos observado un efecto o evento $B$. 
 
 Si los eventos $A_1, A_2, \dots, A_n$ forman una partición del espacio muestral $S$ (son mutuamente excluyentes y su unión es $S$), entonces para cualquier evento $B$ tal que $P(B) > 0$:
@@ -1742,8 +1720,6 @@ cat("Probabilidad Total de Positivo P(B):", (0.96 * 0.001) + (0.05 * 0.999))
 
 ## Material complementario: métodos y aplicaciones
 
-#### Teoría
-
 Esta sección complementa la teoría anterior con material adicional tomado de las
 diapositivas del curso: las leyes que rigen las operaciones de conjuntos, los
 métodos clásicos para asignar probabilidades y dos aplicaciones célebres del
@@ -1751,8 +1727,6 @@ Teorema de Bayes. Todas las figuras se generan con código en lugar de
 reutilizar las imágenes originales de las diapositivas.
 
 ### Leyes de operaciones de conjuntos
-
-#### Teoría
 
 Dados tres sucesos $A$, $B$ y $C$ de un espacio muestral $S$, se cumplen las
 siguientes propiedades:
@@ -1791,8 +1765,6 @@ ggplot() +
 ```
 
 ### Métodos para asignar probabilidad
-
-#### Teoría
 
 Existen tres métodos clásicos para asignar una probabilidad a un evento:
 
@@ -1836,8 +1808,6 @@ resultado contraintuitivo característico de este método clásico de asignació
 de probabilidades.
 
 ### Aplicaciones del Teorema de Bayes
-
-#### Teoría
 
 **Pruebas diagnósticas.** Si una persona porta el virus $V$, un análisis de
 sangre lo detecta el 99% de las veces (sensibilidad), pero también produce un

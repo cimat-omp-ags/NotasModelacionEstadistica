@@ -91,7 +91,7 @@ axis(1, at=c(1.5, 3.5), labels=c("a", "b"))
 
 Para calcular el valor exacto de esta probabilidad en la mayoría de las distribuciones teóricas, se recurre a la integración matemática. Sin embargo, en ciertos casos, el área puede encontrarse usando fórmulas de geometría elemental.
 
-**Ejemplo:**
+#### Ejemplo
 
 Supongamos que en un modelo de simulación en la recepción de un hotel, la variable aleatoria $Y$ representa la proporción de tiempo durante un turno de 8 horas en que el empleado de recepción está ocupado atendiendo huéspedes de forma ininterrumpida. Al ser una proporción, la variable $Y$ solo puede tomar valores entre 0 y 1 ($0 \le Y \le 1$).
 
@@ -340,7 +340,7 @@ $$E[Y] = \frac{a +b}{2}$$ $$Var(Y) = \frac{(b - a)^2}{12}$$
 
 ------------------------------------------------------------------------
 
-**Ejemplo**
+#### Ejemplo
 
 Suponga que el tiempo que un estudiante debe esperar en la parada para que llegue un autobús universitario está distribuido uniformemente entre 0 y 20 minutos. Considere la variable aleatoria $Y$ como el tiempo de espera del estudiante.
 
@@ -689,7 +689,7 @@ $$Z = \frac{X - \mu}{\sigma}$$
 
 Esta transformación nos dice a cuántas desviaciones estándar ($\sigma$) se encuentra un valor $X$ por encima o por debajo de la media $\mu$. Al hacer esto, podemos usar las tablas de la normal estándar (o software estadístico) para calcular probabilidades para **cualquier** distribución normal.
 
-**Ejemplo**
+#### Ejemplo
 
 Suponga que los puntajes de un examen de aptitud a nivel nacional están distribuidos normalmente con una media $\mu = 400$ y una desviación estándar $\sigma = 50$. 
 
@@ -779,7 +779,7 @@ Esta es la probabilidad acumulada desde $-\infty$ hasta $z_0$, donde este últim
 En las distribuciones de probabilidad continuas, la probabilidad de que la variable aleatoria asuma exactamente un valor particular es cero ($P(X = x) = 0$). Por lo tanto, los signos de desigualdad estricta ($<$, $>$) o no estricta ($\le$, $\ge$) son probabilísticamente equivalentes. Es decir, $P(X \le x) = P(X < x)$.
 :::
 
-**Ejemplo:**
+#### Ejemplo
 El peso de los niños al nacer en la localidad de Tequila tiene el comportamiento de una variable aleatoria normal con media $\mu = 3.5 \text{ kg}$ y desviación estándar $\sigma = 1 \text{ kg}$. 
 
 Con base en este ejemplo, estudiaremos cómo calcular probabilidades bajo diferentes escenarios usando la estandarización $Z$. $X$ se distribuye normal y se denota como $X \sim N(3.5, 1^2)$.
@@ -948,7 +948,7 @@ ggplot(df_z, aes(x = z, y = fz)) +
 
 La variable aleatoria exponencial surge en la práctica como el modelo para la probabilidad de la cantidad de tiempo u espacio que transcurre hasta que ocurre un evento de interés. Esta ocurrencia se da de manera independiente y a una tasa constante.
 
-**Ejemplos:**
+#### Ejemplos
 * La cantidad de tiempo (a partir de ahora) hasta que ocurre un terremoto.
 * La cantidad de tiempo (a partir de ahora) hasta que estalla una nueva guerra.
 * La cantidad de tiempo (a partir de ahora) hasta que una llamada telefónica que reciba resulte ser un número equivocado.
@@ -1004,7 +1004,7 @@ $$F(x) = P(X \le x) = 1 - e^{-\lambda x} \quad \text{para } x \ge 0 \quad (17)$$
 
 ---
 
-**Ejemplo 1: Servicio de asistencia técnica**
+#### Ejemplo 1: Servicio de asistencia técnica
 
 Un servicio de asistencia técnica en carretera ha comprobado que en las mañanas de los fines de semana el número de llamadas que recibe es de 3 llamadas cada hora. Un operario comienza su jornada de sábado a las 8 de la mañana. Suponiendo que las llamadas se realizan de manera independiente y con tasa constante:
 
@@ -1041,7 +1041,7 @@ ggplot(df_asist, aes(x = x, y = fx)) +
 
 ---
 
-**Ejemplo 2: Tiempo de revisión de motores**
+#### Ejemplo 2: Tiempo de revisión de motores
 
 El tiempo de revisión del motor de un avión sigue una distribución exponencial con una media igual a 22 minutos.
 
@@ -1098,7 +1098,7 @@ $$P(X > 40 \mid X > 30) = P(X > 10 + 30 \mid X > 30) = P(X > 10)$$
 
 *Cuidado:* Esto no significa que los eventos $X > 40$ y $X > 30$ sean estadísticamente independientes. Si lo fueran, se cumpliría que $P(X > 40 \mid X > 30) = P(X > 40)$, lo cual es falso. Lo que es independiente es el *tiempo adicional*.
 
-**Ejemplo:**
+#### Ejemplo
 
 Si el operario lleva 10 minutos sin recibir una llamada: ¿Cuál es la probabilidad de que reciba una nueva llamada en los **próximos 15 minutos** (es decir, en menos de 25 minutos en total)?
 
