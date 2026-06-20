@@ -48,7 +48,7 @@ Si la primera etapa $$fase$$ de un experimento, procedimiento, proceso, maniabra
 
 Veamos el principio básico del conteo con un ejemplo. Reconsidere el caso simple del comité sindical, el cual debe estar compuesto por 4 personas, dos hombres y dos mujeres. 
 
-El número de parejas de hombres son 3 posibles, y cada una de estas parejas tiene 3 posibles parejas de mujeres con las que pueden relacionarse. Si $ m = 3 $ parejas de hombres y $ n = 3 $ parejas de mujeres, entonces por el principio básico del conteo se tienen:
+El número de parejas de hombres son 3 posibles, y cada una de estas parejas tiene 3 posibles parejas de mujeres con las que pueden relacionarse. Si $m = 3$ parejas de hombres y $n = 3$ parejas de mujeres, entonces por el principio básico del conteo se tienen:
 
 $$
 m \times n = 3 \times 3 = 9
@@ -353,7 +353,7 @@ ggplot() +
 
 **Combinaciones y formación de comités**
 
-Con frecuencia es de interés determinar cuántos **grupos distintos** pueden formarse al seleccionar $ k $ elementos de un conjunto de $ n $ elementos, cuando **el orden no importa** y **no se permiten repeticiones**. Este tipo de selección se conoce como una **combinación**.
+Con frecuencia es de interés determinar cuántos **grupos distintos** pueden formarse al seleccionar $k$ elementos de un conjunto de $n$ elementos, cuando **el orden no importa** y **no se permiten repeticiones**. Este tipo de selección se conoce como una **combinación**.
 
 **Ejemplo: Formación de un comité**
 
@@ -376,7 +376,7 @@ Los posibles grupos de hombres son:
 - Antonio y Héctor  
 - Juan y Héctor  
 
-El número de combinaciones de tamaño $ k $ que se pueden formar a partir de un conjunto de $ n $ elementos se calcula mediante la expresión:
+El número de combinaciones de tamaño $k$ que se pueden formar a partir de un conjunto de $n$ elementos se calcula mediante la expresión:
 
 $$
 \binom{n}{k} = \frac{n!}{(n-k)! \, k!}, \quad k \leq n
@@ -548,7 +548,7 @@ barplot(
 **Espacio muestral y eventos**
 
 El **espacio muestral** se define como el conjunto de **todos los resultados posibles** de un experimento aleatorio.  
-Se suele denotar por la letra $ S $.
+Se suele denotar por la letra $S$.
 
 Un **evento** es cualquier subconjunto del espacio muestral; es decir, un evento está formado por uno o más resultados posibles del experimento.
 
@@ -570,17 +570,17 @@ Cada uno de estos resultados individuales puede considerarse un evento simple.
 
 Definimos los siguientes eventos:
 
-- $ A $: evento en el que aparece la cara **2**  
+- $A$: evento en el que aparece la cara **2**  
   $$
   A = \{2\}
   $$
 
-- $ B $: evento en el que aparece la cara **4**  
+- $B$: evento en el que aparece la cara **4**  
   $$
   B = \{4\}
   $$
 
-- $ C $: evento en el que aparece la cara **6**  
+- $C$: evento en el que aparece la cara **6**  
   $$
   C = \{6\}
   $$
@@ -589,7 +589,7 @@ Definimos los siguientes eventos:
 
 **Unión de eventos**
 
-La **unión** de los eventos $ A $, $ B $ y $ C $ es:
+La **unión** de los eventos $A$, $B$ y $C$ es:
 
 $$
 A \cup B \cup C = \{2, 4, 6\}
@@ -609,7 +609,7 @@ A \cap B = \varnothing
 $$
 
 Esto se debe a que, al lanzar un dado, **solo puede ocurrir un resultado a la vez**; por lo tanto, no es posible obtener simultáneamente la cara 2 y la cara 4.  
-Los eventos $ A $ y $ B $ son **disjuntos**.
+Los eventos $A$ y $B$ son **disjuntos**.
 
 
 
@@ -627,7 +627,7 @@ $$
 
 El **complemento** de un evento contiene todos los resultados del espacio muestral que **no pertenecen** a dicho evento.
 
-El complemento de $ A \cup B \cup C $ es:
+El complemento de $A \cup B \cup C$ es:
 
 $$
 (A \cup B \cup C)^c = \{1, 3, 5\}
@@ -951,7 +951,7 @@ barplot(
 **Probabilidad frecuentista**
 
 En muchas situaciones prácticas no es posible aplicar la noción clásica de probabilidad basada en un número finito de **casos igualmente probables**.  
-Por ejemplo, al lanzar una **moneda no perfecta**, la probabilidad de obtener *cara* puede no ser igual a $ \frac{1}{2} $, ya que los dos resultados posibles no tienen la misma probabilidad de ocurrencia.
+Por ejemplo, al lanzar una **moneda no perfecta**, la probabilidad de obtener *cara* puede no ser igual a $\frac{1}{2}$, ya que los dos resultados posibles no tienen la misma probabilidad de ocurrencia.
 
 En este tipo de situaciones resulta más adecuado utilizar la **teoría frecuentista de la probabilidad**, propuesta por **Von Mises**.
 
@@ -961,7 +961,7 @@ La idea central es la siguiente:
 
 > Si un experimento aleatorio se repite un número grande de veces, aunque los resultados individuales sean irregulares, el **comportamiento global** muestra una **regularidad estadística**.
 
-Por ejemplo, si se lanza una moneda $ n $ veces (por ejemplo, $ n = 100 $), al finalizar el experimento se puede estimar la probabilidad de obtener *cara* como:
+Por ejemplo, si se lanza una moneda $n$ veces (por ejemplo, $n = 100$), al finalizar el experimento se puede estimar la probabilidad de obtener *cara* como:
 
 - el **número de veces** que apareció *cara*, dividido entre
 - el **número total de lanzamientos**.
@@ -969,31 +969,31 @@ Por ejemplo, si se lanza una moneda $ n $ veces (por ejemplo, $ n = 100 $), al f
 
 **Definición de probabilidad frecuentista**
 
-Supóngase que se realiza $ n $ veces un experimento aleatorio $ E $ y sea $ A $ un evento cualquiera.  
-Denotemos por $ n(A) $ el número de veces que ocurre el evento $ A $ en las $ n $ repeticiones del experimento.
+Supóngase que se realiza $n$ veces un experimento aleatorio $E$ y sea $A$ un evento cualquiera.  
+Denotemos por $n(A)$ el número de veces que ocurre el evento $A$ en las $n$ repeticiones del experimento.
 
-La **probabilidad frecuentista** del evento $ A $ se define como:
+La **probabilidad frecuentista** del evento $A$ se define como:
 
 $$
 P(A) = \frac{n(A)}{n}
 \tag{1}
 $$
 
-Diremos que $ P(A) $ es la probabilidad del evento $ A $ en el experimento $ E $.
+Diremos que $P(A)$ es la probabilidad del evento $A$ en el experimento $E$.
 
 **Observación:**  
-La frecuencia relativa $ \frac{n(A)}{n} $ tiende a **estabilizarse** cuando el número de repeticiones $ n $ es suficientemente grande.
+La frecuencia relativa $\frac{n(A)}{n}$ tiende a **estabilizarse** cuando el número de repeticiones $n$ es suficientemente grande.
 
 
 **Ejemplo: Lanzamiento de un dado**
 
-Consideremos el experimento aleatorio $ E $ de lanzar un dado y definamos el evento:
+Consideremos el experimento aleatorio $E$ de lanzar un dado y definamos el evento:
 
 $$
 A = \{\text{ocurre un número par}\} = \{2,4,6\}
 $$
 
-Se lanza el dado **20 veces** y se registra, después de cada lanzamiento, si ocurrió el evento $ A $.
+Se lanza el dado **20 veces** y se registra, después de cada lanzamiento, si ocurrió el evento $A$.
 
 
 ```{r}
@@ -1035,7 +1035,7 @@ Estas reglas, conocidas como **axiomas de la probabilidad**, fueron formuladas p
 
 **Axiomas de Kolmogorov**
 
-Sea $ A $ un evento cualquiera del espacio muestral $ S $:
+Sea $A$ un evento cualquiera del espacio muestral $S$:
 
 $$
 0 \leq P(A) \leq 1
@@ -1043,8 +1043,8 @@ $$
 
 **Observación:**  
 La probabilidad de cualquier evento es un número real entre 0 y 1.  
-- $ P(A) = 0 $ indica que el evento es imposible.  
-- $ P(A) = 1 $ indica que el evento es seguro.
+- $P(A) = 0$ indica que el evento es imposible.  
+- $P(A) = 1$ indica que el evento es seguro.
 
 $$
 P(S) = 1
@@ -1071,7 +1071,7 @@ $$
 S = \{\text{águila}, \text{sol}\}
 $$
 
-Definimos la variable aleatoria $ X $ como el resultado del lanzamiento de la moneda.  
+Definimos la variable aleatoria $X$ como el resultado del lanzamiento de la moneda.  
 Los posibles eventos asociados a este experimento son:
 
 $$
@@ -1137,7 +1137,7 @@ A partir de los axiomas básicos de la probabilidad, se pueden deducir varias re
 **Observaciones**
 
 - **Regla del complemento**  
-  Si $ A $ es un evento, la probabilidad de que **no ocurra** se define como:
+  Si $A$ es un evento, la probabilidad de que **no ocurra** se define como:
   
   $$
   P(A^c) = 1 - P(A)
@@ -1151,7 +1151,7 @@ A partir de los axiomas básicos de la probabilidad, se pueden deducir varias re
   $$
 
 - **Regla de la unión de dos eventos**  
-  Para dos eventos $ A $ y $ B $:
+  Para dos eventos $A$ y $B$:
   
   $$
   P(A \cup B) = P(A) + P(B) - P(A \cap B),
@@ -1159,7 +1159,7 @@ A partir de los axiomas básicos de la probabilidad, se pueden deducir varias re
   $$
 
 - **Regla de la unión de tres eventos**  
-  Para tres eventos $ A $, $ B $ y $ C $:
+  Para tres eventos $A$, $B$ y $C$:
   
   $$
   P(A \cup B \cup C) =
@@ -1180,8 +1180,8 @@ Se desea calcular:
 
 Definimos los siguientes eventos:
 
-- $ A $: Evento que denota reclamos por **fallas de tipo serio**  
-- $ B $: Evento que denota reclamos por **fallas de tipo mayor**
+- $A$: Evento que denota reclamos por **fallas de tipo serio**  
+- $B$: Evento que denota reclamos por **fallas de tipo mayor**
 
 De acuerdo con la información proporcionada en la **Tabla 8**, columna de **frecuencia relativa**, se tiene que:
 
@@ -1700,171 +1700,3 @@ Podemos visualizar este proceso de decisión mediante un diagrama de árbol de p
 # Árbol de decisión simple para la prueba de Tuberculosis
 cat("Probabilidad Total de Positivo P(B):", (0.96 * 0.001) + (0.05 * 0.999))
 ```
-
-## 1.5 Material complementario: métodos y aplicaciones
-
-Esta sección complementa la teoría anterior con material adicional tomado de las
-diapositivas del curso: las leyes que rigen las operaciones de conjuntos, los
-métodos clásicos para asignar probabilidades y dos aplicaciones célebres del
-Teorema de Bayes. Todas las figuras se generan con código en lugar de
-reutilizar las imágenes originales de las diapositivas.
-
-### 1.5.1 Leyes de operaciones de conjuntos
-
-Dados tres sucesos $A$, $B$ y $C$ de un espacio muestral $S$, se cumplen las
-siguientes propiedades:
-
-$$\text{Conmutativa:} \quad A \cup B = B \cup A, \qquad A \cap B = B \cap A$$
-$$\text{Asociativa:} \quad A \cup (B \cup C) = (A \cup B) \cup C, \qquad A \cap (B \cap C) = (A \cap B) \cap C$$
-$$\text{Distributiva:} \quad A \cup (B \cap C) = (A \cup B) \cap (A \cup C), \qquad A \cap (B \cup C) = (A \cap B) \cup (A \cap C)$$
-$$\text{Leyes de De Morgan:} \quad \overline{A \cup B} = \overline{A} \cap \overline{B}, \qquad \overline{A \cap B} = \overline{A} \cup \overline{B}$$
-
-A continuación se recrea, mediante código, un diagrama de Venn para ilustrar la
-unión y la intersección de dos eventos $A$ y $B$ dentro del espacio muestral $S$:
-
-```{r, echo=TRUE, fig.align='center', fig.width=6, fig.height=5}
-#| label: fig-venn
-#| fig-cap: "Diagrama de Venn generado por código: eventos A y B en el espacio muestral S"
-library(ggplot2)
-
-circulo <- function(cx, cy, r, n = 200) {
-  t <- seq(0, 2 * pi, length.out = n)
-  data.frame(x = cx + r * cos(t), y = cy + r * sin(t))
-}
-
-cA <- circulo(-0.6, 0, 1.4)
-cB <- circulo(0.6, 0, 1.4)
-
-ggplot() +
-  geom_polygon(data = cA, aes(x, y), fill = "#006341", alpha = 0.35, color = "#004D31", linewidth = 0.8) +
-  geom_polygon(data = cB, aes(x, y), fill = "#C8962E", alpha = 0.35, color = "#8a6a1f", linewidth = 0.8) +
-  annotate("text", x = -1.1, y = 0, label = "A", size = 6, fontface = "bold") +
-  annotate("text", x = 1.1, y = 0, label = "B", size = 6, fontface = "bold") +
-  annotate("text", x = 0, y = 0, label = expression(A ~ "∩" ~ B), size = 4.5) +
-  annotate("rect", xmin = -2.3, xmax = 2.3, ymin = -1.9, ymax = 1.9, alpha = 0, color = "black") +
-  annotate("text", x = -2.0, y = 1.65, label = "S", size = 6, fontface = "bold") +
-  coord_equal() +
-  theme_void()
-```
-
-### 1.5.2 Métodos para asignar probabilidad
-
-Existen tres métodos clásicos para asignar una probabilidad a un evento:
-
-1. **Método clásico (Laplace):** supone resultados igualmente probables, $P(A) = N(A)/N$.
-2. **Método de la frecuencia relativa (Von Mises, 1931):** $P(A) = \lim_{n \to \infty} n_A/n$, la proporción de veces que ocurre $A$ al repetir el experimento.
-3. **Método subjetivo:** asigna un valor numérico al grado de creencia sobre la ocurrencia de un resultado (por ejemplo, la probabilidad de que un equipo gane su próximo partido).
-
-**Ejemplo — la paradoja del cumpleaños.** Bajo el método clásico, la probabilidad
-de que en un grupo de $r$ personas al menos dos compartan cumpleaños es
-$P(\overline{A}) = 1 - \dfrac{365 \times 364 \times \cdots \times (365 - r + 1)}{365^r}$.
-En vez de reutilizar la imagen de la diapositiva, esta probabilidad se calcula y
-grafica directamente con código para distintos tamaños de grupo:
-
-```{r, echo=TRUE, fig.align='center', fig.width=7, fig.height=4.5}
-#| label: fig-cumpleanos
-#| fig-cap: "Probabilidad de coincidencia de cumpleaños según el tamaño del grupo"
-r <- 1:60
-prob_sin_coincidencia <- sapply(r, function(n) prod((365 - 0:(n - 1)) / 365))
-prob_coincidencia <- 1 - prob_sin_coincidencia
-
-df_cumple <- data.frame(r = r, probabilidad = prob_coincidencia)
-
-ggplot(df_cumple, aes(x = r, y = probabilidad)) +
-  geom_line(color = "#006341", linewidth = 1) +
-  geom_point(data = df_cumple[df_cumple$r == 25, ], color = "#C8962E", size = 3) +
-  geom_hline(yintercept = 0.5, linetype = "dashed", color = "grey50") +
-  labs(
-    title = "Paradoja del cumpleaños",
-    subtitle = "Probabilidad de que al menos dos personas compartan cumpleaños",
-    x = "Número de personas en el grupo (r)",
-    y = "P(al menos una coincidencia)"
-  ) +
-  theme_minimal()
-
-cat("Con r = 25 personas, P(al menos una coincidencia) =",
-    round(prob_coincidencia[25], 3), "\n")
-```
-
-Con apenas 23 personas la probabilidad de coincidencia ya supera el 50%, un
-resultado contraintuitivo característico de este método clásico de asignación
-de probabilidades.
-
-### 1.5.3 Aplicaciones del Teorema de Bayes
-
-**Pruebas diagnósticas.** Si una persona porta el virus $V$, un análisis de
-sangre lo detecta el 99% de las veces (sensibilidad), pero también produce un
-3% de falsos positivos en personas sanas. Si solo 5 de cada 1000 personas
-tienen el virus, la probabilidad de que alguien con resultado positivo ($S$)
-realmente tenga el virus es:
-
-$$P(V \mid S) = \frac{P(S \mid V) P(V)}{P(S \mid V)P(V) + P(S \mid \overline{V})P(\overline{V})} = \frac{0.99 \times 0.005}{0.99 \times 0.005 + 0.03 \times 0.995} \approx 0.142$$
-
-Es decir, aun con una prueba muy sensible, solo el 14.2% de quienes dan
-positivo están realmente enfermos, porque la prevalencia de la enfermedad es
-muy baja. Esto se puede verificar simulando una población de un millón de
-personas:
-
-```{r virus_bayes, echo=TRUE}
-set.seed(123)
-n <- 1e6
-tiene_virus <- runif(n) < 0.005
-positivo <- ifelse(tiene_virus, runif(n) < 0.99, runif(n) < 0.03)
-
-p_v_dado_s <- sum(tiene_virus & positivo) / sum(positivo)
-cat("P(V | S) estimado por simulación:", round(p_v_dado_s, 3), "\n")
-cat("P(V | S) teórico:", round(0.99 * 0.005 / (0.99 * 0.005 + 0.03 * 0.995), 3), "\n")
-```
-
-**El problema de Monty Hall.** En un concurso hay tres puertas; detrás de una
-hay un coche y detrás de las otras dos, cabras. El concursante elige una
-puerta, el presentador (que conoce el contenido) abre otra puerta distinta
-mostrando una cabra, y le ofrece cambiar su elección. La intuición sugiere que
-no importa cambiar, pero el Teorema de Bayes muestra que cambiar duplica la
-probabilidad de ganar. En vez de mostrar el enunciado como imagen, se simula
-el juego miles de veces para comparar ambas estrategias:
-
-```{r, echo=TRUE, fig.align='center', fig.width=6, fig.height=4.5}
-#| label: fig-montyhall
-#| fig-cap: "Simulación de Monte Carlo: probabilidad de ganar al cambiar vs. mantener la elección"
-set.seed(2024)
-muestrear <- function(x, ...) if (length(x) == 1) x else sample(x, ...)
-
-simular_monty_hall <- function(n, cambiar) {
-  ganadas <- 0
-  for (i in 1:n) {
-    puertas <- 1:3
-    premio <- sample(puertas, 1)
-    eleccion <- sample(puertas, 1)
-    abre <- muestrear(puertas[puertas != premio & puertas != eleccion], 1)
-    if (cambiar) {
-      eleccion_final <- muestrear(puertas[puertas != eleccion & puertas != abre], 1)
-    } else {
-      eleccion_final <- eleccion
-    }
-    if (eleccion_final == premio) ganadas <- ganadas + 1
-  }
-  ganadas / n
-}
-
-n_sim <- 10000
-resultados <- data.frame(
-  estrategia = c("Mantener", "Cambiar"),
-  probabilidad = c(simular_monty_hall(n_sim, FALSE), simular_monty_hall(n_sim, TRUE))
-)
-
-ggplot(resultados, aes(x = estrategia, y = probabilidad, fill = estrategia)) +
-  geom_col(width = 0.5) +
-  geom_text(aes(label = round(probabilidad, 3)), vjust = -0.5, fontface = "bold") +
-  scale_fill_manual(values = c("Mantener" = "#C8962E", "Cambiar" = "#006341")) +
-  coord_cartesian(ylim = c(0, 0.8)) +
-  labs(title = "Monty Hall: ¿cambiar o mantener la elección?",
-       x = NULL, y = "Probabilidad de ganar (estimada por simulación)") +
-  theme_minimal() +
-  theme(legend.position = "none")
-```
-
-La simulación confirma la teoría: la probabilidad de ganar es de
-aproximadamente $1/3$ si se mantiene la elección original y de
-aproximadamente $2/3$ si se cambia, ya que al abrir una puerta con una cabra
-el presentador aporta información adicional sobre la ubicación del premio.

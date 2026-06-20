@@ -119,7 +119,7 @@ ggplot(df_monedas, aes(x = factor(x), y = probabilidad)) +
 
 Nótese que la última columna de la tabla 1 proporciona la probabilidad de ocurrencia para cada valor de la variable aleatoria, a dicha columna se le denomina __Función de masa de probabilidad (fmp)__ o __función de densidad de probabilidad  (pdf)__. La función masa de probabilidad es aquella que surge al asignar probabilidades a cada uno de los valores de una variable aleatoria y se denota como $P(X)$.
 
-De la tabla 1 es fácil percibir que la suma de las probabilidades correspondientes a todos los valores posibles que toma la variable aleatoria es igual a $1$, esto siempre ocurrirá para cualquier variable aleatoria, y se debe a que la probabilidad en el espacio muestral es $1%, $P(S)=1$.
+De la tabla 1 es fácil percibir que la suma de las probabilidades correspondientes a todos los valores posibles que toma la variable aleatoria es igual a $1$, esto siempre ocurrirá para cualquier variable aleatoria, y se debe a que la probabilidad en el espacio muestral es $1$, es decir, $P(S)=1$.
 También se puede acumular la probabilidad del valor mínimo de la variable aleatoria X hasta un determinado valor de esta misma. Esto se ilustra en la tabla 2 considerando nuevamente el ejemplo 2.1.1.
 
 __Tabla 2:__
@@ -203,7 +203,7 @@ ___Solución:___
 El número esperado de accidentes está dado por:
 
 $E[X] = \sum_{i=0}^{3}x_i*P(x_i) =$ 
-$ 0*\dfrac{1}{6} + 1*\dfrac{1}{3}+ 2*\dfrac{1}{3} + 3*\dfrac{1}{6} = \dfrac{1}{3} + \dfrac{2}{3} + \dfrac{1}{2} = \dfrac{3}{2} = 1.5  $
+$0*\dfrac{1}{6} + 1*\dfrac{1}{3}+ 2*\dfrac{1}{3} + 3*\dfrac{1}{6} = \dfrac{1}{3} + \dfrac{2}{3} + \dfrac{1}{2} = \dfrac{3}{2} = 1.5$
 
 Por lo tanto, se esperan alrededor de 2 accidentes por jornada laboral. Veamos la varianza:
 
@@ -242,7 +242,7 @@ Ahora nos hacemos la pregunta, _¿qué es más probable que recuerden? ¿Al meno
 
 La probabilidad de que un estudiante de psicología recuerdfe al menos tres palabras es:
 
- $P(X>=x)$$= P(X=3) + P(X=4)+ P(X=5)$ =$  0.05 + 0.05 + 0.2 $= $0.3 $
+ $P(X>=x)$$= P(X=3) + P(X=4)+ P(X=5)$=$  0.05 + 0.05 + 0.2 $=$0.3 $
  
  Este proceso puede hacerse de manera similar aplicando lo siguiente: $P(X\geq x) =  1-P(X<x)$, similarmente, $P(X\leq x) =  1-P(X>x)$
 
@@ -407,7 +407,7 @@ Por lo tanto: $E[X] = (1+2+3+4+5+6) * \dfrac{1}{6}$ = $3.5$
 
 Similarmente, la varianza para una distribución uniforme está dada por:
 
- $V[X] = \sum_{i=1}^{n}(x_i-E[X])^2*P(X=x_i) $
+ $V[X] = \sum_{i=1}^{n}(x_i-E[X])^2*P(X=x_i)$
  
  En estos casos, es factible tener una tabla como la siguiente para no perder de vista nuestros datos:
  
@@ -439,11 +439,11 @@ Cabe destacar que $x$ solo toma los valores de 0 o 1, también se puede interpre
 
 La esperanza de ésta distribución es:
 
-$E[X] = p $
+$E[X] = p$
 
 Y su varianza:
 
-$V[X] = p(1-p) $
+$V[X] = p(1-p)$
 
 
 __Ejemplo__
@@ -741,8 +741,8 @@ Replanteando los incisos anteriores:
 
 - Se realiza un experimento tipo Bernoulli.  
 - El resultado se clasifica en una de dos categorías mutuamente excluyentes: éxito o fracaso.  
-- La probabilidad de éxito, denotada por $ p $, **permanece constante** de prueba a prueba.  
-- El experimento se realiza un número fijo de veces $ n = 3 $, bajo las mismas condiciones.
+- La probabilidad de éxito, denotada por $p$, **permanece constante** de prueba a prueba.  
+- El experimento se realiza un número fijo de veces $n = 3$, bajo las mismas condiciones.
 
 
 
@@ -762,8 +762,8 @@ Una variable aleatoria binomial se define como el número de éxitos observados 
 
 Volviendo al ejemplo del biólogo:
 
-- $ F $: la planta tiene flores  
-- $ F^c $: la planta no tiene flores  
+- $F$: la planta tiene flores  
+- $F^c$: la planta no tiene flores  
 
 Definimos la variable aleatoria:
 
@@ -788,7 +788,7 @@ En la tabla siguiente se muestran los resultados posibles tras realizar **tres e
 
 En la columna $F$ (con flores), el primer renglón indica que se obtuvieron **3 plantas con flores** y, por tanto, **0 plantas sin flores**.
 
-Por ejemplo, cuando $ X = 3 $, el resultado observado es:
+Por ejemplo, cuando $X = 3$, el resultado observado es:
 
 $$
 FFF
@@ -806,8 +806,8 @@ $$
 
 Denotemos:
 
-- $ p = P(F) $: probabilidad de éxito  
-- $ q = 1 - p $: probabilidad de fracaso  
+- $p = P(F)$: probabilidad de éxito  
+- $q = 1 - p$: probabilidad de fracaso  
 
 Entonces:
 
@@ -817,7 +817,7 @@ $$
 
 
 
-**Caso $ X = 2 $**
+**Caso $X = 2$**
 
 Obtener dos plantas con flores puede ocurrir de las siguientes maneras:
 
@@ -836,7 +836,7 @@ P(X = 2) &= P(FF F^c \cup F F^c F \cup F^c FF) \\
 $$
 
 
-**Caso $ X = 1 $**
+**Caso $X = 1$**
 
 De manera análoga:
 
@@ -849,7 +849,7 @@ P(X = 1) &= P(F^c F^c F \cup F^c F F^c \cup F F^c F^c) \\
 $$
 
 
-**Caso $ X = 0 $**
+**Caso $X = 0$**
 
 $$
 P(X = 0) = P(F^c F^c F^c) = q^3
@@ -918,7 +918,7 @@ text(
 La **distribución binomial** modela el número de éxitos que ocurren al repetir un experimento de Bernoulli un número fijo de veces, bajo las siguientes condiciones:
 
 - Cada ensayo tiene solo dos posibles resultados: éxito o fracaso.
-- La probabilidad de éxito es constante e igual a $ p $.
+- La probabilidad de éxito es constante e igual a $p$.
 - Los ensayos son independientes entre sí.
 
 
@@ -927,14 +927,14 @@ La **distribución binomial** modela el número de éxitos que ocurren al repeti
 
 La función masa de probabilidad de una variable aleatoria binomial se compone de dos partes fundamentales.
 
-**Término probabilístico $ p^x q^{n-x} $**
+**Término probabilístico $p^x q^{n-x}$**
 
 Este término representa la probabilidad de una **secuencia específica** de resultados que contiene:
 
-- $ x $ éxitos, cada uno con probabilidad $ p $
-- $ n-x $ fracasos, cada uno con probabilidad $ q = 1-p $
+- $x$ éxitos, cada uno con probabilidad $p$
+- $n-x$ fracasos, cada uno con probabilidad $q = 1-p$
 
-Por ejemplo, para el evento $ P(X = 2) $ con $ n = 3 $, se consideran secuencias con dos éxitos y un fracaso, lo que se expresa como:
+Por ejemplo, para el evento $P(X = 2)$ con $n = 3$, se consideran secuencias con dos éxitos y un fracaso, lo que se expresa como:
 
 $$
 p^2 q
@@ -950,7 +950,7 @@ $$
 
 indica el número de formas mutuamente excluyentes en que pueden ordenarse los éxitos y fracasos.
 
-Para $ n = 3 $ y $ x = 2 $:
+Para $n = 3$ y $x = 2$:
 
 $$
 \binom{3}{2} = 3
@@ -958,9 +958,9 @@ $$
 
 Las secuencias posibles son:
 
-- $ EFF $
-- $ FEF $
-- $ FFE $
+- $EFF$
+- $FEF$
+- $FFE$
 
 Por tanto:
 
@@ -988,16 +988,16 @@ $$
 p = \frac{2}{3}, \qquad q = \frac{1}{3}
 $$
 
-La variable aleatoria $ X $ representa el número de plantas con flores en $ n = 3 $ observaciones.
+La variable aleatoria $X$ representa el número de plantas con flores en $n = 3$ observaciones.
 
 **Tabla 14. Función masa de probabilidad**
 
 | $x$ | $P(X=x)$ | Aproximación |
 |---|---|---|
-| 0 | $ (1/3)^3 = 1/27 $ | 0.037 |
-| 1 | $ 3(2/3)(1/3)^2 = 2/9 $ | 0.222 |
-| 2 | $ 3(2/3)^2(1/3) = 4/9 $ | 0.444 |
-| 3 | $ (2/3)^3 = 8/27 $ | 0.296 |
+| 0 | $(1/3)^3 = 1/27$ | 0.037 |
+| 1 | $3(2/3)(1/3)^2 = 2/9$ | 0.222 |
+| 2 | $3(2/3)^2(1/3) = 4/9$ | 0.444 |
+| 3 | $(2/3)^3 = 8/27$ | 0.296 |
 
 
 ```{r}
@@ -1108,9 +1108,9 @@ $$
 
 Las probabilidades condicionadas son:
 
-- Primera mujer: $ 14/20 = 0.70 $
-- Segunda mujer: $ 13/19 \approx 0.684 $
-- Tercera mujer: $ 12/18 = 0.67 $
+- Primera mujer: $14/20 = 0.70$
+- Segunda mujer: $13/19 \approx 0.684$
+- Tercera mujer: $12/18 = 0.67$
 
 **Observación:**  
 La probabilidad de éxito cambia significativamente en cada extracción. Por tanto, **no es adecuado utilizar un modelo binomial** y se debe emplear la **distribución hipergeométrica**.
@@ -1119,12 +1119,12 @@ La probabilidad de éxito cambia significativamente en cada extracción. Por tan
 
 **Notación**
 
-- $ N $: tamaño de la población  
-- $ K $: número de éxitos en la población  
-- $ N-K $: número de fracasos en la población  
-- $ n $: tamaño de la muestra  
-- $ X $: número de éxitos en la muestra  
-- $ n-X $: número de fracasos en la muestra  
+- $N$: tamaño de la población  
+- $K$: número de éxitos en la población  
+- $N-K$: número de fracasos en la población  
+- $n$: tamaño de la muestra  
+- $X$: número de éxitos en la muestra  
+- $n-X$: número de fracasos en la muestra  
 
 
 
@@ -1176,9 +1176,9 @@ Se seleccionan 4 secretarias al azar.
 
 Datos:
 
-- $ N = 18 $
-- $ K = 10 $
-- $ n = 4 $
+- $N = 18$
+- $K = 10$
+- $n = 4$
 
 Se desea calcular:
 
@@ -1215,9 +1215,9 @@ Un oficial selecciona 3 tabletas al azar.
 
 Datos
 
-- $ N = 15 $
-- $ K = 6 $
-- $ n = 3 $
+- $N = 15$
+- $K = 6$
+- $n = 3$
 
 La probabilidad de arresto es:
 
@@ -1297,13 +1297,13 @@ por lo que el uso directo de la distribución binomial se vuelve computacionalme
 
 **Función masa de probabilidad**
 
-Sea $ X $ una variable aleatoria Poisson con parámetro $ \lambda > 0 $. Su función masa de probabilidad está dada por:
+Sea $X$ una variable aleatoria Poisson con parámetro $\lambda > 0$. Su función masa de probabilidad está dada por:
 
 $$
 P(X = x) = \frac{e^{-\lambda}\lambda^x}{x!}, \quad x = 0,1,2,\ldots
 $$
 
-donde $ e \approx 2.71828 $ es la base del logaritmo natural.
+donde $e \approx 2.71828$ es la base del logaritmo natural.
 
 La función de distribución acumulada es:
 
@@ -1313,16 +1313,16 @@ $$
 
 **Relación con la distribución binomial**
 
-La distribución binomial $ \text{Bin}(n,p) $ puede aproximarse por una distribución Poisson cuando:
+La distribución binomial $\text{Bin}(n,p)$ puede aproximarse por una distribución Poisson cuando:
 
-- $ n \to \infty $,
-- $ p \to 0 $,
-- $ \lambda = np $ permanece constante.
+- $n \to \infty$,
+- $p \to 0$,
+- $\lambda = np$ permanece constante.
 
-En la práctica, esta aproximación es adecuada cuando $ np < 5 $.
+En la práctica, esta aproximación es adecuada cuando $np < 5$.
 
 **Observación:**  
-En la distribución Poisson, el parámetro $ \lambda $ representa simultáneamente:
+En la distribución Poisson, el parámetro $\lambda$ representa simultáneamente:
 - la **esperanza matemática**,
 - la **varianza** de la variable aleatoria.
 
@@ -1338,13 +1338,13 @@ Un agrónomo sabe que el **2% de las semillas** de cierta especie no germina. Se
 
 **Definición del modelo**
 
-Sea $ X $ el número de semillas no germinadas.
+Sea $X$ el número de semillas no germinadas.
 
 $$
 \lambda = np = 100(0.02) = 2
 $$
 
-Por tanto, $ X \sim \text{Poisson}(2) $.
+Por tanto, $X \sim \text{Poisson}(2)$.
 
 La probabilidad de interés es:
 
@@ -1471,132 +1471,4 @@ ggplot(df, aes(x, prob)) +
 
 ```
 
-## 2.5 Material complementario: distribuciones adicionales y distribuciones conjuntas
-
-Esta sección incorpora, a partir de las diapositivas del curso, dos familias
-discretas adicionales (Geométrica y Binomial Negativa) y la teoría de
-distribuciones conjuntas para dos variables aleatorias discretas. Todas las
-gráficas se generan con código.
-
-### 2.5.1 Distribución Geométrica
-
-Sea $X$ el número de fracasos antes de obtener el primer éxito en ensayos
-Bernoulli independientes, cada uno con probabilidad de éxito $p$. Su función
-de probabilidad y momentos son:
-
-$$p(x; p) = (1-p)^x \cdot p = q^x p, \qquad x = 0, 1, 2, \ldots$$
-$$E(X) = \frac{1-p}{p}, \qquad Var(X) = \frac{1-p}{p^2}$$
-
-Una propiedad importante de esta distribución es la **falta de memoria**: no
-importa cuántos fracasos hayan ocurrido ya, la distribución de los fracasos
-restantes hasta el próximo éxito es siempre la misma.
-
-```{r, echo=TRUE, fig.align='center', fig.width=6, fig.height=4}
-#| label: fig-geometrica
-#| fig-cap: "Distribución Geométrica para distintos valores de p"
-library(ggplot2)
-
-x <- 0:15
-df_geom <- do.call(rbind, lapply(c(0.2, 0.5), function(p) {
-  data.frame(x = x, prob = dgeom(x, p), p = paste0("p = ", p))
-}))
-
-ggplot(df_geom, aes(x = x, y = prob, fill = p)) +
-  geom_col(position = "dodge") +
-  scale_fill_manual(values = c("p = 0.2" = "#006341", "p = 0.5" = "#C8962E")) +
-  labs(title = "Distribución Geométrica", x = "Número de fracasos (x)",
-       y = "P(X = x)", fill = NULL) +
-  theme_minimal()
-```
-
-**Ejemplo:** cada intento de conexión tiene una probabilidad de éxito de
-$p = 0.2$. El número esperado de intentos hasta lograr la conexión es:
-
-```{r geometrica_ejemplo, echo=TRUE}
-p <- 0.2
-cat("P(conectarse en menos de 4 intentos):", round(pgeom(2, p), 4), "\n")
-cat("Número esperado de fracasos antes del éxito, E(X):", (1 - p) / p, "\n")
-cat("Número esperado de intentos totales:", 1 / p, "\n")
-```
-
-### 2.5.2 Distribución Binomial Negativa
-
-Generaliza a la Geométrica: $X$ representa el número de fracasos antes de
-alcanzar $k$ éxitos en ensayos Bernoulli con probabilidad de éxito $p$.
-
-$$p(x; k, p) = \binom{k + x - 1}{x} p^k (1-p)^x, \qquad x = 0, 1, 2, \ldots$$
-$$E(X) = \frac{k(1-p)}{p}, \qquad Var(X) = \frac{k(1-p)}{p^2}$$
-
-```{r, echo=TRUE, fig.align='center', fig.width=6, fig.height=4}
-#| label: fig-binneg
-#| fig-cap: "Distribución Binomial Negativa (k = 3, p = 0.3)"
-x <- 0:25
-df_bn <- data.frame(x = x, prob = dnbinom(x, size = 3, prob = 0.3))
-
-ggplot(df_bn, aes(x = x, y = prob)) +
-  geom_col(fill = "#006341") +
-  labs(title = "Binomial Negativa (k = 3 éxitos, p = 0.3)",
-       x = "Número de fracasos (x)", y = "P(X = x)") +
-  theme_minimal()
-```
-
-**Ejemplo:** la probabilidad de que una persona tenga un perro se estima en
-$p = 0.3$. La probabilidad de que la décima persona entrevistada sea la
-tercera que tiene un perro ($k = 3$ éxitos, $x = 7$ fracasos):
-
-```{r binneg_ejemplo, echo=TRUE}
-k <- 3; p <- 0.3
-cat("p(7; 3, 0.3) =", round(dnbinom(7, size = k, prob = p), 4), "\n")
-cat("E(X) =", k * (1 - p) / p, "personas sin perro en promedio\n")
-```
-
-### 2.5.3 Distribuciones discretas conjuntas
-
-La **función de probabilidad conjunta** de dos variables aleatorias discretas
-$X$ y $Y$ se define como $p(x,y) = P(X = x, Y = y)$, con $p(x,y) \ge 0$ y
-$\sum_x \sum_y p(x,y) = 1$. A partir de ella se obtienen:
-
-- **Función de probabilidad marginal:** $p_X(x) = \sum_y p(x,y)$ y $p_Y(y) = \sum_x p(x,y)$.
-- **Función de probabilidad condicional:** $p_{Y\mid X}(y \mid x) = p(x,y)/p_X(x)$.
-- **Independencia:** $X$ y $Y$ son independientes si $p(x,y) = p_X(x) \cdot p_Y(y)$ para todo par $(x,y)$.
-
-**Ejemplo (deducibles de seguros).** Sea $X$ el deducible de una póliza de
-auto (\$100 o \$250) y $Y$ el deducible de una póliza de casa (\$0, \$100 o
-\$200), con la siguiente función de probabilidad conjunta:
-
-```{r, echo=TRUE, fig.align='center', fig.width=6, fig.height=4.5}
-#| label: fig-conjunta-discreta
-#| fig-cap: "Función de probabilidad conjunta p(x,y): deducibles de auto y casa"
-library(ggplot2)
-
-tabla <- expand.grid(x = c(100, 250), y = c(0, 100, 200))
-tabla$p <- c(0.20, 0.05, 0.10, 0.15, 0.20, 0.30)
-
-ggplot(tabla, aes(x = factor(y), y = factor(x), fill = p)) +
-  geom_tile(color = "white") +
-  geom_text(aes(label = p), color = "white", fontface = "bold") +
-  scale_fill_gradient(low = "#C8962E", high = "#004D31") +
-  labs(title = "p(x, y): deducible auto (X) vs. deducible casa (Y)",
-       x = "Deducible casa (y)", y = "Deducible auto (x)", fill = "p(x,y)") +
-  theme_minimal()
-```
-
-```{r conjunta_marginales, echo=TRUE}
-# Probabilidades marginales y condicionales a partir de la tabla conjunta
-mat <- matrix(tabla$p, nrow = 2, byrow = TRUE,
-              dimnames = list(x = c("100", "250"), y = c("0", "100", "200")))
-p_x <- rowSums(mat)   # marginal de X
-p_y <- colSums(mat)   # marginal de Y
-cat("p_X(x):\n"); print(p_x)
-cat("\np_Y(y):\n"); print(p_y)
-
-# Independencia: ¿p(100,100) == p_X(100) * p_Y(100)?
-cat("\np(100,100) =", mat["100", "100"],
-    " vs.  p_X(100)*p_Y(100) =", p_x["100"] * p_y["100"], "\n")
-cat("Como no coinciden, X y Y NO son independientes.\n")
-```
-
-Como $p(100,100) = 0.10 \ne p_X(100) \cdot p_Y(100) = 0.50 \times 0.25 =
-0.125$, las variables $X$ y $Y$ no son independientes: conocer el deducible
-de una póliza aporta información sobre el deducible de la otra.
-                                              
+## 2.5 Material complementario: distribucione
