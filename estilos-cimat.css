@@ -131,12 +131,59 @@ code {
 }
 
 /* ---------- Callouts (nota, tip, warning…) ---------- */
+.callout {
+  background-color: #ffffff;
+}
+
+.callout-header,
+.callout-title-container {
+  color: var(--cimat-texto) !important;
+  font-weight: 700 !important;
+}
+
+.callout-body-container,
+.callout-body-container p,
+.callout-body-container li {
+  color: var(--cimat-texto) !important;
+  opacity: 1 !important;
+}
+
 .callout-note {
   border-left-color: var(--cimat-verde) !important;
 }
 
+.callout-note .callout-header {
+  background-color: rgba(0, 99, 65, 0.08) !important;
+}
+
 .callout-tip {
   border-left-color: var(--cimat-dorado) !important;
+}
+
+.callout-tip .callout-header {
+  background-color: rgba(200, 150, 46, 0.12) !important;
+}
+
+.callout-warning .callout-header,
+.callout-important .callout-header {
+  background-color: rgba(200, 150, 46, 0.12) !important;
+}
+
+.callout-caution .callout-header {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Observaciones/Notas escritas como blockquote (> **Nota:** ...) */
+blockquote {
+  color: var(--cimat-texto);
+  background-color: var(--cimat-gris);
+  border-left: 4px solid var(--cimat-dorado);
+  padding: 0.6rem 1rem;
+  border-radius: 2px;
+}
+
+blockquote p {
+  color: var(--cimat-texto) !important;
 }
 
 /* ---------- Tablas ---------- */

@@ -2,7 +2,7 @@
 
 En esta unidad, estudiaremos las distribuciones generadas por características medidas a conjuntos de individuos (muestras). Antes de revisar las distribuciones de muestreo se definen conceptos importantes en la modelación estadística.
 
-## 4.1 Población
+## Población
 
 Una población es un conjunto de elementos, objetos o seres vivos con características comunes $A$, $B$, $C$, $D$ y no comunes $E$, $F$, $G$ (que varían de un sujeto a otro).
 
@@ -20,9 +20,12 @@ Por otra parte, la lista de características no comunes: \* $E$: Edad \* $F$: Ti
 
 Se esperaría que las variables no comunes tengan poca influencia sobre la variable de respuesta: “Ingreso mensual”, que puedan afectar su comportamiento al realizar un estudio, o en su defecto, en el diseño del experimento deben de controlarse adecuadamente, quizás con algún método de estratificación y seguramente en la definición de la población objetivo de interés, utilizando criterios de exclusión y de inclusión.
 
-> **Nota:** En la teoría estadística, la población no solo es el conjunto de individuos u objetos físicos, sino el **conjunto completo de mediciones o respuestas** de interés para el experimentador. Por lo tanto, si nos interesa el ingreso mensual, la población conceptual estaría formada por todos los valores monetarios posibles de ese grupo, más que por los individuos mismos. Los valores numéricos constantes que resumen las características de esta población en su totalidad (como el verdadero ingreso medio $\mu$ o la varianza del ingreso $\sigma^2$) reciben el nombre de **parámetros**.
+::: {.callout-note icon=false}
+## Nota
+En la teoría estadística, la población no solo es el conjunto de individuos u objetos físicos, sino el **conjunto completo de mediciones o respuestas** de interés para el experimentador. Por lo tanto, si nos interesa el ingreso mensual, la población conceptual estaría formada por todos los valores monetarios posibles de ese grupo, más que por los individuos mismos. Los valores numéricos constantes que resumen las características de esta población en su totalidad (como el verdadero ingreso medio $\mu$ o la varianza del ingreso $\sigma^2$) reciben el nombre de **parámetros**.
+:::
 
-## 4.2 Muestra aleatoria
+## Muestra aleatoria
 
 Si de una población bajo estudio, digamos con una distribución de probabilidad $P(x; \theta)$, seleccionamos un elemento al azar y medimos una característica de interés, se generará un dato que "asumimos" poseerá las mismas propiedades de la población general.
 
@@ -89,7 +92,7 @@ Como la realización de la muestra indica que los datos provienen de una variabl
 
 Dado que las variables $X_1, X_2, \dots, X_n$ provienen de una misma población y son independientes, a la variable aleatoria general $X$ que describe la característica en toda la población se le atribuye este comportamiento fundamental: $$X \sim N(65, 4)$$
 
-## 4.3 Estimadores de parámetros
+## Estimadores de parámetros
 
 Los seres humanos tenemos características propias que nos definen. Por ejemplo, características anatómicas: tipo de rostro (redondo, alargado), ojos (grandes o pequeños), color de ojos (cafés, negros, etcétera), color de piel (moreno, claro, negro), estatura, etcétera. De manera que al mencionar todas sus características de la persona podremos definirla.
 
@@ -197,7 +200,7 @@ ggplot() +
   )
 ```
 
-## 4.4 Distribución muestral de un estimador
+## Distribución muestral de un estimador
 
 Como ya hemos visto, una vez que se tienen los datos observados de una muestra, se calculan ciertas funciones llamadas estimadores que nos permiten inferir las características de la población estudiada. Los datos son realizaciones de variables aleatorias; por lo tanto, **los estimadores también son variables aleatorias** antes de que la muestra sea extraída. Al ser una variable aleatoria, todo estimador cuenta con una función de densidad o de probabilidad, a la cual llamaremos **distribución muestral del estimador**.
 
@@ -214,7 +217,7 @@ A continuación, estudiaremos las distribuciones muestrales teóricas para los e
 
 ------------------------------------------------------------------------
 
-## 4.5 Distribución muestral de promedios ($\bar{X}$)
+## Distribución muestral de promedios ($\bar{X}$)
 
 Si $X_1, X_2, \dots, X_n$ representan una muestra aleatoria extraída de una población infinita (o con reemplazo) que posee una media $\mu$ y una varianza $\sigma^2$, entonces las propiedades del estimador media muestral $\bar{X} = \frac{\sum_{i=1}^n X_i}{n}$ son:
 
@@ -251,7 +254,7 @@ La probabilidad de que la media muestral exceda los 75 puntos es de **0.994** (o
 
 ------------------------------------------------------------------------
 
-## 4.6 Esperanza o media del estimador de la varianza ($S^2$)
+## Esperanza o media del estimador de la varianza ($S^2$)
 
 Si $X_1, X_2, \dots, X_n$ representan una muestra aleatoria, el estimador insesgado de la varianza poblacional se define como: $$S^2 = \frac{\sum_{i=1}^n (X_i - \bar{X})^2}{n-1}$$
 
@@ -261,7 +264,7 @@ A diferencia del estimador de la media ($\bar{X}$), cuya distribución puede mod
 
 ------------------------------------------------------------------------
 
-## 4.7 Distribución $\chi^2$ (Chi-cuadrada)
+## Distribución $\chi^2$ (Chi-cuadrada)
 
 La distribución $\chi^2$ es un pilar de la inferencia estadística, estrechamente vinculada a la distribución Normal. Supongamos que tenemos una variable aleatoria de interés que sigue una distribución normal: $X \sim N(\mu, \sigma^2)$. Si seleccionamos una muestra aleatoria $X_1, X_2, \dots, X_n$, es lógico suponer que cada observación se comporta como una normal.
 
@@ -303,7 +306,7 @@ ggplot(df_chi, aes(x=x, y=densidad, color=grados)) +
 
 ------------------------------------------------------------------------
 
-## 4.8 Cálculo de probabilidades para la distribución $\chi^2$
+## Cálculo de probabilidades para la distribución $\chi^2$
 
 En lugar de recurrir a las clásicas tablas impresas (que solo muestran cuantiles acumulados fijos), podemos calcular probabilidades exactas para cualquier escenario utilizando el software estadístico R.
 
@@ -382,7 +385,7 @@ ggplot(df_d, aes(x=x, y=fx)) +
   annotate("text", x=8, y=0.01, label="Área \n = 0.01", color="darkorange", fontface="bold")
 ```
 
-## 4.9 Distribución del estimador $S^2$
+## Distribución del estimador $S^2$
 
 Como mencionamos anteriormente, el estimador de la varianza $S^2$ por sí solo no tiene una distribución de probabilidad que podamos tipificar directamente en una tabla. Sin embargo, existe una transformación matemática fundamental que asocia a este estadístico con una distribución conocida.
 
@@ -390,7 +393,10 @@ Como mencionamos anteriormente, el estimador de la varianza $S^2$ por sí solo n
 
 $$\frac{(n-1)S^2}{\sigma^2} \sim \chi^2_{n-1} \quad (8)$$
 
-*Nota:* Esta relación es el núcleo de la inferencia para varianzas, pero depende fuertemente de la suposición de que la población original sea Normal. Si la población no es Normal, este estadístico no seguirá una distribución Chi-cuadrada.
+::: {.callout-note icon=false}
+## Nota
+Esta relación es el núcleo de la inferencia para varianzas, pero depende fuertemente de la suposición de que la población original sea Normal. Si la población no es Normal, este estadístico no seguirá una distribución Chi-cuadrada.
+:::
 
 **Ejemplo:**
 
@@ -414,7 +420,7 @@ La probabilidad de que la varianza muestral sea mayor a 12.16 es de **0.791** (7
 
 ------------------------------------------------------------------------
 
-## 4.10 Distribución $t$ de Student
+## Distribución $t$ de Student
 
 La distribución $t$ de Student es el modelo matemático que utilizamos cuando queremos hacer inferencias sobre la media poblacional $\mu$, pero **desconocemos la verdadera desviación estándar poblacional** $\sigma$ y nos vemos obligados a estimarla usando la desviación estándar de nuestra muestra ($S$).
 
@@ -434,7 +440,7 @@ e)  A medida que aumenta el tamaño de la muestra ($n \to \infty$), la estimaci�
 
 ------------------------------------------------------------------------
 
-## 4.11 Cálculo de probabilidades de una distribución $t$ de Student
+## Cálculo de probabilidades de una distribución $t$ de Student
 
 **Ejemplo:** Un ingeniero agrónomo ha desarrollado una variedad de maíz ("xy32") y afirma que su rendimiento medio es de $\mu = 1.5 \text{ kg/planta}$. En un campo experimental se cultivaron $n = 20$ plantas. Tras la cosecha, se estimó una desviación estándar muestral de $S = 0.8 \text{ kg/planta}$.
 
@@ -479,7 +485,7 @@ ggplot(df_comp, aes(x=x, y=densidad, color=Distribucion)) +
 
 ------------------------------------------------------------------------
 
-## 4.12 Distribución $F$ de Fisher
+## Distribución $F$ de Fisher
 
 La distribución $F$ surge de manera natural cuando queremos **comparar las varianzas de dos poblaciones distintas**.
 
@@ -525,7 +531,7 @@ ggplot(df_fisher, aes(x=x, y=densidad)) +
   annotate("text", x=2.5, y=0.1, label="P(F > 2) = 0.063", color="darkgreen", fontface="bold")
 ```
 
-## 4.13 Cálculo de probabilidades de una distribución F
+## Cálculo de probabilidades de una distribución F
 
 Para hacer más ágil y preciso el cálculo de probabilidades, se emplea el software estadístico R en lugar de las tradicionales tablas impresas.
 
@@ -559,7 +565,7 @@ Al especificar `lower.tail = FALSE` en la función `qf`, le indicamos al softwar
 
 ------------------------------------------------------------------------
 
-## 4.14 Distribución muestral del estimador de la proporción
+## Distribución muestral del estimador de la proporción
 
 Cuando estudiamos una característica cualitativa en una población (por ejemplo: artículo defectuoso vs. no defectuoso, alquila vivienda vs. no alquila), trabajamos con variables que asumen solo dos valores.
 
@@ -605,7 +611,7 @@ Comprobando la Ecuación (19) para la varianza: $$Var(\hat{P}) = \frac{P(1-P)}{n
 
 ------------------------------------------------------------------------
 
-## 4.15 Teorema del Límite Central (TLC)
+## Teorema del Límite Central (TLC)
 
 Este es, quizás, el teorema de mayor importancia práctica en la estadística inferencial. Especifica cuál es el comportamiento de las distribuciones de promedios o sumas cuando el tamaño de la muestra crece.
 
@@ -635,7 +641,7 @@ La probabilidad es de **0.835**.
 
 ------------------------------------------------------------------------
 
-## 4.16 Teorema del límite central para el estimador de la proporción
+## Teorema del límite central para el estimador de la proporción
 
 Dado que la proporción muestral $\hat{P}$ es, matemáticamente, un promedio de variables aleatorias Bernoulli (1s y 0s), **el Teorema del Límite Central también aplica a las proporciones**.
 

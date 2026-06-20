@@ -6,7 +6,7 @@
 
 Al término de este curso, el participante conocerá los fundamentos de la probabilidad, las  características de las distribuciones de probabilidades discretas y continuas más utilizadas, así como,  conceptos básicos de inferencia estadística y las distribuciones derivadas del muestreo más  frecuentes en la modelación estadística. 
 
-## 2.1 Variable aleatoria
+## Variable aleatoria
 
 Se denominan ___variables___ a las características particulares de cualquier elemento de alguna población o muestra que se tenga, dicha variable puede tomar distintos valores y, en general, hay dos tipos de variables (Cualitativa [Edad] y Cuantitativa [Género]). Se dice que son ___aleatorias___ porque el valor observado no se conoce hasta la realización del experimento, aunque sí se sabe cuáles son los posibles resultados
 
@@ -34,7 +34,7 @@ Es importante mencionar que en el ejemplo 2.1.1 se supone que es posible disting
 La importancia de definir una variable aleatoria rádica en que los eventos que nos interesa estudiar (que se encuentran en el espacio muestral) van a ser trasladados a los números reales y, en este espacio ya nos va a ser posible realizar operaciones matemáticas e incluso a cada valor de la variable aleatoria asignarle una función de densidad de probabilidad con la cual cada valor de la variable aleatoria tendrá asociado una probabilidad de ocurrencia.
 
 
-## 2.2 Variable aleatoria discreta
+## Variable aleatoria discreta
 El común de los fenómenos aleatorios discretos tiende a comportarse bajo determinadas características generales, por lo que se han desarrollado algunas distribuciones discretas de probabilidad.
 
 __Nota__: 
@@ -60,7 +60,7 @@ valores
 X=1, 2, 3, 4, …
 ::::
 
-### 2.2.1 Función de probabilidad y función de probabilidad acumulada
+### Función de probabilidad y función de probabilidad acumulada
 La asignación de valores reales a cada evento del espacio completo de eventois lo hemos llamado _variable aleatoria_; como vimos, a cada evento del espacio completo de eventos le corresponde una probabilidad determinada, a este conjunto de probabilidades le llamaremos la ___distribuición de probabilidad___, esto quiere decir que existe un rango de valores que puede tomar, por lo tanto, cualquier fenómeno aleatorio puede tomar valores en el intervalo (0,1).
 
 __Ejemplo 2.2.1__:
@@ -175,7 +175,7 @@ La última columna de la __Tabla 2__ proporciona la probabilidad de ocurrencia a
 
 Recordad que una distribución de probabilidad siempre está dada en el intervalo $(0,1)$
 
-### 2.2.2 Valor esperado de una variable aleatoria discreta
+### Valor esperado de una variable aleatoria discreta
 
 La esperanza matemática, valor esperado o media de una variable aleatoria discreta ($E(X)$) corresponde al valor esperado de que un cierto evento ocurra. Se calcula como la suma de los productos de cada valor que toma la variable aleatoria por su respectivo valor de probabilidad:
 
@@ -260,11 +260,11 @@ Por lo tanto, los estudiantes recuerdan, en promedio, alrededor de 2 palabras.
 
 Lo invitamos a calcular $E[X]$, así como las correspondientes varianzas de cada variable.
 
-## 2.3 Familia de distribuciones de probabilidad discretas
+## Familia de distribuciones de probabilidad discretas
 
 Dada la naturaleza de ciertos eventos, como lanzar una moneda, arrojar un dado, seleccionar de manera indistinta a una persona de un grupo, se desarrollaron ciertos procedimientos para analizar esos casos, pues en cada ejemplo cada uno de los valores de las posibles variables aleatorias tiene la misma probabilidad de ocurrir
 
-### 2.3.1 Distribución aleatoria discreta Uniforme
+### Distribución aleatoria discreta Uniforme
 
 Sea el experimento que consiste en lanzar un dado. El resultado de interés es el número de la cara del dado, la cual se denota con la variable aleatoria X. En un dado existen 6 caras, por lo que la variable aleatoria puede tomar valores de 1 a 6 y si se asume que cada cara tiene la misma probabilidad de aparecer, entonces la función masa de probabilidad de la variable aleatoria X es la mostrada en la tabla 7.
 
@@ -424,7 +424,7 @@ Entonces, $V[X]= (1-3.5)^2 +(2-3.5)^2+(3-3.5)^2+(4-3.5)^2+(5-3.5)^2+(6-3.5)^2*\d
 =$2.91$
  
  
-### 2.3.2 Distribución aleatoria discreta Bernoulli
+### Distribución aleatoria discreta Bernoulli
 
 Es la distribucipon mpas sencilla que podemos contruir, y es aquella cuyo espacio de eventos está compuesto por dos eventos complementarios, donde a uno de ellos lo designamos por el evento de éxito y el otro por el de fracaso; lo cual implica que en la realización de un solo experimento se podrá presentar uno u otro, pero no ambos. 
 
@@ -472,7 +472,7 @@ X=0 el individuo está muerto y X=1 el individuo está vivo. Se define a p como 
 - $$PX=1=p=0.10 $$
 
 
-## 2.4 Muestreo
+## Muestreo
 
 En la mayoría de los problemas en lugar de observar una sola unidad se observan un número n de unidades experimentales, posteriormente se clasifican en una de dos categorías. En esta parte se hace una reflexión sobre la manera de seleccionar unidades experimentales en cada repetición del experimento aleatorio.
 
@@ -489,7 +489,7 @@ $\dfrac{10}{30} = \dfrac{1}{3}$
 En la segunda extracción, la probabilidad de extraer una bola negra también será de $\dfrac{10}{30} = \dfrac{1}{3}$ ya que luego de realizar la primera extracción se devolvió la bola seleccionada a la bolsa.
 En síntesis, devolviendo la bola extraída a la bolsa después de cada extracción, la probabilidad de extraer bolas negras o blancas permanece inalterada de prueba a prueba. Entonces, si nuestro éxito es la extracción de una bola negra, la probabilidad de éxito p = 1/3 y se mantiene constante a través de las n repeticiones del experimento. Ante situaciones como la planteada, se dice que el muestreo se hace con reemplazo.
 
-### 2.4.1 Muestreo aleatorio con reemplazo
+### Muestreo aleatorio con reemplazo
 
 El concepto de muestreo con reemplazo implica que las extracciones son independientes porque la ocurrencia de un evento en particular en una prueba del experimento no modifica la probabilidad de ocurrencia del evento en la prueba siguiente.
 Consideremos ahora el caso en que se extraen unidades experimentales de un conjunto y que ellas también pueden asignarse a solo dos categorías diferentes, como en el ejemplo anterior: bola blanca y bola negra, pero con la diferencia de que la bola extraída no se devuelve a la bolsa que las contiene.
@@ -544,7 +544,7 @@ ggplot(df_extraccion, aes(x = Escenario, y = Probabilidad, fill = Color_Extraido
   )
 ```
 
-### 2.4.1 Muestreo aleatorio sin reemplazo
+### Muestreo aleatorio sin reemplazo
 
 El **muestreo con reemplazo** es un procedimiento en el que cada unidad experimental extraída del conjunto original **se devuelve antes de realizar la siguiente extracción**.  
 Esto implica que **todas las extracciones son independientes**, ya que la ocurrencia de un evento en una prueba del experimento **no modifica** la probabilidad de ocurrencia del mismo evento en la prueba siguiente.
@@ -668,8 +668,10 @@ $$
 
 
 
-**Observación:**  
+::: {.callout-note icon=false}
+## Observación
 El muestreo con reemplazo genera **ensayos independientes**, lo que permite aplicar directamente el **Principio Básico de Conteo** y multiplicar probabilidades iguales en cada repetición.
+:::
 
 
 
@@ -710,7 +712,7 @@ Obsérvese que, al no haber reemplazo, la probabilidad de éxito **disminuye en 
 - En cambio, cuando las extracciones se realizan **sin reemplazo en poblaciones finitas**, las probabilidades cambian en cada repetición, por lo que el experimento se modela mediante una **variable aleatoria hipergeométrica**.
 
 
-### 2.3.3 Distribución aleratoria discreta Binomial
+### Distribución aleratoria discreta Binomial
 
 Un **experimento de tipo Bernoulli** surge cuando se selecciona al azar una unidad experimental y, con base en una característica de interés, dicha unidad se clasifica en **una de dos categorías mutuamente excluyentes**, comúnmente denominadas **éxito** o **fracaso**.
 
@@ -1049,7 +1051,7 @@ plot(
 
 ```
 
-### 2.3.4 Distribución aleratoria discreta Hipergeométrica
+### Distribución aleratoria discreta Hipergeométrica
 
 La **distribución hipergeométrica** surge en situaciones experimentales donde se extraen elementos de una **población finita**, sin reemplazo, y cada elemento puede clasificarse en una de **dos categorías mutuamente excluyentes**, denominadas **éxito** y **fracaso**.
 
@@ -1091,8 +1093,10 @@ $$
 \frac{599\,998}{999\,998} \approx 0.5999
 $$
 
-**Observación:**  
+::: {.callout-note icon=false}
+## Observación
 Las probabilidades prácticamente no varían en cada extracción. En este caso es razonable adoptar un modelo de muestreo con reemplazo, es decir, una **variable aleatoria binomial**.
+:::
 
 
 
@@ -1112,8 +1116,10 @@ Las probabilidades condicionadas son:
 - Segunda mujer: $13/19 \approx 0.684$
 - Tercera mujer: $12/18 = 0.67$
 
-**Observación:**  
+::: {.callout-note icon=false}
+## Observación
 La probabilidad de éxito cambia significativamente en cada extracción. Por tanto, **no es adecuado utilizar un modelo binomial** y se debe emplear la **distribución hipergeométrica**.
+:::
 
 
 
@@ -1273,7 +1279,7 @@ ggplot(df, aes(x = x, y = Probabilidad)) +
 
 ```
 
-### 2.3.5 Distribución aleratoria discreta Poisson
+### Distribución aleratoria discreta Poisson
 
 
 La **variable aleatoria Poisson** puede estudiarse desde dos enfoques fundamentales:
@@ -1321,10 +1327,13 @@ La distribución binomial $\text{Bin}(n,p)$ puede aproximarse por una distribuci
 
 En la práctica, esta aproximación es adecuada cuando $np < 5$.
 
-**Observación:**  
+::: {.callout-note icon=false}
+## Observación
 En la distribución Poisson, el parámetro $\lambda$ representa simultáneamente:
+
 - la **esperanza matemática**,
 - la **varianza** de la variable aleatoria.
+:::
 
 $$
 E(X) = V(X) = \lambda
@@ -1471,4 +1480,131 @@ ggplot(df, aes(x, prob)) +
 
 ```
 
-## 2.5 Material complementario: distribucione
+## Material complementario: distribuciones adicionales y distribuciones conjuntas
+
+Esta sección incorpora, a partir de las diapositivas del curso, dos familias
+discretas adicionales (Geométrica y Binomial Negativa) y la teoría de
+distribuciones conjuntas para dos variables aleatorias discretas. Todas las
+gráficas se generan con código.
+
+### Distribución Geométrica
+
+Sea $X$ el número de fracasos antes de obtener el primer éxito en ensayos
+Bernoulli independientes, cada uno con probabilidad de éxito $p$. Su función
+de probabilidad y momentos son:
+
+$$p(x; p) = (1-p)^x \cdot p = q^x p, \qquad x = 0, 1, 2, \ldots$$
+$$E(X) = \frac{1-p}{p}, \qquad Var(X) = \frac{1-p}{p^2}$$
+
+Una propiedad importante de esta distribución es la **falta de memoria**: no
+importa cuántos fracasos hayan ocurrido ya, la distribución de los fracasos
+restantes hasta el próximo éxito es siempre la misma.
+
+```{r, echo=TRUE, fig.align='center', fig.width=6, fig.height=4}
+#| label: fig-geometrica
+#| fig-cap: "Distribución Geométrica para distintos valores de p"
+library(ggplot2)
+
+x <- 0:15
+df_geom <- do.call(rbind, lapply(c(0.2, 0.5), function(p) {
+  data.frame(x = x, prob = dgeom(x, p), p = paste0("p = ", p))
+}))
+
+ggplot(df_geom, aes(x = x, y = prob, fill = p)) +
+  geom_col(position = "dodge") +
+  scale_fill_manual(values = c("p = 0.2" = "#006341", "p = 0.5" = "#C8962E")) +
+  labs(title = "Distribución Geométrica", x = "Número de fracasos (x)",
+       y = "P(X = x)", fill = NULL) +
+  theme_minimal()
+```
+
+**Ejemplo:** cada intento de conexión tiene una probabilidad de éxito de
+$p = 0.2$. El número esperado de intentos hasta lograr la conexión es:
+
+```{r geometrica_ejemplo, echo=TRUE}
+p <- 0.2
+cat("P(conectarse en menos de 4 intentos):", round(pgeom(2, p), 4), "\n")
+cat("Número esperado de fracasos antes del éxito, E(X):", (1 - p) / p, "\n")
+cat("Número esperado de intentos totales:", 1 / p, "\n")
+```
+
+### Distribución Binomial Negativa
+
+Generaliza a la Geométrica: $X$ representa el número de fracasos antes de
+alcanzar $k$ éxitos en ensayos Bernoulli con probabilidad de éxito $p$.
+
+$$p(x; k, p) = \binom{k + x - 1}{x} p^k (1-p)^x, \qquad x = 0, 1, 2, \ldots$$
+$$E(X) = \frac{k(1-p)}{p}, \qquad Var(X) = \frac{k(1-p)}{p^2}$$
+
+```{r, echo=TRUE, fig.align='center', fig.width=6, fig.height=4}
+#| label: fig-binneg
+#| fig-cap: "Distribución Binomial Negativa (k = 3, p = 0.3)"
+x <- 0:25
+df_bn <- data.frame(x = x, prob = dnbinom(x, size = 3, prob = 0.3))
+
+ggplot(df_bn, aes(x = x, y = prob)) +
+  geom_col(fill = "#006341") +
+  labs(title = "Binomial Negativa (k = 3 éxitos, p = 0.3)",
+       x = "Número de fracasos (x)", y = "P(X = x)") +
+  theme_minimal()
+```
+
+**Ejemplo:** la probabilidad de que una persona tenga un perro se estima en
+$p = 0.3$. La probabilidad de que la décima persona entrevistada sea la
+tercera que tiene un perro ($k = 3$ éxitos, $x = 7$ fracasos):
+
+```{r binneg_ejemplo, echo=TRUE}
+k <- 3; p <- 0.3
+cat("p(7; 3, 0.3) =", round(dnbinom(7, size = k, prob = p), 4), "\n")
+cat("E(X) =", k * (1 - p) / p, "personas sin perro en promedio\n")
+```
+
+### Distribuciones discretas conjuntas
+
+La **función de probabilidad conjunta** de dos variables aleatorias discretas
+$X$ y $Y$ se define como $p(x,y) = P(X = x, Y = y)$, con $p(x,y) \ge 0$ y
+$\sum_x \sum_y p(x,y) = 1$. A partir de ella se obtienen:
+
+- **Función de probabilidad marginal:** $p_X(x) = \sum_y p(x,y)$ y $p_Y(y) = \sum_x p(x,y)$.
+- **Función de probabilidad condicional:** $p_{Y\mid X}(y \mid x) = p(x,y)/p_X(x)$.
+- **Independencia:** $X$ y $Y$ son independientes si $p(x,y) = p_X(x) \cdot p_Y(y)$ para todo par $(x,y)$.
+
+**Ejemplo (deducibles de seguros).** Sea $X$ el deducible de una póliza de
+auto (\$100 o \$250) y $Y$ el deducible de una póliza de casa (\$0, \$100 o
+\$200), con la siguiente función de probabilidad conjunta:
+
+```{r, echo=TRUE, fig.align='center', fig.width=6, fig.height=4.5}
+#| label: fig-conjunta-discreta
+#| fig-cap: "Función de probabilidad conjunta p(x,y): deducibles de auto y casa"
+library(ggplot2)
+
+tabla <- expand.grid(x = c(100, 250), y = c(0, 100, 200))
+tabla$p <- c(0.20, 0.05, 0.10, 0.15, 0.20, 0.30)
+
+ggplot(tabla, aes(x = factor(y), y = factor(x), fill = p)) +
+  geom_tile(color = "white") +
+  geom_text(aes(label = p), color = "white", fontface = "bold") +
+  scale_fill_gradient(low = "#C8962E", high = "#004D31") +
+  labs(title = "p(x, y): deducible auto (X) vs. deducible casa (Y)",
+       x = "Deducible casa (y)", y = "Deducible auto (x)", fill = "p(x,y)") +
+  theme_minimal()
+```
+
+```{r conjunta_marginales, echo=TRUE}
+# Probabilidades marginales y condicionales a partir de la tabla conjunta
+mat <- matrix(tabla$p, nrow = 2, byrow = TRUE,
+              dimnames = list(x = c("100", "250"), y = c("0", "100", "200")))
+p_x <- rowSums(mat)   # marginal de X
+p_y <- colSums(mat)   # marginal de Y
+cat("p_X(x):\n"); print(p_x)
+cat("\np_Y(y):\n"); print(p_y)
+
+# Independencia: ¿p(100,100) == p_X(100) * p_Y(100)?
+cat("\np(100,100) =", mat["100", "100"],
+    " vs.  p_X(100)*p_Y(100) =", p_x["100"] * p_y["100"], "\n")
+cat("Como no coinciden, X y Y NO son independientes.\n")
+```
+
+Como $p(100,100) = 0.10 \ne p_X(100) \cdot p_Y(100) = 0.50 \times 0.25 =
+0.125$, las variables $X$ y $Y$ no son independientes: conocer el deducible
+de una póliza aporta información sobre el deducible de la otra.

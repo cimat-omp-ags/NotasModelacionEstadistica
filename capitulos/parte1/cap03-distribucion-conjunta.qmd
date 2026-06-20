@@ -2,7 +2,7 @@
 
 Ciertos fenómenos originan resultados en un espectro continuo. En la modelación analítica y la simulación de procesos, podríamos estar interesados en estudiar el tiempo de espera de un paciente en la sala de urgencias de un hospital, la duración de una llamada en una línea telefónica de atención, o el tiempo exacto que toma el proceso de pintado de un automóvil en una línea de ensamblaje. Este tipo de variable aleatoria, que puede tomar cualquier valor dentro de un intervalo (o unión de intervalos), se denomina *continua*.
 
-## 3.1 Variable aleatoria continua
+## Variable aleatoria continua
 
 **Ejemplo:** Consideremos que se tiene la siguiente rueda de la fortuna:
 
@@ -63,7 +63,7 @@ abline(h=0, col="gray")
 
 De lo anterior se concluye que en las variables continuas, el interés no recae en calcular la probabilidad de valores aislados, sino en encontrar la probabilidad de que la variable caiga en un rango de valores.
 
-### 3.1.1 Función de densidad de probabilidad
+### Función de densidad de probabilidad
 
 Dado que para una variable aleatoria continua $Y$, $P(Y=y) = 0$, no es posible utilizar una función de probabilidad puntual como en el caso discreto. En su lugar, se emplea una **función de densidad de probabilidad**, denotada comúnmente como $f(y)$.
 
@@ -127,7 +127,7 @@ text(0.35, 0.4, "P(Y <= 0.5)\n= 0.25", font=2)
 points(c(0.5, 1), c(1, 2), pch=19, col="red")
 ```
 
-### 3.1.2Función de probabilidad acumulada
+### Función de probabilidad acumulada
 
 Es una función que acumula probabilidades. Para esto considere que la variable aleatoria $X$ está definida en el intervalo $[a, b]$ y sea $x$ un valor tal que se encuentra entre $a$ y $b$, es decir $a \le x \le b$, entonces la función de probabilidad acumulada o también conocida como función de distribución ($F(x)$) se define como:
 
@@ -324,7 +324,7 @@ ggplot() +
 
 En primer lugar, haremos revisión de la variable aleatoria uniforme y luego trataremos de manera especial la variable aleatoria normal. *La variable aleatoria normal tiene alta importancia, debido a que una gran parte de las metodologías de estadísticas inferenciales la emplean como base.*
 
-## 3.2 Distribución uniforme continua
+## Distribución uniforme continua
 
 Una de las distribuciones continuas más simples e intuitivas es la distribución uniforme continua. Decimos que una variable aleatoria $Y$ tiene una distribución uniforme en el intervalo $[a, b]$ si su probabilidad es constante para cualquier subintervalo de la misma longitud dentro de ese rango. En otras palabras, la función de densidad de probabilidad es plana y constante sobre el intervalo de valores posibles.
 
@@ -413,7 +413,7 @@ ggplot(df_tiempo, aes(x = x, y = y)) +
   theme(plot.title = element_text(face = "bold", hjust = 0.5))
 ```
 
-## 3.3 Distribución normal
+## Distribución normal
 
 Cuando nace un bebé, el médico lo lleva a la balanza y observa que pesa 3.5 kg. Lo primero que dirá, casi con certeza, es que tiene un peso normal. Luego, cuando el niño comienza su vida escolar, es probable que alguna psicopedagoga luego de efectuar un test informe a la maestra que tiene una inteligencia normal. Cuando ya adolescente asista a un colegio secundario y termine el año con 5 amonestaciones, la madre probablemente tratará de justificarlo diciendo que es un chico normal. Si al llegar a adulto se dedica a sembrar papas y dice que ha obtenido un rendimiento de 10000 kg por ha seguramente pensará que eso es lo normal.
 
@@ -533,7 +533,7 @@ ggplot(df_varianzas, aes(x = x, y = y, color = Distribucion)) +
 ```
 
 
-#### 3.3.1 Característica de la distribución normal
+#### Característica de la distribución normal
 
 -   El área total bajo la curva normal es igual a 1, por ser una función de distribución de probabilidad, es decir: $$P(-\infty < X < \infty) = 1$$
 
@@ -632,7 +632,7 @@ ggplot(df_altura, aes(x = x, y = y)) +
   )
 ```
 
-## 3.4 Distribución normal estándar
+## Distribución normal estándar
 
 A menudo, calcular las probabilidades asociadas a una distribución normal arbitraria $X \sim N(\mu, \sigma)$ implica resolver una integral compleja. Para simplificar esto, se recurre a un proceso llamado **estandarización**. 
 
@@ -761,7 +761,7 @@ ggplot(df_z, aes(x = z, y = fz)) +
   annotate("text", x = -0.5, y = 0.15, label = "Área = 0.8185", fontface = "bold")
 ```
 
-#### 3.4.1. Uso de tablas
+#### Uso de tablas
 
 Para calcular probabilidades de la variable aleatoria normal deberíamos aplicar la operación integral a la función de densidad, reemplazando los parámetros $\mu$ y $\sigma$ por los valores de alguna combinación en particular. Teniendo en cuenta que la expresión matemática de la función de densidad de una variable normalmente distribuida no tiene una antiderivada de forma cerrada (como bien señala la teoría estadística clásica), calcular probabilidades con base en ella mediante integración analítica es imposible, requiriendo métodos numéricos. Por este motivo, se ilustra el uso de tablas estadísticas estandarizadas.
 
@@ -774,7 +774,10 @@ La tabla para calcular probabilidades de una distribución normal estandarizada 
 $$P(Z \le z_0) = F(z_0)$$
 Esta es la probabilidad acumulada desde $-\infty$ hasta $z_0$, donde este último es un valor particular de la variable $Z$.
 
-> **Nota:** En las distribuciones de probabilidad continuas, la probabilidad de que la variable aleatoria asuma exactamente un valor particular es cero ($P(X = x) = 0$). Por lo tanto, los signos de desigualdad estricta ($<$, $>$) o no estricta ($\le$, $\ge$) son probabilísticamente equivalentes. Es decir, $P(X \le x) = P(X < x)$.
+::: {.callout-note icon=false}
+## Nota
+En las distribuciones de probabilidad continuas, la probabilidad de que la variable aleatoria asuma exactamente un valor particular es cero ($P(X = x) = 0$). Por lo tanto, los signos de desigualdad estricta ($<$, $>$) o no estricta ($\le$, $\ge$) son probabilísticamente equivalentes. Es decir, $P(X \le x) = P(X < x)$.
+:::
 
 **Ejemplo:**
 El peso de los niños al nacer en la localidad de Tequila tiene el comportamiento de una variable aleatoria normal con media $\mu = 3.5 \text{ kg}$ y desviación estándar $\sigma = 1 \text{ kg}$. 
@@ -941,7 +944,7 @@ ggplot(df_z, aes(x = z, y = fz)) +
   annotate("text", x = 0, y = 0.15, label = "Área = 0.3830", fontface = "bold")
 ```
 
-## 3.5 Distribución exponencial
+## Distribución exponencial
 
 La variable aleatoria exponencial surge en la práctica como el modelo para la probabilidad de la cantidad de tiempo u espacio que transcurre hasta que ocurre un evento de interés. Esta ocurrencia se da de manera independiente y a una tasa constante.
 
@@ -952,7 +955,10 @@ La variable aleatoria exponencial surge en la práctica como el modelo para la p
 
 También es utilizada para determinar el tiempo entre llegadas de clientes a una cola de un supermercado, el tiempo entre fallas de un componente electrónico o el tiempo entre accidentes en una autopista.
 
-> **Nota:** En la literatura estadística existen dos formas comunes de parametrizar la distribución exponencial. En muchos textos aplicados (y en este documento), se utiliza el parámetro de tasa $\lambda$ (número de ocurrencias por unidad de tiempo). Sin embargo, en algunos textos teóricos utilizan el parámetro de escala $\beta$, que representa el **tiempo promedio** de espera entre eventos, donde $\beta = \frac{1}{\lambda}$. Ambas formas son equivalentes, pero es crucial identificar cuál se está utilizando al resolver problemas.
+::: {.callout-note icon=false}
+## Nota
+En la literatura estadística existen dos formas comunes de parametrizar la distribución exponencial. En muchos textos aplicados (y en este documento), se utiliza el parámetro de tasa $\lambda$ (número de ocurrencias por unidad de tiempo). Sin embargo, en algunos textos teóricos utilizan el parámetro de escala $\beta$, que representa el **tiempo promedio** de espera entre eventos, donde $\beta = \frac{1}{\lambda}$. Ambas formas son equivalentes, pero es crucial identificar cuál se está utilizando al resolver problemas.
+:::
 
 Utilizando la parametrización por tasa ($\lambda$), la función de densidad de probabilidad de una variable exponencial $X$, denotada como $X \sim \text{Exp}(\lambda)$, está dada por:
 
@@ -1055,7 +1061,10 @@ $$P(X \le 10) = 1 - e^{-\frac{10}{22}} \approx 1 - 0.6348 = 0.3652$$
 
 **Inciso b) ¿Cuál es el tiempo de revisión de un motor que ha superado el 10% de los tiempos de revisión más largos?**
 
-*Nota: Estar en el 10% de los tiempos más largos significa que el tiempo de reparación deja al 90% de los casos por debajo de él o al 10% por encima. A este punto lo denotaremos como $x_{0.10}$.*
+::: {.callout-note icon=false}
+## Nota
+Estar en el 10% de los tiempos más largos significa que el tiempo de reparación deja al 90% de los casos por debajo de él o al 10% por encima. A este punto lo denotaremos como $x_{0.10}$.
+:::
 
 La ecuación de interés es:
 $$P(X \ge x_{0.10}) = 1 - P(X \le x_{0.10}) = 1 - \left(1 - e^{-\frac{x_{0.10}}{22}}\right) = 0.10$$
@@ -1105,7 +1114,7 @@ Es exactamente la misma probabilidad calculada en el Ejemplo 1 al inicio del tur
 
 ### Resumen
 
-#### 1. Conceptos Fundamentales
+#### Conceptos Fundamentales
 
 A diferencia de las variables discretas, una **variable aleatoria continua** puede tomar infinitos valores dentro de un intervalo en la recta real (ej. tiempo, peso, distancia). 
 
@@ -1118,7 +1127,7 @@ A diferencia de las variables discretas, una **variable aleatoria continua** pue
 
 ***
 
-#### 2. Distribución Uniforme Continua
+#### Distribución Uniforme Continua
 
 Modela fenómenos donde todos los subintervalos de la misma longitud dentro de un rango $[a, b]$ tienen exactamente la misma probabilidad de ocurrir. Su f.d.p. forma un rectángulo. Se denota como $X \sim U(a, b)$.
 
@@ -1128,7 +1137,7 @@ Modela fenómenos donde todos los subintervalos de la misma longitud dentro de u
 
 ***
 
-#### 3. Distribución Normal
+#### Distribución Normal
 
 Es la distribución más importante en la estadística inferencial. Su gráfica tiene forma de campana (Campana de Gauss), es asintótica al eje horizontal y perfectamente simétrica. Se denota como $X \sim N(\mu, \sigma^2)$.
 
@@ -1140,7 +1149,7 @@ Es la distribución más importante en la estadística inferencial. Su gráfica 
 
 ***
 
-#### 4. Distribución Normal Estándar y Uso de Tablas
+#### Distribución Normal Estándar y Uso de Tablas
 
 Dado que la f.d.p. de la distribución normal no tiene una integral analítica sencilla, se utiliza un proceso de **estandarización** para transformar cualquier variable normal $X$ en una variable normal estándar $Z$, la cual tiene media $\mu=0$ y varianza $\sigma^2=1$.
 
@@ -1150,7 +1159,7 @@ Dado que la f.d.p. de la distribución normal no tiene una integral analítica s
 
 ***
 
-#### 5. Distribución Exponencial
+#### Distribución Exponencial
 
 Se utiliza para modelar el tiempo o la distancia que transcurre hasta que ocurre un evento de interés (ej. tiempo entre fallas, tiempo hasta recibir una llamada), asumiendo una tasa de ocurrencia constante ($\lambda$). Se denota como $X \sim \text{Exp}(\lambda)$.
 
@@ -1160,14 +1169,14 @@ Se utiliza para modelar el tiempo o la distancia que transcurre hasta que ocurre
 * **Propiedad de Falta de Memoria (Memoryless):** Es la única distribución continua con esta propiedad. Establece que la probabilidad condicional de que un evento ocurra en el futuro depende solo del tiempo restante, "olvidando" el tiempo que ya ha transcurrido: 
   $$P(X > s+t \mid X > t) = P(X > s)$$
 
-## 3.6 Material complementario: distribución Weibull y distribuciones continuas conjuntas
+## Material complementario: distribución Weibull y distribuciones continuas conjuntas
 
 A partir de las diapositivas del curso, se incorpora la distribución Weibull
 (una generalización de la Exponencial usada en análisis de confiabilidad) y la
 teoría de distribuciones conjuntas para dos variables aleatorias continuas.
 Las figuras se generan con código.
 
-### 3.6.1 Distribución Weibull
+### Distribución Weibull
 
 Se dice que $X$ tiene distribución Weibull con parámetros de forma $\beta$ y
 escala $\alpha$ si:
@@ -1199,7 +1208,7 @@ ggplot(df_weibull, aes(x = x, y = densidad, color = beta)) +
   theme_minimal()
 ```
 
-### 3.6.2 Distribuciones continuas conjuntas
+### Distribuciones continuas conjuntas
 
 Una función $f(x,y)$ es una **función de densidad de probabilidad conjunta**
 de dos variables aleatorias continuas $X$ y $Y$ si $f(x,y) \ge 0$ y
@@ -1249,4 +1258,3 @@ cat("Integral de f(x,y) sobre [0,1]x[0,1]:", round(integral, 4), "\n")
 x0 <- 0.4; y0 <- 0.7
 cat("f(x0,y0) =", f(x0, y0), " vs.  g(x0)*h(y0) =", g(x0) * h(y0), "-> son iguales: X y Y son independientes\n")
 ```
- 
