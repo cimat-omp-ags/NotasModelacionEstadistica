@@ -1,0 +1,196 @@
+# Análisis Exploratorio: Dataset Autos {#cap-autos}
+
+En este capítulo exploramos el conjunto de datos **Autos** (versión del paquete
+`MASS` de R), que contiene especificaciones técnicas y de precio de 93 modelos
+de automóviles del año 1993. Este ejemplo ilustra el flujo de trabajo de un
+Análisis Exploratorio de Datos (EDA) completo: importación, limpieza,
+visualización y correlación.
+
+::: {.callout-note icon=false}
+## Datos y reproducibilidad
+
+Los archivos se encuentran en `DataSets/Autos/` del repositorio:
+
+- `autos.csv` — datos originales (93 autos, 27 variables).
+- `Autos_sin_otliersylogs.csv` — versión sin valores atípicos y con transformaciones logarítmicas para análisis de regresión.
+:::
+
+## Descripción del conjunto de datos
+
+```{r autos-setup, message=FALSE, warning=FALSE}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(corrplot)
+
+# Carga desde la raíz del proyecto
+autos <- read.csv("DataSets/Autos/autos.csv", check.names = FALSE)
+# Limpiar BOM en nombre de primera columna si existe
+names(autos)[1] <- gsub("\xef\xbb\xbf|\uFEFF", "", names(autos)[1])
+
+glimpse(autos)
+```
+
+Las **27 variables** del dataset se agrupan en tres categorías:
+
+| Categoría | Variables |
+|:----------|:----------|
+| **Identificación** | Manufacturer, Model, Make, Type, Origin |
+| **Precio** | Min.Price, Price, Max.Price |
+| **Desempeño / motor** | MPG.city, MPG.highway, EngineSize, Horsepower, RPM, Cylinders |
+| **Dimensiones** | Length, Wheelbase, Width, Weight, Turn.circle, Rear.seat.room, Luggage.room |
+| **Equipamiento** | AirBags, DriveTrain, Man.trans.avail, Fuel.tank.capacity, Passengers |
+
+## Limpieza y preparación
+
+```{r autos-clean}
+# Convertir variables categóricas
+autos$Type      <- factor(autos$Type)
+autos$Origin    <- factor(autos$Origin)
+autos$AirBags   <- factor(autos$AirBags)
+autos$DriveTrain <- factor(autos$DriveTrain)
+autos$Cylinders <- factor(autos$Cylinders)
+autos$Man.trans.avail <- factor(autos$Man.trans.avail)
+
+# Precio y MPG como numéricos (por si acaso)
+autos$Price    <- as.numeric(autos$Price)
+autos$MPG.city <- as.numeric(autos$MPG.city)
+
+cat("Dimensiones:", nrow(autos), "filas x", ncol(autos), "columnas\n")
+cat("Valores faltantes por variable:\n")
+print(colSums(is.na(autos[, sapply(autos, is.numeric)])))
+```
+
+## Distribución de precios
+
+```{r autos-precio-hist, fig.align='center', fig.width=8, fig.height=4}
+p1 <- ggplot(autos, aes(x = Price)) +
+  geom_histogram(bins = 15, fill = "#006341", color = "white", alpha = 0.8) +
+  geom_vline(xintercept = median(autos$Price, na.rm=TRUE),
+             color = "#C8962E", linewidth = 1.2, linetype = "dashed") +
+  theme_minimal() +
+  labs(title = "Distribución del precio de lista",
+       subtitle = paste0("Mediana = $", round(median(autos$Price, na.rm=TRUE), 1), " mil USD"),
+       x = "Precio (miles USD)", y = "Frecuencia")
+
+p2 <- ggplot(autos, aes(x = Type, y = Price, fill = Type)) +
+  geom_boxplot(alpha = 0.75, outlier.color = "red") +
+  theme_minimal() +
+  theme(legend.position = "none") +
+  labs(title = "Precio por tipo de auto",
+       x = "Tipo", y = "Precio (miles USD)")
+
+gridExtra::grid.arrange(p1, p2, ncol = 2)
+```
+
+```{r autos-precio-origen, fig.align='center', fig.width=6, fig.height=4}
+ggplot(autos, aes(x = Origin, y = Price, fill = Origin)) +
+  geom_boxplot(alpha = 0.75) +
+  scale_fill_manual(values = c("#004D31", "#C8962E")) +
+  theme_minimal() +
+  theme(legend.position = "none") +
+  labs(title = "Precio según origen del fabricante",
+       x = "Origen", y = "Precio (miles USD)")
+```
+
+## Consumo de combustible
+
+```{r autos-mpg, fig.align='center', fig.width=8, fig.height=4}
+df_mpg <- pivot_longer(autos[, c("MPG.city","MPG.highway","Type")],
+                       cols = c("MPG.city","MPG.highway"),
+                       names_to = "Tipo_MPG", values_to = "MPG")
+
+ggplot(df_mpg, aes(x = Type, y = MPG, fill = Tipo_MPG)) +
+  geom_boxplot(alpha = 0.75, position = position_dodge(0.8)) +
+  scale_fill_manual(values = c("#006341", "#C8962E"),
+                    labels = c("Ciudad", "Carretera")) +
+  theme_minimal() +
+  labs(title = "Consumo (MPG) por tipo de auto y contexto de manejo",
+       x = "Tipo de auto", y = "Millas por galón (MPG)", fill = "Contexto")
+```
+
+## Relación entre potencia, precio y tipo
+
+```{r autos-hp-precio, fig.align='center', fig.width=7, fig.height=5}
+ggplot(autos, aes(x = Horsepower, y = Price, color = Type, shape = Origin)) +
+  geom_point(size = 2.5, alpha = 0.8) +
+  geom_smooth(method = "lm", se = FALSE, aes(group = 1),
+              color = "gray40", linetype = "dashed", linewidth = 0.7) +
+  theme_minimal() +
+  labs(title = "Potencia vs. Precio",
+       x = "Potencia (HP)", y = "Precio (miles USD)",
+       color = "Tipo", shape = "Origen")
+```
+
+## Análisis de correlación (variables numéricas)
+
+```{r autos-cor, fig.align='center', fig.width=8, fig.height=7}
+vars_num <- c("Price","Min.Price","Max.Price","MPG.city","MPG.highway",
+              "EngineSize","Horsepower","RPM","Fuel.tank.capacity",
+              "Passengers","Length","Wheelbase","Width","Turn.circle",
+              "Rear.seat.room","Weight")
+
+mat_cor <- cor(autos[, vars_num], use = "pairwise.complete.obs", method = "pearson")
+
+corrplot(mat_cor,
+         method = "color",
+         type   = "upper",
+         tl.cex = 0.7,
+         tl.col = "black",
+         col    = colorRampPalette(c("#C8962E","white","#004D31"))(100),
+         title  = "Correlación de Pearson — Variables numéricas del dataset Autos",
+         mar    = c(0,0,1,0))
+```
+
+::: {.callout-note icon=false}
+## Hallazgos principales
+
+- **Precio** se correlaciona positivamente con **Horsepower**, **EngineSize**,
+  **Weight** y las dimensiones del vehículo.
+- **MPG.city** y **MPG.highway** están fuertemente correlacionadas entre sí, y
+  negativamente correlacionadas con el precio y la potencia: autos más potentes
+  y costosos consumen más.
+- **RPM** tiene correlación negativa con el tamaño del motor, lo que refleja que
+  los motores más grandes giran a menor velocidad.
+:::
+
+## Versión sin valores atípicos
+
+El archivo `Autos_sin_otliersylogs.csv` incluye los datos después de eliminar
+valores atípicos detectados visualmente y de aplicar transformaciones logarítmicas
+para linealizar relaciones antes de ajustar modelos de regresión.
+
+```{r autos-logs, fig.align='center', fig.width=8, fig.height=4}
+autos_log <- read.csv("DataSets/Autos/Autos_sin_otliersylogs.csv",
+                       check.names = FALSE)
+names(autos_log)[1] <- gsub("\xef\xbb\xbf|\uFEFF", "", names(autos_log)[1])
+
+p_orig <- ggplot(autos, aes(x = Weight, y = MPG.city)) +
+  geom_point(color="#006341", alpha=0.7) +
+  geom_smooth(method="lm", se=FALSE, color="#C8962E") +
+  theme_minimal() +
+  labs(title="Original: Weight vs MPG.city", x="Peso (lb)", y="MPG ciudad")
+
+p_log  <- ggplot(autos_log, aes(x = log_Weight, y = log_MPG_city)) +
+  geom_point(color="#004D31", alpha=0.7) +
+  geom_smooth(method="lm", se=FALSE, color="#C8962E") +
+  theme_minimal() +
+  labs(title="Transformado: log(Weight) vs log(MPG.city)",
+       x="log(Peso)", y="log(MPG ciudad)")
+
+gridExtra::grid.arrange(p_orig, p_log, ncol=2)
+```
+
+La transformación logarítmica hace más lineal la relación y estabiliza la
+varianza, cumpliendo mejor los supuestos de la regresión lineal.
+
+::: {.callout-note icon=false}
+## Ejercicios propuestos
+
+1. Calcula la media y la desviación estándar del precio agrupando por **Type** y
+   por **Origin**. ¿Qué tipo y origen presentan mayor variabilidad?
+2. Ajusta un modelo de regresión lineal simple con `log_Weight` como predictor
+   de `log_MPG_city` usando `autos_log`. Interpreta el coeficiente obtenido.
+3. Identifica visualmente los valores atípicos de **Horsepower** con un boxplot.
+   ¿A qué modelos corresponden? Usa `autos[which(autos$Horsepower > 200), c("Make","Horsepower","Price")]`.
+:::

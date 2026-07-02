@@ -1,0 +1,508 @@
+---
+title: "Práctica de Análisis Exploratorio de Datos: Casas"
+author: "Humberto Martínez Bautista (https://orcid.org/0000-0001-6984-9430).
+ Centro de Investigación en Matemáticas A.C. Unidad Aguascalientes.
+"
+date: "Publicación v1.2:   `r Sys.Date()`.  R: 4.5.0.  Autor de correspondencia: humberto.martinez@cimat.mx"
+
+output:
+  bookdown::html_document2:
+    code_folding: show
+    toc: yes
+    number_sections: yes
+    toc_float:
+      collapsed: yes
+      smooth_croll: yes
+      toc_depth: 2
+    theme: journal
+    highlight: pygments
+  bookdown::pdf_document2: default
+---
+
+```{css, echo=FALSE}
+.scroll-100 {
+  max-height: 300px;
+  overflow-y: auto;
+}
+```
+
+<!-- INICIO DE DOCUMENTO R MARKDOWN -->
+
+## Introducción, contexto o estado del arte
+
+::: {align="justify"}
+En el sector inmobiliario, determinar el precio adecuado de compra o venta de casas-habitación es un problema de gran relevancia. Los propietarios de los inmuebles y las compañías inmobiliarias consideran diversos aspectos (condiciones) para establecer dicho precio. Nuestro objetivo es analizar el impacto y relevancia que ciertas características de las viviendas tienen sobre el precio de los inmuebles en el mercado. El estudio piloto seleccionó al azar 26 casas en venta y, registró información sobre diversas variables como: zona de ubicación, cantidad de recamarás, baños, entre otros factores que los consumidores toman en cuenta al momento de elegir una vivienda.
+
+Es importante precisar que este documento **NO ES UN TRABAJO EXHAUSTIVO** de aplicación estadística, sólo promueve la divulgación educativa para iniciarse en el análisis exploratorio de datos. Para correcciones, contribuciones y trabajos especializados (o con mayor rigor estadístico) favor de ponerse en contacto con el autor de correspondencia.
+:::
+
+## Objetivos
+
+-   Construir tablas de distribución de frecuencias e histogramas
+-   Estudiar las principales medidas de tendencia central
+-   Analizar la variabilidad
+-   Estudiar la asimetría y forma de algunas variables
+-   Validación de supuestos, por ejemplo normalidad
+
+## Hipótesis de investigación
+
+-   Los precios de las cosas están en función de ciertas caracterítsicas propias de las viviendas
+
+## Hipótesis estadística
+
+-   $H_0:$ Ninguna característica de las casas influye en el precio de mercado.
+
+-   $H_a:$ Un conjunto de características de las casas condicionan su precio de mercado.
+
+## Materiales y métodos
+
+La base de datos que se emplea para abordar el análisis cuenta con el registro de 26 casas, cada una con la especificación de las siguientes variables:
+
+-   **RECAM:** Número de recámaras en la casa.
+-   **AREA:** Metros cuadrados de construcción.
+-   **CHIM:** Variable dicotómica que indica si la casa tiene o no chimenea() 0 = no tiene, 1 = si tiene).
+-   **CUARTOS:** Número de habitaciones que tiene la casa (incluye: cocina, sala, comedor, recámara, etc.).
+-   **CONTRAV:** Variable dicotómica que indica si la casa tiene o no contraventanas-protección exterior (0 = no tiene, 1 = sí tiene).
+-   **LONGFR:** Longitud del frente en metros.
+-   **BAÑOS:** El número de baños con los que cuenta la casa.
+-   **CON:** Variable dicotómica que indica si la construcción es de ladrillo o tiene madera.
+-   **COCHERA:** Indica la capacidad de vehículos de la cochera.
+-   **COND:** Variable dicotómica que indica si la casa necesita arreglos mayores. (0 = no necesita arreglos mayores y 1 = sí requiere de arreglos mayores).
+-   **ZONA:** Variable categórica que indica la zona de la ciudad en donde se localiza la casa, donde 1 zona lujosa, 2 zona media y 3 zona baja.
+-   **PRECIO:** Precio de la vivienda en miles de pesos.
+
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE)
+
+# Instalación
+list.of.packages <- c("readxl", "pheatmap", "ggplot2","modeest")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
+
+#Activación
+library(readxl)   # Permite leer el archivo excel
+library(pheatmap) # Para generar mapa calor
+library(ggplot2)  # Graficos ggplot2
+library(modeest)  # Moda
+
+# Importar base de datos
+Casas <- read_excel("Casas.xlsx")
+attach(Casas)
+
+# Condición de casas
+FactCond <- factor(COND, labels = c("No necesita arreglos", "Necesita arreglos"))
+tabla_Condicion = table(FactCond)
+
+# Cantidad de recámaras
+FactRecam = factor(RECAM)
+tabla_Recamaras = table(FactRecam)
+
+# Zona 
+FactZona = factor(ZONA, labels = c("Zona 1", "Zona 2", "Zona 3"))
+tabla_Zona = table(FactZona)
+
+# Cantidad de baños
+FactB = factor(BAÑOS)
+tabla_Baños = table(FactB)
+
+```
+
+### Análisis univariado
+
+```{r grafica_cond, fig.align='center', out.height='200px'}
+barplot(tabla_Condicion,
+     main = "Condición de la casa",
+     xlab = "Condición",
+     ylab = "Frecuencia",
+     col = terrain.colors(3))
+
+```
+
+*Tendencia central*
+
+```{r tendencia}
+# Calcular tendencia central por zona
+promedio <- tapply(PRECIO, FactZona, mean)
+mediana <- tapply(PRECIO, FactZona, median)
+moda <- tapply(PRECIO, FactZona, mlv, method = "shorth")
+
+```
+
+```{r tendencia_r}
+# Mostrar resultados de tendencia central por zona
+print("Media:")
+print(promedio)
+
+print("Mediana:")
+print(mediana)
+
+print("Moda:")
+print(moda)
+
+```
+
+Se realizó una grafica entre la zona y el precio de la vivienda, el precio de la vivienda es mayor para zonas residenciales o de "lujo", reduciendo su costo según la plusvalia de la zona.
+
+```{r zona_precio, fig.align='center', out.height='200px'}
+# Crear el boxplot
+boxplot(PRECIO ~ ZONA, 
+        main = "Distribución de precios de casas por zona",
+        xlab = "Zona",
+        ylab = "Precio",
+        col = terrain.colors(3))
+```
+
+Para alcanzar los objetivos establecidos, se llevaron a cabo los siguientes pasos:
+
+1.  Análisis univariado o exploratorio descriptivo de los datos para observar si existe una relación entre una o varias variables con el precio.
+
+2.  Análisis bivariado de correlación entre las diferentes características de las casas y sus precios. Dado que si el análisis de correlación muestra que dos características están relacionadas entre sí, se puede comprobar posteriormente si una característica puede utilizarse para predecir la otra [2].
+
+3.  Identificación de valores atípicos que podrían afectar el análisis y la interpretación de los resultados.
+
+4.  Ajuste de modelos de regresión para analizar la relación lineal entre las características de las casas y sus precios.
+
+## Resultados
+
+### Análisis exploratorio
+
+Como se mencionó en la hipótesis, se sospecha que el precio de una vivienda es altamente influenciado por el área de construcción, la zona, la cantidad de recámaras, entre otros.
+
+Como primer acercamiento, se calculan las medidas de tendencia central (media, mediana, moda) así como graficos de dispersión para las variables numéricas, contra el precio (en miles de pesos).
+
+```{r, message=FALSE}
+# Resumen estadístico de las variables
+summary(Casas[, c("PRECIO", "RECAM", "AREA","CUARTOS","LONGFR", "BAÑOS","COCH")])
+```
+
+```{r,echo=FALSE,message=FALSE, fig.align='center', out.weight='250px'}
+
+# Gráficos de dispersión para cada variable numérica
+par(mfrow=c(3,2), mar=c(2, 7, 1, 1)) 
+
+plot(RECAM, PRECIO, 
+       main = "Precio vs Recámaras",
+       xlab = "Cantidad de Recámaras",
+       ylab = "Precio",
+       col = "#87CEEB",
+       pch = 19,
+       cex = 0.8)
+
+plot(AREA, PRECIO, 
+       main = "Precio vs Área",
+       xlab = "Área de construcción",
+       ylab = "Precio",
+       col = "#87CEAA",
+       pch = 19,
+       cex = 0.8) 
+
+plot(CUARTOS, PRECIO, 
+       main = "Precio vs Cuartos",
+       xlab = "Cantidad de cuartos",
+       ylab = "Precio",
+       col = "#4682B4",
+       pch = 19,
+       cex = 0.8)
+
+plot(LONGFR, PRECIO, 
+       main = "Precio vs Longitud frente",
+       xlab = "Longitud de frente (metros)",
+       ylab = "Precio",
+       col = "#000080",
+       pch = 19,
+       cex = 0.8)
+
+plot(BAÑOS, PRECIO, 
+       main = "Precio vs Baños",
+       xlab = "Cantidad de baños",
+       ylab = "Precio",
+       col = "#191BDB",
+       pch = 19,
+       cex = 0.8)
+
+plot(COCH, PRECIO, 
+       main = "Precio vs Espacio para vehículos",
+       xlab = "Cantidad de vehículos",
+       ylab = "Precio",
+       col = "#41BCB5",
+       pch = 19,
+       cex = 0.8)
+
+par(mfrow=c(1,1))
+```
+
+Para las variables categoricas se emplearán graficos de barras para ver la frecuencia de cada categoría,
+
+```{r name, echo=FALSE, fig.align='center', message=FALSE, warning=FALSE, out.weight='200px'}
+
+par(mfrow=c(2,2), mar=c(2, 7, 1, 1)) 
+# Gráfico de barras de la variable CHIM
+FactChim = factor(CHIM, labels = c("No", "Sí"))
+barplot(table(FactChim), 
+        main = "Presencia de chimenea", 
+        ylab = "Frecuencia",
+        col = c("#41BCB5", "#4682B4"))
+
+# Gráfico de barras de la variable contraventana
+FactContraV = factor(CONTRAV, labels = c("No", "Sí"))
+barplot(table(FactContraV), 
+        main = "Presencia de contraventanas", 
+        ylab = "Frecuencia",
+        col = c("#000080", "#BFFBDB"))
+
+# Gráfico de barras de la variable tipo de construcción
+FactCons = factor(CON, labels = c("Ladrillo", "Tiene madera"))
+barplot(table(FactCons), 
+        main = "Tipo de construcción", 
+        ylab = "Frecuencia",
+        col = c("#BF9BBF", "#BF9AFF"))
+
+# Gráfico de barras de la variable tipo de construcción
+barplot(table(FactZona), 
+        main = "Zona de residencia", 
+        ylab = "Frecuencia",
+        col = c("#BF5DA3", "#B93C57","#E58A30"))
+
+par(mfrow=c(1,1))
+```
+
+### Análisis de correlación
+
+Fueron empleadas las variable: **Área de contrucción**, **Precio**, **Zona** y **Cantidad de recámaras** para generar el siguiente gráfico, en el cual se puede observar que el comportamiento del precio aumenta a la par que el área de construcción lo hace, así mismo, se observa que las casas con más área de construcción corresponden a las zonas 1 y 2 que son las de "mayor plusvalia" y a su vez, las zonas de mayor construcción son las que tienen más recámaras.
+
+```{r area_precio, fig.align='center', out.height='250px'}
+# Crear un dataframe con los datos
+df <- data.frame(PRECIO, AREA, FactZona, RECAM)
+
+# Crear el gráfico utilizando ggplot2
+ggplot(df, aes(x = PRECIO, y = AREA, color = FactZona, size = RECAM)) +
+  geom_point() +
+  labs(title = "Relación entre Precio, Área, Zona y Recámaras",
+       x = "Precio",
+       y = "Área de construcción",
+       color = "Zona",
+       size = "Recámaras") +
+  theme_minimal()
+```
+
+Hasta este punto, es fácil notar la presencia de ciertos datos atípicos, entre los registros de las casas en venta, como lo es el caso de que solo hay una casa con 8 habitaciones y 3 casas en las que sus datos están a lejados del resto.
+
+Para realizar la correlación en nuestro software **R**, se emplea la función **cor()** con el método *Spearman*, indica que, - Un valor cercano a 1 exite una correlación positiva, lo que significa que las variables están relacionadas de misma manera - Un valor cercano a $-1$ exite una correlación negativa, lo que significa que las variables están relacionadas de manera contraria - Un valor cercano a 0 exite una correlación débil o nula.
+
+```{r cor}
+# Crear una subconjunto de datos solo con las variables numéricas
+datos_numericos <- Casas[, c("RECAM", "AREA","CHIM","CUARTOS","CONTRAV","LONGFR", "BAÑOS","CON","COCH","COND","ZONA","PRECIO")]
+
+# Calcular la matriz de correlación
+matriz_correlacion <- cor(datos_numericos, method = "spearman")
+print(matriz_correlacion)
+```
+
+Con la intención de tener una mejor visualización de dicha correlación entre las variables, se anexa un mapa de calor,
+
+```{r mapa, fig.align='center', out.weight='200px'}
+# Mapa de calor
+pheatmap(matriz_correlacion, 
+         scale = "none",
+         display_numbers = TRUE,
+         number_color = "black", 
+         fontsize_number = 8)
+```
+
+En un análisis de correlación es importante tener en cuenta lo que implica su valor de correlación, es decir,
+
+-   Una correlación positiva cercana a 1 indica que las variables tienden a aumentar juntas.
+
+-   Una correlación negativa cercana a -1 indica que una variable tiende a disminuir mientras la otra aumenta.
+
+-   Si la correlación entre dos variables es cercana a 0, indica que no hay una relación lineal fuerte entre ellas.
+
+En un mapa de calor, las correlaciones fuertes, ya sean positivas o negativas, se destacarán con colores intensos, mientras que las correlaciones débiles se mostrarán con colores claros.
+
+En el resultado obtenido con la correlación se puede observar que el precio está fuertemente relacionado con la zona, la capacidad de la cochera, el área de contrucción, la cantidad de baños y la cantidad de cuartos. A su vez, el área de construcción está fuertemente relacionado con la cantidad de recámaras, baños y cuartos de la vivienda. Mientras que las variables con una correlación débil con la mayoría de las demás variables son condición de la vivienda, el tipo de construcción, la presencia de chimeneas y la presencia de contraventanas. <br>
+
+### Valores atípicos (outliers)
+
+Para detectar valores atípicos analizaremos las variables mediante graficas de cajas (boxplot).
+
+```{r, fig.align='center', out.weight='350px'}
+
+par(mfrow=c(4,2), mar=c(2, 7, 1, 1)) 
+
+boxplot(AREA, 
+        main = "Boxplot de Área", 
+        ylab = "Área en metros cuadrados", 
+        col = "#F8BBD0", 
+        border = "black")
+
+boxplot(LONGFR, 
+        main = "Boxplot de longitud de frente", 
+        ylab = "Longitud de frente en metros", 
+        col = "#E2725B", 
+        border = "black")
+
+boxplot(RECAM, 
+        main = "Boxplot de Recámaras", 
+        ylab = "Cantidad de Recámaras", 
+        col = "#E9A451", 
+        border = "black")
+
+boxplot(CUARTOS, 
+        main = "Boxplot de Cuartos", 
+        ylab = "Cantidad de Cuartos", 
+        col = "#D68FB6", 
+        border = "black")
+
+boxplot(BAÑOS, 
+        main = "Boxplot de Baños", 
+        ylab = "Cantidad de Baños", 
+        col = "#9B4F6C", 
+        border = "black")
+
+boxplot(COCH, 
+        main = "Boxplot de Cochera", 
+        ylab = "Capacidad de la cochera", 
+        col = "#EAB951", 
+        border = "black")
+
+boxplot(ZONA, 
+        main = "Boxplot de zona",
+        ylab = "Zonas de residencia",
+        col = "#E2720F")
+par(mfrow=c(1,1))
+```
+
+Nótese que para las variables **RECAM** y **CUARTOS** hay un valor atípico, mientras que para la variable **AREA** hay dos/tres datos atípicos, se analizará su influencia en el proceso de regresión lineal.
+
+### Análisis de Regresión Lineal (ARL)
+
+Con el modelo de regresión vamos a tomar ciertas consideraciones respecto a las variables con datos atípicos. Por lo que primero se analizaá Factor de Inflación de la Varianza (VIF) y así determinar si se puede eliminar alguna de las variables debido a la multicolinealidad. Hay que tomar en cuenta que un VIF \> 10 indica un estudio más detallado del la relación entre las variables.
+
+```{r}
+# variables categóricas como factores
+Casas$ZONA <- factor(Casas$ZONA)
+Casas$CHIM <- factor(Casas$CHIM)
+Casas$CON <- factor(Casas$CON)
+Casas$COND <- factor(Casas$COND)
+
+```
+
+```{r}
+library(car)
+modelo_reg <- lm(PRECIO ~ RECAM + AREA + CHIM + CUARTOS 
+                       + CONTRAV + LONGFR + BAÑOS + CON + COCH 
+                       + COND + ZONA, data = Casas)
+
+# Calcular el VIF para cada variable independiente
+vif_result <- car::vif(modelo_reg)
+vif_result
+```
+
+De los resultados obtenidos del Factor de Inflación de la Varianza (VIF), se puede observar que:
+
+1.  Las variables **RECAM** y **CUARTOS** tienen VIFs significativamente altos, lo que sugiere una multicolinealidad importante.
+
+2.  Las demás variables tienen VIFs más bajos, lo que indica una menor multicolinealidad.
+
+Tomando en cuenta dicha observación, para elegir qué variable eliminar entre **RECAM** y **CUARTOS**, hay que considerar a qué se refiere cada una, dado que "cuartos" hace referencia a todas las habitaciones de la casa (incluidas recámaras, sala, comedor, etc), es más conveniente tomar dicha variable como parte del modelo por sobre "recámaras", ya que un cuarto se puede adaptar como recámara o según la necesidad del usuario. Por lo tanto, se usará únicamente la variable **CUARTOS** en el modelo final.
+
+Ahora, se diseña un modelo de regresión lineal para explorar la relación entre las características seleccionadas de las casas y sus precios. Para realizar el mejor ajuste de la recta que represente el comportamiento del precio según los diversos factores, se comienza realizando un ANOVA para observar la diferencia significativa estadisticamente entre las variables. Dado que el comportamiento que se busca modelar es el precio de las casas, se toma dicha característica como la variable dependiente, el primer modelo que se aborda contiene todas las variables de la base para poder empezar a descartar aquellas que no tienen aporte significativo al modelo según su relación,
+
+```{r ANOVA1}
+
+modelo_anova1 <- aov(PRECIO ~ AREA + ZONA + BAÑOS + COCH + 
+                        LONGFR + COND + CUARTOS + CHIM + CONTRAV, data = Casas)
+summary(modelo_anova1)
+```
+
+En este caso, el ANOVA revela que las variables que representan una mayor diferencia significativas en el precio de la casa son: - El área de construcción de la vivienda (AREA: $F = 70.326$, $p < 0.001$). - La ubicación de la casa (ZONA: $F = 6.756$, $p = 0.00809$). - La cantidad de baños en la casa (BAÑOS: $F = 4.183$, $p = 0.05878$). - La capcidad de vehículos de la cochera (COCH: $F = 9.823$, $p = 0.00682$). - Si la casa tiene o no contraventanas (CONTRAV: $F = 10.710$, $p = 0.00514$).
+
+Esto indica que la estas variables descriptivas de la casa, tienen un impacto significativo en su precio. Por lo que para el ajuste del modelo se tomarán en cuenta únicamente estas variables,
+
+```{r ANOAV2, echo=TRUE}
+modelo_anova2 <- aov(PRECIO ~ AREA + ZONA + BAÑOS + COCH +
+                         CONTRAV, data = Casas)
+summary(modelo_anova2)
+```
+
+Con el segundo ajuste, se observa que aquellas con diferencia significatav son el área de construccón, la ubicación de la casa, la capacidad de la cochera y si tienen o no contraventanas,
+
+```{r ANOAV3, echo=TRUE}
+modelo_anova3 <- aov(PRECIO ~ AREA + ZONA + COCH +
+                      + CONTRAV, data = Casas)
+summary(modelo_anova3)
+```
+
+Con esto, se puede hacer un modelo de regresión lineal, ya que tenemos las variables con mayor significancia estadistica, de esta manera,
+
+```{r reg}
+modelo_regresion <- lm(PRECIO ~ AREA + ZONA + COCH + CONTRAV, data = Casas)
+
+# Mostrar un resumen del modelo
+summary(modelo_regresion)
+```
+
+1.  **Precisión del modelo:** El modelo de regresión lineal ajustado explica aproximadamente el $74.26%$ (segun el $R^2$ ajustado) de la variabilidad en el precio de las casas. Esto sugiere que las variables independientes seleccionadas son capaces de predecir de manera efectiva los precios de las casas en el conjunto de datos.
+
+2.  **Significancia global del modelo:** El valor extremadamente pequeño del p-value ($2.853e-06$) asociado con el estadístico $F$ indica que el modelo es estadísticamente significativo. Lo que nos dice que al menos una de las variables independientes incluidas en el modelo tiene un efecto significativo en el precio de las casas.
+
+### Prueba de residuos
+
+Para verificar si los residuos del modelo siguen una distribución normal se puede emplear la prueba estadística de Shapiro-Wilk, mediante un grafico QQ (cuantil-cuantil) se puede observar el comportamiento.
+
+```{r, message=FALSE}
+# Prueba de Shapiro-Wilk para normalidad de los residuos
+residuos <- modelo_regresion$residuals
+shapiro.test(residuos)
+
+```
+
+```{r, fig.align='center', message=FALSE, out.height='200px'}
+# Gráfico de QQ para visualizar la normalidad de los residuos
+qqnorm(residuos)
+qqline(residuos)
+```
+
+Dado que el $p-value = 0.9896$, no hay suficiente evidencia para rechazar la hipótesis nula de normalidad. Por lo tanto, podemos concluir que los residuos del modelo siguen estadísticamente una distribución normal, el QQ-plot respalda la conclusión de la prueba de Shapiro-Wilk de que los residuos son estadísticamente normales.
+
+Al analizar si la varianza de los residuos es constante en todos los niveles de las variables independientes se puede ver si hay homocedasticidad. Se puede observar mediante gráficos de dispersión de los residuos frente a los valores ajustados.
+
+**Prueba de homocedasticidad**:
+
+```{r, message=FALSE, fig.align='center', out.height='200px'}
+# Gráfico de dispersión de los residuos frente a los valores ajustados
+plot(modelo_regresion$fitted.values, 
+     residuos, 
+     xlab = "Valores Ajustados", 
+     ylab = "Residuos", 
+     main = "Residuos vs. Valores Ajustados")
+abline(h = 0, col = "red")
+```
+
+En la grafica se puede observar que hay una dispersión aleatoria de puntos alrededor del cero, por lo que los residuos son independientes entre sí y no muestran ningún patrón en su distribución a lo largo del tiempo o del orden de los datos.
+
+Con base en estos hallazgos, es posible concluir que los residuos del modelo de regresión lineal cumplen con las suposiciones de normalidad, homocedasticidad.
+
+Por lo tanto, el modelo aparenta ser adecuado para realizar inferencias sobre la relación entre las caracteristicas de la casa con el precio de esta.
+
+## Interpretación de resultados
+
+***Interpretación de los coeficientes del modelo de regresión final***
+
+1.  **Intercept:** Representa el valor esperado del precio de una casa cuando todas las demás variables independientes en el modelo son iguales a cero. En este caso, el intercepto es de $\$356,353.2$.
+
+2.  **AREA:** Por cada metros cuadrado adicional en el área de construcción de una casa, se espera un aumento de $\$1,783$ en el precio. Esto sugiere que el tamaño de la casa tiene un impacto significativo en el incremento de su precio.
+
+3.  **CONTRAV:** La presencia de contraventanas está asociada con un aumento de $\$88,314.3$ en el precio de la casa. Lo que sugiere que las casas con contraventanas tienden a tener precios más altos en comparación con aquellas que no las tienen.
+
+4.  **COCH:** Por cada unidad adicional en la capacidad de vehiculos de la cochera de una casa, se espera un aumento de $\$53,722.8$ en el precio, lo que indica que las casas con más capacidad en la cochera tienden a tener precios más altos.
+
+5.  **ZONA:** La pertenencia a la Zona 2 o 3 no tiene un efecto estadísticamente significativo en el precio de la casa, ya que el valor p asociado con estas variables es mayor que el nivel de significancia típicamente utilizado (0.05).
+
+## Bibliografía
+
+1.  Kolde R. (s.f.). *La función \`pheatmap.* R CHARTS. <https://r-charts.com/es/correlacion/pheatmap/>
+
+2.  DATAtab Team (2024). *Análisis de correlación.*DATAtab: Online Statistics Calculator. <https://datatab.es/tutorial/correlation>
+
+3.  Rodrigo A. (2016) *Correlación lineal y Regresión lineal simple.* <https://cienciadedatos.net/documentos/24_correlacion_y_regresion_lineal#Bibliograf%C3%ADa>

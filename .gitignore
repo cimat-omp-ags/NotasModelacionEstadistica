@@ -39,3 +39,8 @@ desktop.ini
 
 # ── Logs sueltos generados por paquetes de R (ej. VennDiagram) ────────────────
 *.log
+
+# ── DataSets — archivos binarios grandes (no útiles para el libro) ────────────
+DataSets/**/*.jasp
+DataSets/**/*.html
+DataSets/**/*.Rproj

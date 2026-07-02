@@ -1,0 +1,257 @@
+# Análisis de Regresión Lineal: Dataset Casas {#cap-casas}
+
+En esta práctica aplicamos las herramientas de estadística descriptiva e inferencial
+estudiadas en los capítulos anteriores a un conjunto de datos real: una muestra de
+26 casas en venta en una ciudad mexicana. El objetivo es identificar qué características
+de las viviendas influyen en su precio de mercado y cuantificar dicha influencia
+mediante un modelo de regresión lineal múltiple.
+
+::: {.callout-note icon=false}
+## Datos y reproducibilidad
+
+La base de datos (`Casas.xlsx`) y los scripts de análisis se encuentran en la
+carpeta `DataSets/2504_Casas/` del repositorio. Para reproducir este capítulo
+basta con clonar el repositorio y renderizar el libro con Quarto.
+:::
+
+## Descripción del conjunto de datos
+
+El estudio piloto seleccionó al azar 26 casas en venta y registró las siguientes
+variables:
+
+| Variable | Tipo | Descripción |
+|:---------|:-----|:------------|
+| **RECAM** | Numérica | Número de recámaras |
+| **AREA** | Numérica | Metros cuadrados de construcción |
+| **CHIM** | Dicotómica (0/1) | Presencia de chimenea |
+| **CUARTOS** | Numérica | Total de habitaciones (sala, comedor, recámaras, etc.) |
+| **CONTRAV** | Dicotómica (0/1) | Presencia de contraventanas |
+| **LONGFR** | Numérica | Longitud del frente (metros) |
+| **BAÑOS** | Numérica | Número de baños |
+| **CON** | Dicotómica (0/1) | Tipo de construcción (ladrillo=0 / madera=1) |
+| **COCH** | Numérica | Capacidad de la cochera (núm. vehículos) |
+| **COND** | Dicotómica (0/1) | Condición (0=no necesita arreglos, 1=sí) |
+| **ZONA** | Categórica (1/2/3) | Zona: 1=lujosa, 2=media, 3=popular |
+| **PRECIO** | Numérica | Precio de venta (miles de pesos) |
+
+```{r casas-setup, message=FALSE, warning=FALSE}
+library(readxl)
+library(ggplot2)
+library(pheatmap)
+library(car)
+
+# Ruta relativa desde la raíz del proyecto (Quarto la establece automáticamente)
+Casas <- read_excel("DataSets/2504_Casas/Casas.xlsx")
+
+# Codificación de variables categóricas
+Casas$ZONA  <- factor(Casas$ZONA,  labels = c("Zona 1", "Zona 2", "Zona 3"))
+Casas$CHIM  <- factor(Casas$CHIM,  labels = c("No", "Sí"))
+Casas$CON   <- factor(Casas$CON,   labels = c("Ladrillo", "Madera"))
+Casas$COND  <- factor(Casas$COND,  labels = c("Sin arreglos", "Necesita arreglos"))
+Casas$CONTRAV <- factor(Casas$CONTRAV, labels = c("No", "Sí"))
+
+head(Casas)
+```
+
+## Análisis exploratorio
+
+### Resumen estadístico
+
+```{r casas-summary}
+summary(Casas[, c("PRECIO", "RECAM", "AREA", "CUARTOS", "LONGFR", "BAÑOS", "COCH")])
+```
+
+### Distribución del precio por zona
+
+El precio de venta varía considerablemente según la zona de ubicación. Las casas
+en zona lujosa (Zona 1) presentan precios más altos y mayor dispersión.
+
+```{r casas-boxplot-zona, fig.align='center', fig.width=7, fig.height=4}
+ggplot(Casas, aes(x = ZONA, y = PRECIO, fill = ZONA)) +
+  geom_boxplot(alpha = 0.7) +
+  geom_jitter(width = 0.15, size = 2, alpha = 0.6) +
+  scale_fill_manual(values = c("#004D31", "#006341", "#C8962E")) +
+  theme_minimal() +
+  labs(
+    title = "Distribución del precio de casas por zona",
+    x = "Zona", y = "Precio (miles de pesos)",
+    fill = "Zona"
+  ) +
+  theme(legend.position = "none")
+```
+
+```{r casas-tendencia}
+# Medidas de tendencia central por zona
+tapply(Casas$PRECIO, Casas$ZONA, function(x) round(c(Media=mean(x), Mediana=median(x), DE=sd(x)), 1))
+```
+
+### Diagramas de dispersión (variables numéricas vs. precio)
+
+```{r casas-scatter, fig.align='center', fig.width=9, fig.height=6, message=FALSE}
+library(tidyr)
+vars_num <- c("RECAM", "AREA", "CUARTOS", "LONGFR", "BAÑOS", "COCH")
+df_long <- tidyr::pivot_longer(Casas[, c("PRECIO", vars_num)],
+                               cols = all_of(vars_num),
+                               names_to = "Variable", values_to = "Valor")
+
+ggplot(df_long, aes(x = Valor, y = PRECIO)) +
+  geom_point(color = "#006341", alpha = 0.7, size = 2) +
+  geom_smooth(method = "lm", se = TRUE, color = "#C8962E", linewidth = 0.8) +
+  facet_wrap(~Variable, scales = "free_x", ncol = 3) +
+  theme_minimal() +
+  labs(title = "Relación entre variables numéricas y el precio",
+       x = "Valor de la variable", y = "Precio (miles de pesos)")
+```
+
+### Relación multivariada: Precio, Área, Zona y Recámaras
+
+```{r casas-multi, fig.align='center', fig.width=7, fig.height=5}
+ggplot(Casas, aes(x = AREA, y = PRECIO, color = ZONA, size = RECAM)) +
+  geom_point(alpha = 0.8) +
+  scale_color_manual(values = c("#004D31", "#C8962E", "#8a6a1f")) +
+  theme_minimal() +
+  labs(
+    title = "Precio vs Área de construcción",
+    subtitle = "Color: zona de ubicación | Tamaño: núm. de recámaras",
+    x = "Área de construcción (m²)",
+    y = "Precio (miles de pesos)",
+    color = "Zona", size = "Recámaras"
+  )
+```
+
+## Análisis de correlación
+
+Calculamos la correlación de Spearman entre todas las variables numéricas para
+identificar las que están más relacionadas con el precio.
+
+```{r casas-cor, fig.align='center', fig.width=7, fig.height=6}
+vars_cor <- c("RECAM","AREA","CUARTOS","LONGFR","BAÑOS","COCH","ZONA_num","PRECIO")
+Casas_num <- Casas
+Casas_num$ZONA_num <- as.numeric(Casas$ZONA)
+mat_cor <- cor(Casas_num[, c("RECAM","AREA","CUARTOS","LONGFR","BAÑOS","COCH","ZONA_num","PRECIO")],
+               method = "spearman")
+
+pheatmap(mat_cor,
+         display_numbers = TRUE,
+         number_color = "black",
+         fontsize_number = 8,
+         color = colorRampPalette(c("#C8962E", "white", "#004D31"))(50),
+         main = "Matriz de correlación de Spearman")
+```
+
+::: {.callout-note icon=false}
+## Interpretación
+
+Las variables con mayor correlación con **PRECIO** son: **ZONA** (negativa: zonas
+más populares tienen precios menores), **COCH**, **AREA**, **BAÑOS** y **CUARTOS**.
+Las variables **CHIM**, **CONTRAV** y **CON** muestran correlaciones débiles con
+la mayoría de las demás.
+:::
+
+## Detección de valores atípicos
+
+```{r casas-outliers, fig.align='center', fig.width=8, fig.height=5}
+vars_box <- c("AREA","LONGFR","RECAM","CUARTOS","BAÑOS","COCH")
+df_box <- tidyr::pivot_longer(Casas[, vars_box], cols = everything(),
+                              names_to = "Variable", values_to = "Valor")
+
+ggplot(df_box, aes(x = Variable, y = Valor, fill = Variable)) +
+  geom_boxplot(alpha = 0.7, outlier.color = "red", outlier.size = 2.5) +
+  theme_minimal() +
+  theme(legend.position = "none") +
+  labs(title = "Diagramas de caja para detección de valores atípicos",
+       x = "", y = "Valor")
+```
+
+Las variables **RECAM**, **CUARTOS** y **AREA** presentan valores atípicos. Se
+considerará su influencia al ajustar el modelo de regresión.
+
+## Modelo de regresión lineal múltiple
+
+### Selección de variables (VIF y ANOVA)
+
+Antes de ajustar el modelo final, evaluamos la multicolinealidad con el Factor
+de Inflación de la Varianza (VIF). Un VIF > 10 indica multicolinealidad severa.
+
+```{r casas-vif}
+modelo_completo <- lm(PRECIO ~ RECAM + AREA + CHIM + CUARTOS +
+                        CONTRAV + LONGFR + BAÑOS + CON + COCH +
+                        COND + ZONA, data = Casas)
+vif(modelo_completo)
+```
+
+**RECAM** y **CUARTOS** tienen VIF altos por estar muy correlacionadas entre sí.
+Se elimina **RECAM** y se conserva **CUARTOS** (que incluye todos los tipos de
+habitación). A continuación se aplica selección secuencial mediante ANOVA:
+
+```{r casas-anova}
+# ANOVA con todas las variables restantes
+anova(lm(PRECIO ~ AREA + ZONA + BAÑOS + COCH + LONGFR +
+           COND + CUARTOS + CHIM + CONTRAV, data = Casas))
+```
+
+Las variables con mayor significancia estadística son **AREA**, **ZONA**, **COCH**
+y **CONTRAV** ($p < 0.01$). Se ajusta el modelo final con estas cuatro variables.
+
+### Modelo final
+
+```{r casas-modelo}
+modelo_final <- lm(PRECIO ~ AREA + ZONA + COCH + CONTRAV, data = Casas)
+summary(modelo_final)
+```
+
+El modelo explica aproximadamente el **74% de la variabilidad** en el precio
+($R^2$ ajustado $≈ 0.74$, $p < 0.001$). Los coeficientes se interpretan así:
+
+- **AREA:** cada m² adicional de construcción aumenta el precio en $pprox \$1{,}783$ miles.
+- **CONTRAV:** la presencia de contraventanas agrega $pprox \$88{,}314$ miles al precio.
+- **COCH:** cada espacio adicional en cochera aumenta el precio en $pprox \$53{,}723$ miles.
+- **ZONA:** pertenecer a zona 2 o 3 no resulta estadísticamente significativo
+  en este tamaño muestral ($n = 26$).
+
+### Verificación de supuestos
+
+```{r casas-residuos, fig.align='center', fig.width=8, fig.height=4}
+par(mfrow = c(1, 2))
+
+# Normalidad de residuos
+residuos <- modelo_final$residuals
+qqnorm(residuos, main = "QQ-plot de residuos")
+qqline(residuos, col = "#C8962E", lwd = 2)
+
+# Homocedasticidad
+plot(modelo_final$fitted.values, residuos,
+     xlab = "Valores ajustados", ylab = "Residuos",
+     main = "Residuos vs. Valores ajustados",
+     col = "#006341", pch = 19)
+abline(h = 0, col = "red", lty = 2)
+par(mfrow = c(1, 1))
+```
+
+```{r casas-shapiro}
+shapiro.test(residuos)
+```
+
+::: {.callout-note icon=false}
+## Conclusión
+
+La prueba de Shapiro-Wilk ($p > 0.05$) y el QQ-plot confirman que los residuos
+siguen una distribución normal. El gráfico de residuos vs. valores ajustados no
+muestra patrones sistemáticos, lo que respalda el supuesto de homocedasticidad.
+El modelo de regresión lineal múltiple con las variables **AREA**, **ZONA**,
+**COCH** y **CONTRAV** es adecuado para describir el precio de venta de las casas
+en esta muestra.
+:::
+
+::: {.callout-note icon=false}
+## Ejercicios propuestos
+
+1. Ajusta un modelo de regresión simple con solo la variable **AREA** como
+   predictora. ¿En cuánto disminuye el $R^2$ respecto al modelo múltiple?
+2. Aplica la función `predict()` para estimar el precio de una casa con
+   $	ext{AREA}=90$, $	ext{ZONA}=	ext{"Zona 2"}$, $	ext{COCH}=1$ y
+   sin contraventanas.
+3. Investiga el concepto de *leverage* y *distancia de Cook*; identifica con
+   `plot(modelo_final)` si alguna observación tiene influencia desproporcionada
+   en el modelo.
+:::

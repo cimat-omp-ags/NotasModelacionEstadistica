@@ -25,44 +25,73 @@ las cuales, son indispensables para el cálculo de probabilidades. Las reglas de
 herramienta que nos ayuda a contar el número de configuraciones posibles al ordenar o agrupar un determinado 
 número de elementos.
 
-:::: {.callout-note icon=false}
-## Ejemplo 1
-Suponga que en una empresa se quiere establecer un comité sindical, el cual debe de estar formado por 5 mujeres y 5 hombres de toda la empresa. Si en la empresa hay 20 hombres y 15 mujeres, considere los siguientes puntos:
+::: {#exm-comite}
+**Formación de comité sindical**
 
-1. ¿Cuántas configuraciones posibles podrían formarse para establecer el comité sindical?
-2. ¿Cuál es la probabilidad de que el comité tenga dicha configuración?
-::::
+Suponga que en una empresa se quiere establecer un comité sindical
+formado por 2 mujeres y 2 hombres. En la empresa laboran 3 hombres
+(Antonio, Juan y Héctor) y 3 mujeres (Denisse, Lucila y Laura).
+Considere los siguientes puntos:
 
-La pregunta número 1 es un caso típico de combinatoria. A manera de ejemplo, considere que el comité debe estar conformado por 4 personas, dos hombres y dos mujeres, de un total de 3 hombres y 3 mujeres. Ahora: ¿Cómo quedaría el comité?, cuando los hombres en la empresa son: Antonio, Juan y Héctor; mientras que las mujeres en la empresa son: Denisse, Lucila y Laura.
+1. ¿Cuántas configuraciones posibles podrían formarse para el comité?
+2. ¿Cuál es la probabilidad de que el comité tenga una configuración
+   específica?
 
-¿Cuántos grupos de 2 hombres se pueden formar del conjunto de 3 hombres? Los posibles grupos son: Antonio y Juan, Antonio y Héctor, Juan y Héctor, es decir, 3 combinaciones. 
+---
 
-¿Cuántos grupos de 2 mujeres se pueden formar del conjunto de 3 mujeres? Del mismo modo que para los hombres, los posibles grupos de 2 son: Denisse y Lucila, Denisse y Laura, Lucila y Laura. 
+La pregunta número 1 es un caso típico de combinatoria. Para resolverla,
+primero contamos por separado cuántos grupos se pueden formar de cada sexo.
 
-Todas las posibles configuraciones del comité se muestran en la tabla 1.
+**Grupos posibles de 2 hombres** (de un total de 3):
 
-### Posibles configuraciones del comité
+- Antonio y Juan
+- Antonio y Héctor
+- Juan y Héctor
 
-| Comités posibles | Configuración de mujeres | Configuración de hombres | Configuración del comité |
-|------------------|-------------------------|-------------------------|---------------------------|
-| Comité 1        | Denisse, Lucila          | Antonio, Juan          | Denisse, Lucila, Antonio, Juan |
-| Comité 2        | Denisse, Lucila          | Antonio, Héctor        | Denisse, Lucila, Antonio, Héctor |
-| Comité 3        | Denisse, Lucila          | Juan, Héctor           | Denisse, Lucila, Juan, Héctor |
-| Comité 4        | Denisse, Laura           | Antonio, Juan          | Denisse, Laura, Antonio, Juan |
-| Comité 5        | Denisse, Laura           | Antonio, Héctor        | Denisse, Laura, Antonio, Héctor |
-| Comité 6        | Denisse, Laura           | Juan, Héctor           | Denisse, Laura, Juan, Héctor |
-| Comité 7        | Lucila, Laura            | Antonio, Juan          | Lucila, Laura, Antonio, Juan |
-| Comité 8        | Lucila, Laura            | Antonio, Héctor        | Lucila, Laura, Antonio, Héctor |
-| Comité 9        | Lucila, Laura            | Juan, Héctor           | Lucila, Laura, Juan, Héctor |
+Es decir, **3 combinaciones** posibles de hombres.
 
-__Principio básico del conteo__
+**Grupos posibles de 2 mujeres** (de un total de 3):
 
-:::: {.callout-note icon=false}
-## Definición
-Si la primera etapa (*fase*) de un experimento, procedimiento, proceso, maniobra o intervención puede efectuarse de $n$ formas distintas y su segunda fase puede realizarse de $m$ formas diferentes, entonces el total de formas en que puede efectuarse el primer paso seguido del segundo tiene cardinalidad igual al producto $n \times m$.
-::::
+- Denisse y Lucila
+- Denisse y Laura
+- Lucila y Laura
 
-Veamos el principio básico del conteo con un ejemplo. Reconsidere el caso simple del comité sindical, el cual debe estar compuesto por 4 personas, dos hombres y dos mujeres. 
+Del mismo modo, **3 combinaciones** posibles de mujeres.
+
+Todas las configuraciones del comité se obtienen combinando cada grupo de
+mujeres con cada grupo de hombres, como se muestra en la
+@tbl-configuraciones.
+
+| Comité | Mujeres           | Hombres          | Configuración completa              |
+|--------|-------------------|------------------|--------------------------------------|
+| 1      | Denisse, Lucila   | Antonio, Juan    | Denisse, Lucila, Antonio, Juan       |
+| 2      | Denisse, Lucila   | Antonio, Héctor  | Denisse, Lucila, Antonio, Héctor     |
+| 3      | Denisse, Lucila   | Juan, Héctor     | Denisse, Lucila, Juan, Héctor        |
+| 4      | Denisse, Laura    | Antonio, Juan    | Denisse, Laura, Antonio, Juan        |
+| 5      | Denisse, Laura    | Antonio, Héctor  | Denisse, Laura, Antonio, Héctor      |
+| 6      | Denisse, Laura    | Juan, Héctor     | Denisse, Laura, Juan, Héctor         |
+| 7      | Lucila, Laura     | Antonio, Juan    | Lucila, Laura, Antonio, Juan         |
+| 8      | Lucila, Laura     | Antonio, Héctor  | Lucila, Laura, Antonio, Héctor       |
+| 9      | Lucila, Laura     | Juan, Héctor     | Lucila, Laura, Juan, Héctor          |
+
+: Posibles configuraciones del comité {#tbl-configuraciones}
+
+En total hay **9 configuraciones posibles**, lo que responde la pregunta 1.
+
+:::
+
+::: {#def-principio-multiplicativo .definicion}
+## Principio multiplicativo del conteo
+
+Sean $A$ y $B$ dos etapas secuenciales de un proceso. Si la etapa $A$
+puede realizarse de $n$ maneras distintas y, para cada una de ellas,
+la etapa $B$ puede realizarse de $m$ maneras distintas, entonces el
+número total de formas en que puede llevarse a cabo el proceso completo
+$A$ seguido de $B$ es:
+$$n \times m$$
+:::
+
+Reconsidere el caso del comité sindical del @exm-comite, el cual debe estar compuesto por 4 personas, dos hombres y dos mujeres. 
 
 El número de parejas de hombres son 3 posibles, y cada una de estas parejas tiene 3 posibles parejas de mujeres con las que pueden relacionarse. Si $m = 3$ parejas de hombres y $n = 3$ parejas de mujeres, entonces por el principio básico del conteo se tienen:
 

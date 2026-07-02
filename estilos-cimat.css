@@ -23,6 +23,20 @@
   --cimat-link-hover:  #C8962E;
 }
 
+.definicion {
+  border: 1px solid #2780e3;
+  border-left: 4px solid #2780e3;
+  border-radius: 4px;
+  padding: 1em 1.5em;
+  margin: 1em 0;
+  background-color: #f0f5ff;
+}
+
+.definicion h2 {
+  color: #2780e3;
+  margin-top: 0;
+}
+
 /* ---------- Barra de navegación superior ---------- */
 .navbar {
   background-color: var(--cimat-verde-osc) !important;

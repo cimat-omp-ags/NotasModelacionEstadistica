@@ -2,6 +2,8 @@ project:
   type: book
   output-dir: _book
 
+lang: es
+
 book:
   title: "Modelacion Estadistica"
   subtitle: "Notas del Curso - Maestria OMP, CIMAT"
@@ -37,6 +39,10 @@ book:
         - capitulos/parte1/cap02-distribuciones.qmd
         - capitulos/parte1/cap03-distribucion-conjunta.qmd
         - capitulos/parte1/cap04-inferencia.qmd
+    - part: "Parte II - Aplicaciones con Datos Reales"
+      chapters:
+        - capitulos/parte2/cap05-casas.qmd
+        - capitulos/parte2/cap06-autos.qmd
     - referencias.qmd
 
 bibliography: referencias.bib
