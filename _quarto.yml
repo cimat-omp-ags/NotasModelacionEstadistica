@@ -83,6 +83,7 @@ execute:
   freeze: auto
   warning: false
   message: false
+  dir: project
 
 knitr:
   opts_chunk:
