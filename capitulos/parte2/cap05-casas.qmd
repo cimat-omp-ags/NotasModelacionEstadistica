@@ -203,9 +203,9 @@ summary(modelo_final)
 El modelo explica aproximadamente el **74% de la variabilidad** en el precio
 ($R^2$ ajustado $≈ 0.74$, $p < 0.001$). Los coeficientes se interpretan así:
 
-- **AREA:** cada m² adicional de construcción aumenta el precio en $pprox \$1{,}783$ miles.
-- **CONTRAV:** la presencia de contraventanas agrega $pprox \$88{,}314$ miles al precio.
-- **COCH:** cada espacio adicional en cochera aumenta el precio en $pprox \$53{,}723$ miles.
+- **AREA:** cada m² adicional de construcción aumenta el precio en $\approx \$1{,}783$ miles.
+- **CONTRAV:** la presencia de contraventanas agrega $\approx \$88{,}314$ miles al precio.
+- **COCH:** cada espacio adicional en cochera aumenta el precio en $\approx \$53{,}723$ miles.
 - **ZONA:** pertenecer a zona 2 o 3 no resulta estadísticamente significativo
   en este tamaño muestral ($n = 26$).
 
