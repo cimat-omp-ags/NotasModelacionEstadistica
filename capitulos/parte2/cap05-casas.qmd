@@ -252,6 +252,4 @@ en esta muestra.
    $\text{AREA}=90$, $\text{ZONA}=\text{"Zona 2"}$, $\text{COCH}=1$ y
    sin contraventanas.
 3. Investiga el concepto de *leverage* y *distancia de Cook*; identifica con
-   `plot(modelo_final)` si alguna observación ejerce influencia desproporcionada
-   sobre los coeficientes del modelo.
-:::
+   `plot(modelo_final)` si alguna ob

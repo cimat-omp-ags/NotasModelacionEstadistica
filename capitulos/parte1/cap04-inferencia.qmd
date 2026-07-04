@@ -727,6 +727,365 @@ ggplot(df_prop, aes(x = x, y = densidad)) +
 :::
 
 ::: {.callout-note icon=false}
+
+## Métodos de estimación puntual {#sec-metodos-estimacion}
+
+::: {.callout-tip icon=false}
+## Fuente: Apuntes del curso (Prof. Magín Zúñiga Estrada)
+
+El desarrollo de esta sección sigue el texto del Dr. Magín Zúñiga
+Estrada. Se presentan los dos métodos clásicos de estimación puntual:
+el método de momentos y el de máxima verosimilitud.
+:::
+
+Un **estimador** es un estadístico $T(\mathbf{X})$ que, dada una
+realización $x_1,\ldots,x_n$ de la muestra, produce una estimación
+$\hat{\theta} = T(\mathbf{x})$ del parámetro desconocido $\theta$.
+
+::: {.callout-note icon=false}
+## Estimación puntual
+
+La **estimación puntual** consiste en derivar un estadístico
+$\hat{\theta} = T(\mathbf{X})$ que estime $\theta$ mediante un solo
+valor. Por convención $\hat{\theta}$ es una variable aleatoria (depende
+de los datos) y $\theta$ es fijo y desconocido.
+:::
+
+### Método de momentos
+
+Propuesto por Karl Pearson (1902). La idea es **igualar momentos
+poblacionales con momentos muestrales**.
+
+El $k$-ésimo momento poblacional es $\mu_k = E[X^k]$ (función de
+$\theta$). El $k$-ésimo momento muestral es
+$\hat{\mu}_k = \frac{1}{n}\sum_{i=1}^n x_i^k$.
+
+Se igualan $\mu_k(\theta) = \hat{\mu}_k$ y se despeja $\theta$.
+
+**Ejemplo.** Sea $X_1,\ldots,X_n \overset{iid}{\sim} \text{Exp}(\lambda)$.
+Encontrar el estimador de momentos de $\lambda$.
+
+**Solución.** El primer momento poblacional es $\mu_1 = E[X] = 1/\lambda$.
+El primer momento muestral es $\hat{\mu}_1 = \bar{x}$.
+Igualando: $1/\lambda = \bar{x}$, por tanto $\hat{\lambda}_{MM} = 1/\bar{x}$.
+
+```{r est-momentos, message=FALSE, warning=FALSE}
+# Simulación: método de momentos para Exp(lambda=2)
+set.seed(42)
+lambda_teo <- 2
+n <- 100
+x <- rexp(n, rate = lambda_teo)
+
+lambda_mm <- 1 / mean(x)
+cat("lambda verdadera  :", lambda_teo, "\n")
+cat("Estimación (MOM)  :", round(lambda_mm, 4), "\n")
+cat("Error relativo    :", round(abs(lambda_mm - lambda_teo)/lambda_teo*100, 2), "%\n")
+```
+
+### Método de máxima verosimilitud
+
+Propuesto por Ronald Fisher (1912–1922). Es el método de estimación más
+importante: los estimadores resultantes tienen propiedades óptimas
+asintóticas.
+
+::: {.callout-note icon=false}
+## Función de verosimilitud
+
+Dada una muestra $x_1,\ldots,x_n$ con $X_i \sim f(x;\theta)$, la
+**función de verosimilitud** es:
+$$L(\theta \mid x_1,\ldots,x_n) = \prod_{i=1}^n f(x_i;\theta).$$
+
+La **log-verosimilitud** es $\ell(\theta) = \log L(\theta)$.
+:::
+
+::: {.callout-note icon=false}
+## Estimador de Máxima Verosimilitud (EMV)
+
+El **EMV** $\hat{\theta}_{MV}$ es el valor de $\theta$ que maximiza
+$L(\theta)$ (equivalentemente, $\ell(\theta)$):
+$$\hat{\theta}_{MV} = \arg\max_{\theta \in \Theta} L(\theta).$$
+:::
+
+**Principio:** se elige el valor de $\theta$ que hace más probable
+(verosímil) haber observado los datos disponibles.
+
+**Ejemplo (Exponencial).** Sea $X_i \sim \text{Exp}(\theta)$.
+
+$$L(\theta) = \prod_{i=1}^n \theta e^{-\theta x_i} = \theta^n e^{-\theta \sum x_i}$$
+
+$$\ell(\theta) = n\log\theta - \theta\sum x_i \quad \Rightarrow \quad
+\frac{d\ell}{d\theta} = \frac{n}{\theta} - \sum x_i = 0
+\quad \Rightarrow \quad \hat{\theta}_{MV} = \frac{n}{\sum x_i} = \frac{1}{\bar{x}}.$$
+
+```{r emv-exp, fig.align='center', fig.width=6, fig.height=4}
+library(ggplot2)
+# Visualizar la log-verosimilitud
+log_lik <- function(theta, x) {
+  n <- length(x)
+  n * log(theta) - theta * sum(x)
+}
+
+set.seed(1)
+x_obs <- rexp(50, rate = 1.5)
+theta_grid <- seq(0.5, 3.5, length.out = 300)
+ll_vals    <- sapply(theta_grid, log_lik, x = x_obs)
+theta_mle  <- 1/mean(x_obs)
+
+df_ll <- data.frame(theta = theta_grid, ll = ll_vals)
+ggplot(df_ll, aes(x=theta, y=ll)) +
+  geom_line(color="#006341", linewidth=1.1) +
+  geom_vline(xintercept=theta_mle, color="#C8962E",
+             linewidth=1, linetype="dashed") +
+  annotate("text", x=theta_mle+0.15, y=min(ll_vals)*0.97,
+           label=paste0("EMV = ", round(theta_mle,3)),
+           color="#C8962E", hjust=0) +
+  theme_minimal() +
+  labs(title="Log-verosimilitud para Exp(θ) — muestra n=50",
+       x="θ", y="ℓ(θ)")
+```
+
+**Tabla EMV para distribuciones comunes:**
+
+| Distribución | Parámetro | EMV |
+|:-------------|:---------|:----|
+| $N(\mu,\sigma^2)$ | $\mu$ | $\hat{\mu} = \bar{X}$ |
+| $N(\mu,\sigma^2)$ | $\sigma^2$ | $\hat{\sigma}^2 = \frac{1}{n}\sum(X_i-\bar{X})^2$ |
+| $\text{Exp}(\lambda)$ | $\lambda$ | $\hat{\lambda} = 1/\bar{X}$ |
+| $\text{Bern}(p)$ | $p$ | $\hat{p} = \bar{X}$ |
+| $\text{Poisson}(\lambda)$ | $\lambda$ | $\hat{\lambda} = \bar{X}$ |
+
+## Propiedades de los estimadores {#sec-propiedades-estimadores}
+
+No basta con obtener un estimador; es necesario evaluar su calidad.
+
+### Sesgo (insesgamiento)
+
+::: {.callout-note icon=false}
+## Definición: Estimador insesgado
+
+Un estimador $\hat{\theta}$ es **insesgado** para $\theta$ si:
+$$E[\hat{\theta}] = \theta \quad \forall\, \theta \in \Theta.$$
+
+El **sesgo** es $\text{Sesgo}(\hat{\theta}) = E[\hat{\theta}] - \theta$.
+:::
+
+**Ejemplo.** $\bar{X}$ es insesgado para $\mu$: $E[\bar{X}] = \mu$.
+El estimador $\hat{\sigma}^2 = \frac{1}{n}\sum(X_i-\bar{X})^2$ es
+sesgado para $\sigma^2$; el estimador insesgado es $S^2 = \frac{1}{n-1}\sum(X_i-\bar{X})^2$.
+
+### Error cuadrático medio (ECM)
+
+$$\text{ECM}(\hat{\theta}) = E[(\hat{\theta}-\theta)^2]
+  = \text{Var}(\hat{\theta}) + \text{Sesgo}^2(\hat{\theta}).$$
+
+Un buen estimador minimiza el ECM: busca equilibrio entre varianza baja
+y sesgo bajo.
+
+### Consistencia
+
+$\hat{\theta}_n$ es **consistente** para $\theta$ si $\hat{\theta}_n
+\xrightarrow{p} \theta$ cuando $n\to\infty$. Intuitivamente: con más
+datos, el estimador se acerca al parámetro verdadero.
+
+### Eficiencia y la cota de Cramér-Rao
+
+Entre todos los estimadores insesgados, el más **eficiente** es el de
+menor varianza. La **cota de Cramér-Rao** establece el límite inferior
+para la varianza de cualquier estimador insesgado:
+$$\text{Var}(\hat{\theta}) \geq \frac{1}{n\, \mathcal{I}(\theta)},$$
+donde $\mathcal{I}(\theta) = E\!\left[\left(\frac{\partial \log f(X;\theta)}{\partial\theta}\right)^2\right]$
+es la **información de Fisher**.
+
+Un estimador que alcanza esta cota se llama **estimador de varianza
+uniformemente mínima (EVUM)**.
+
+```{r propiedades-est, message=FALSE, warning=FALSE}
+# Comparar sesgo y varianza de dos estimadores de sigma^2
+set.seed(123)
+N_sim <- 5000; n <- 10; sigma2_teo <- 4
+
+est_biased <- numeric(N_sim)   # (1/n)*sum(xi-xbar)^2
+est_unbias <- numeric(N_sim)   # S^2 = (1/(n-1))*sum(xi-xbar)^2
+
+for (i in seq_len(N_sim)) {
+  xi <- rnorm(n, mean=0, sd=sqrt(sigma2_teo))
+  est_biased[i] <- mean((xi - mean(xi))^2)
+  est_unbias[i] <- var(xi)
+}
+
+cat("--- Estimadores de sigma^2 (n=10, sigma^2=4) ---\n")
+cat("Sesgado  — E[est]:", round(mean(est_biased),4),
+    " Sesgo:", round(mean(est_biased) - sigma2_teo, 4), "\n")
+cat("Insesgado— E[S^2]:", round(mean(est_unbias),4),
+    " Sesgo:", round(mean(est_unbias) - sigma2_teo, 4), "\n")
+```
+
+## Intervalos de confianza {#sec-intervalos-confianza}
+
+La **estimación por intervalo** va más allá de un valor único: produce
+un rango de valores plausibles para $\theta$.
+
+::: {.callout-note icon=false}
+## Intervalo de confianza
+
+Sea $\alpha \in (0,1)$. Un **intervalo de confianza (IC)** de nivel
+$1-\alpha$ para $\theta$ es un intervalo aleatorio
+$(\hat{\theta}_L, \hat{\theta}_U)$ tal que:
+$$P(\hat{\theta}_L \leq \theta \leq \hat{\theta}_U) = 1-\alpha.$$
+
+Al valor $1-\alpha$ se le llama **coeficiente de confianza** (e.g., 0.95).
+:::
+
+**Interpretación frecuentista:** si el procedimiento se repitiera muchas
+veces, el $(1-\alpha)\times 100\%$ de los intervalos construidos
+contendría al verdadero $\theta$.
+
+### IC para la media ($\sigma^2$ conocida)
+
+Si $X_1,\ldots,X_n \overset{iid}{\sim} N(\mu, \sigma^2)$ con $\sigma^2$
+conocida, entonces $Z = (\bar{X}-\mu)/(\sigma/\sqrt{n}) \sim N(0,1)$, y el IC
+de nivel $1-\alpha$ es:
+$$\bar{X} \pm z_{\alpha/2} \cdot \frac{\sigma}{\sqrt{n}},$$
+donde $z_{\alpha/2}$ es el cuantil $1-\alpha/2$ de la $N(0,1)$.
+
+### IC para la media ($\sigma^2$ desconocida)
+
+Cuando $\sigma^2$ es desconocida se usa $t_{n-1}$ en lugar de $Z$:
+$$\bar{X} \pm t_{\alpha/2, n-1} \cdot \frac{S}{\sqrt{n}}.$$
+
+```{r ic-media, fig.align='center', fig.width=8, fig.height=4}
+library(ggplot2)
+# Cobertura empírica del IC para la media
+set.seed(7)
+mu_teo <- 5; sigma <- 2; n <- 20; alpha <- 0.05
+N_ic <- 200
+ics <- replicate(N_ic, {
+  x <- rnorm(n, mu_teo, sigma)
+  c(mean(x) - qt(1-alpha/2, n-1)*sd(x)/sqrt(n),
+    mean(x) + qt(1-alpha/2, n-1)*sd(x)/sqrt(n))
+})
+
+df_ic <- data.frame(
+  id    = 1:N_ic,
+  lower = ics[1,],
+  upper = ics[2,],
+  cubre = ics[1,] <= mu_teo & mu_teo <= ics[2,]
+)
+
+cat("Cobertura empírica:", round(mean(df_ic$cubre)*100, 1), "%",
+    "(teórica:", (1-alpha)*100, "%)\n")
+
+ggplot(df_ic[1:50,], aes(x=id, ymin=lower, ymax=upper, color=cubre)) +
+  geom_linerange(linewidth=0.7) +
+  geom_hline(yintercept=mu_teo, color="#C8962E", linewidth=1, linetype="dashed") +
+  scale_color_manual(values=c("FALSE"="red","TRUE"="#006341"),
+                     labels=c("No cubre","Cubre")) +
+  theme_minimal() +
+  labs(title="Intervalos de confianza del 95% para μ (primeros 50)",
+       x="Muestra #", y="IC", color="")
+```
+
+**Tabla de IC más utilizados:**
+
+| Parámetro | Condición | Estadístico pivote | IC |
+|:----------|:---------|:------------------|:---|
+| $\mu$ | $\sigma^2$ conocida | $Z \sim N(0,1)$ | $\bar{X} \pm z_{\alpha/2}\sigma/\sqrt{n}$ |
+| $\mu$ | $\sigma^2$ desconocida | $T \sim t_{n-1}$ | $\bar{X} \pm t_{\alpha/2,n-1} S/\sqrt{n}$ |
+| $p$ | $n$ grande | $Z \approx N(0,1)$ | $\hat{p} \pm z_{\alpha/2}\sqrt{\hat{p}(1-\hat{p})/n}$ |
+| $\sigma^2$ | $\mu$ desconocida | $\chi^2_{n-1}$ | $\left(\frac{(n-1)S^2}{\chi^2_U},\frac{(n-1)S^2}{\chi^2_L}\right)$ |
+
+## Pruebas de hipótesis {#sec-pruebas-hipotesis}
+
+Una **prueba de hipótesis** es un procedimiento para decidir, a partir de
+los datos, si hay evidencia suficiente para rechazar una afirmación sobre
+los parámetros de una distribución.
+
+::: {.callout-note icon=false}
+## Elementos de una prueba de hipótesis
+
+- **Hipótesis nula** $H_0$: la afirmación que se pone a prueba (statu quo).
+- **Hipótesis alternativa** $H_1$: lo que se concluye si se rechaza $H_0$.
+- **Estadístico de prueba**: función de los datos que sirve para decidir.
+- **Región de rechazo** $W$: conjunto de valores del estadístico que llevan a rechazar $H_0$.
+- **Nivel de significancia** $\alpha = P(\text{rechazar } H_0 \mid H_0 \text{ verdadera})$ (error tipo I).
+- **Valor-$p$**: la probabilidad de observar un resultado tan extremo como el observado, si $H_0$ fuera verdadera.
+:::
+
+| Tipo de error | Descripción | Probabilidad |
+|:-------------|:-----------|:------------|
+| **Tipo I** ($\alpha$) | Rechazar $H_0$ siendo verdadera | Controlada por el investigador |
+| **Tipo II** ($\beta$) | No rechazar $H_0$ siendo falsa | Depende del tamaño de muestra |
+| **Potencia** | Rechazar $H_0$ siendo falsa | $1 - \beta$ |
+
+### Prueba para la media (una muestra)
+
+$H_0: \mu = \mu_0$ vs $H_1: \mu \neq \mu_0$ (bilateral).
+
+Con $\sigma^2$ desconocida, el estadístico es:
+$$t = \frac{\bar{X} - \mu_0}{S/\sqrt{n}} \sim t_{n-1} \text{ bajo } H_0.$$
+
+Se rechaza $H_0$ si $|t| > t_{\alpha/2, n-1}$, o equivalentemente si
+$\text{valor-}p < \alpha$.
+
+```{r prueba-hip, message=FALSE, warning=FALSE}
+# Ejemplo: prueba t una muestra
+set.seed(99)
+mu_0 <- 100  # hipótesis nula: mu = 100
+muestra <- rnorm(25, mean = 103, sd = 8)  # mu real = 103
+
+resultado <- t.test(muestra, mu = mu_0, alternative = "two.sided")
+
+cat("H0: mu =", mu_0, "vs H1: mu ≠", mu_0, "\n")
+cat("Estadístico t :", round(resultado$statistic, 4), "\n")
+cat("Valor-p       :", round(resultado$p.value, 4), "\n")
+cat("IC 95%        :", round(resultado$conf.int, 3), "\n")
+cat("Conclusión    :", ifelse(resultado$p.value < 0.05,
+     "Rechazamos H0: hay evidencia de que mu ≠ 100.",
+     "No rechazamos H0."), "\n")
+```
+
+### Dualidad IC — Prueba de hipótesis
+
+Existe una correspondencia exacta entre los IC y las pruebas de hipótesis:
+un valor $\mu_0$ no es rechazado al nivel $\alpha$ si y solo si $\mu_0$
+pertenece al IC de nivel $1-\alpha$.
+
+```{r ejercicios-hip}
+# Ejercicio integrador: ANOVA de una vía con dataset Casas
+library(modelEstCIMAT)
+casas <- readRDS(system.file("data", "casas.rds", package="modelEstCIMAT"))
+# ¿El precio promedio difiere entre zonas?
+modelo_aov <- aov(PRECIO ~ factor(ZONA), data = casas)
+cat("\nANOVA: Precio ~ Zona\n")
+print(summary(modelo_aov))
+cat("\nConclusion: valor-p =",
+    round(summary(modelo_aov)[[1]]$`Pr(>F)`[1], 4),
+    "→", ifelse(summary(modelo_aov)[[1]]$`Pr(>F)`[1] < 0.05,
+    "existen diferencias significativas entre zonas.",
+    "no hay evidencia de diferencias entre zonas."), "\n")
+```
+
+::: {.callout-note icon=false}
+## Ejercicios propuestos
+
+1. Sea $X_1,\ldots,X_{20} \sim N(\mu, 16)$. Con $\bar{x}=48.5$,
+   construya IC al 90%, 95% y 99% para $\mu$. ¿Cómo cambia el ancho?
+
+2. En una muestra de 150 artículos, 18 son defectuosos.
+   a) Estime $p$ por MV. 
+   b) Construya un IC al 95% para $p$.
+   c) ¿La tasa de defectos es significativamente mayor al 10%?
+
+3. Se comparan dos métodos de enseñanza. Grupo A ($n_1=30$): $\bar{x}_1=72$,
+   $s_1=8$. Grupo B ($n_2=28$): $\bar{x}_2=68$, $s_2=10$.
+   Pruebe $H_0: \mu_1=\mu_2$ vs $H_1: \mu_1>\mu_2$ al nivel 5%.
+
+4. Con el dataset `casas`: estime por MV los parámetros de una
+   distribución normal ajustada al precio. Evalúe el ajuste con una
+   prueba de Shapiro-Wilk.
+:::
+
+
 ## Resumen del capítulo
 
 - **Población:** conjunto completo de mediciones de interés; sus valores numéricos resumen (como $\mu$ y $\sigma^2$) se llaman **parámetros**.

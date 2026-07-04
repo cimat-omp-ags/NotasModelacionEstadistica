@@ -1068,6 +1068,46 @@ plot(
 
 ```
 
+### Ejemplos adicionales: Distribución Binomial
+
+::: {.callout-tip icon=false}
+## Ejemplo: Ventas por teléfono
+
+Una compañía de ventas por teléfono indica que de cada 11 llamadas realizadas, 3 resultan en ventas. Con base en esto, defina $p = 3/11 \approx 0.2727$. Se realiza una campaña con $n = 10$ llamadas.
+
+**Preguntas:**
+
+1. ¿Cuál es la probabilidad de que exactamente 6 resulten en ventas?
+2. ¿Cuál es la probabilidad de que ninguna llamada resulte en venta?
+3. ¿Qué probabilidad hay de realizar a lo más 5 ventas?
+
+**Solución en R:**
+
+```{r binom-ventas, message=FALSE}
+p <- 3/11
+n <- 10
+
+# 1. P(X = 6)
+cat("P(X = 6) =", round(dbinom(6, n, p), 5), "\n")
+
+# 2. P(X = 0)
+cat("P(X = 0) =", round(dbinom(0, n, p), 5), "\n")
+
+# 3. P(X <= 5)
+cat("P(X <= 5) =", round(pbinom(5, n, p), 5), "\n")
+
+# Visualización de la distribución
+x <- 0:n
+prob <- dbinom(x, n, p)
+barplot(prob, names.arg = x,
+        col = "#006341", border = "white",
+        main = paste0("Binomial(n=10, p=3/11)\nVentas por teléfono"),
+        xlab = "Número de ventas", ylab = "Probabilidad")
+```
+
+Los resultados muestran que la probabilidad de exactamente 6 ventas es baja dado que $p < 0.3$, mientras que obtener cero ventas, aunque posible, también es poco probable con $n=10$ llamadas.
+:::
+
 ## Distribución Hipergeométrica
 
 La **distribución hipergeométrica** surge en situaciones experimentales donde se extraen elementos de una **población finita**, sin reemplazo, y cada elemento puede clasificarse en una de **dos categorías mutuamente excluyentes**, denominadas **éxito** y **fracaso**.
@@ -1296,6 +1336,90 @@ ggplot(df, aes(x = x, y = Probabilidad)) +
 
 ```
 
+### Ejemplos adicionales: Distribución Hipergeométrica
+
+::: {.callout-tip icon=false}
+## Ejemplo: Inspección de focos (Magín Zúñiga)
+
+Una fábrica de focos tiene información histórica de que en cada lote de $N = 380$ focos, $K = 15$ son defectuosos. Un inspector toma una muestra sin reemplazo de $n = 18$ focos.
+
+Sea $X$ = número de focos defectuosos en la muestra. Entonces $X \sim \text{Hipergeom}(380, 15, 18)$.
+
+```{r hiper-focos}
+N_f <- 380; K_f <- 15; n_f <- 18
+
+# En R: dhyper(x, m, n, k) con m = fracasos, n = éxitos, k = muestra
+m_f <- N_f - K_f  # 365 focos buenos
+n_f_ok <- K_f     # 15 defectuosos
+
+x_f  <- 0:min(n_f, K_f)
+pmf_f <- dhyper(x_f, m = m_f, n = n_f_ok, k = n_f)
+
+cat("FMP de X ~ Hipergeom(380, 15, 18):\n")
+cat(sprintf("x = %d: P(X = %d) = %.6f\n", x_f, x_f, pmf_f))
+
+# Esperanza
+E_X <- n_f * K_f / N_f
+cat("\nE[X] = n*K/N =", n_f, "*", K_f, "/", N_f, "=", round(E_X, 4), "focos defectuosos esperados\n")
+
+barplot(pmf_f, names.arg = x_f,
+        col = "#004D31", border = "white",
+        main = "Hipergeom(N=380, K=15, n=18) — Focos defectuosos",
+        xlab = "Focos defectuosos en muestra (X)", ylab = "Probabilidad")
+```
+
+Se espera encontrar menos de 1 foco defectuoso en promedio ($E[X] \approx 0.71$), lo que refleja la baja tasa de defectos del proceso (15/380 ≈ 3.9%).
+:::
+
+::: {.callout-tip icon=false}
+## Ejemplo: Representantes políticos
+
+En una convención política nacional, un estado tiene 20 representantes, de los cuales 15 apoyan al candidato A y 5 apoyan al candidato B. Se seleccionan aleatoriamente 4 representantes sin reemplazo.
+
+Sea $X$ = número de representantes que apoyan al candidato A. Entonces $N=20$, $K=15$, $n=4$.
+
+**Preguntas:**
+
+1. ¿Cuál es la probabilidad de que por lo menos 2 apoyen al candidato A?
+2. ¿Cuál es la probabilidad de que ninguno apoye al candidato A?
+3. ¿Cuál es la probabilidad de que ninguno apoye al candidato B?
+
+**Solución en R:**
+
+```{r hiper-politicos, message=FALSE}
+N <- 20   # población total
+K <- 15   # éxitos en la población (apoyan A)
+n <- 4    # tamaño de la muestra
+
+# En R: dhyper(x, m, n, k) donde m=fracasos, n=éxitos, k=muestra
+# m = N - K = 5 (apoyan B), n = K = 15 (apoyan A), k = n = 4
+m_r <- N - K  # fracasos = 5
+n_r <- K      # éxitos = 15
+
+# 1. P(X >= 2) = 1 - P(X <= 1)
+p_geq2 <- 1 - phyper(1, m = m_r, n = n_r, k = n)
+cat("P(X >= 2) =", round(p_geq2, 4), "\n")
+
+# 2. P(X = 0): ninguno apoya A
+p_ninguno_A <- dhyper(0, m = m_r, n = n_r, k = n)
+cat("P(X = 0) =", round(p_ninguno_A, 4), "\n")
+
+# 3. P(X = 4): ninguno apoya B (todos apoyan A)
+p_ninguno_B <- dhyper(4, m = m_r, n = n_r, k = n)
+cat("P(X = 4) =", round(p_ninguno_B, 4), "\n")
+
+# Distribución completa
+x_vals <- 0:n
+probs   <- dhyper(x_vals, m = m_r, n = n_r, k = n)
+barplot(probs, names.arg = x_vals,
+        col = "#C8962E", border = "white",
+        main = "Hipergeométrica(N=20, K=15, n=4)\nRepresentantes que apoyan al candidato A",
+        xlab = "Número de representantes (X)", ylab = "Probabilidad")
+```
+
+Con $K/N = 0.75$ (75% apoyan A), la probabilidad de que ninguno de los 4 seleccionados apoye a A es prácticamente cero.
+:::
+
 ## Distribución Poisson
 
 
@@ -1497,155 +1621,239 @@ ggplot(df, aes(x, prob)) +
 
 ```
 
+### Ejemplos adicionales: Distribución Poisson
+
+::: {.callout-tip icon=false}
+## Ejemplo: Infracciones de parquímetro
+
+El número de infracciones expedidas por el lector de un parquímetro, por violaciones de estacionamiento, puede modelarse mediante un proceso Poisson con una tasa de $\lambda = 5$ infracciones por hora.
+
+**Preguntas:**
+
+1. ¿Cuál es la probabilidad de que exactamente 5 infracciones se expidan durante una hora?
+2. ¿Cuál es la probabilidad de que se expidan al menos 3 infracciones en una hora?
+3. ¿Cuántas infracciones se esperan en un periodo de 45 minutos?
+
+**Solución en R:**
+
+```{r poisson-infracciones, message=FALSE}
+lambda_hr <- 5  # tasa por hora
+
+# 1. P(X = 5)
+cat("P(X = 5) =", round(dpois(5, lambda_hr), 5), "\n")
+
+# 2. P(X >= 3) = 1 - P(X <= 2)
+cat("P(X >= 3) =", round(1 - ppois(2, lambda_hr), 5), "\n")
+
+# 3. Esperanza en 45 min: lambda' = 5 * (45/60) = 3.75
+lambda_45 <- 5 * (45/60)
+cat("E[X en 45 min] = lambda' =", lambda_45, "infracciones\n")
+
+# Visualización para 1 hora
+x <- 0:15
+prob <- dpois(x, lambda_hr)
+barplot(prob, names.arg = x,
+        col = "#004D31", border = "white",
+        main = expression(paste("Poisson(", lambda, " = 5) — Infracciones por hora")),
+        xlab = "Número de infracciones", ylab = "Probabilidad")
+```
+:::
+
+::: {.callout-tip icon=false}
+## Ejemplo: Fuente radiactiva
+
+Una fuente radiactiva emite partículas según una distribución Poisson con media $\lambda = 10$ partículas por minuto.
+
+**Preguntas:**
+
+1. Probabilidad de 5 partículas en un minuto.
+2. Probabilidad de 0 partículas en un minuto.
+3. Probabilidad de más de 5 partículas en un minuto.
+4. Probabilidad de a lo más 30 partículas en 5 minutos.
+
+**Solución en R:**
+
+```{r poisson-radiactivo, message=FALSE}
+lambda_1min <- 10
+
+# 1. P(X = 5)
+cat("P(X = 5)  =", round(dpois(5, lambda_1min), 5), "\n")
+
+# 2. P(X = 0)
+cat("P(X = 0)  =", formatC(dpois(0, lambda_1min), format = "e"), "\n")
+
+# 3. P(X > 5) = 1 - P(X <= 5)
+cat("P(X > 5)  =", round(1 - ppois(5, lambda_1min), 5), "\n")
+
+# 4. Y = partículas en 5 min => lambda' = 5 * 10 = 50
+lambda_5min <- 5 * lambda_1min
+cat("P(Y <= 30) en 5 min =", round(ppois(30, lambda_5min), 6), "\n")
+```
+
+Los valores confirman que con $\lambda = 10$, obtener 0 partículas es un evento extremadamente improbable ($\approx 4.5 \times 10^{-5}$), mientras que más de 5 partículas ocurre con probabilidad 0.933.
+:::
+
 ::: {.callout-note icon=false}
 ## Ejercicios propuestos
 
 1. Una máquina produce piezas defectuosas con probabilidad $p=0.04$. Si se inspeccionan 10 piezas, calcule la probabilidad de encontrar exactamente 2 defectuosas usando la distribución Binomial.
 2. De un lote de 25 artículos, 5 son defectuosos. Si se seleccionan 4 artículos sin reemplazo, calcule la probabilidad de obtener al menos un defectuoso usando la distribución Hipergeométrica.
 3. El número de accidentes en una intersección sigue una distribución Poisson con una media de 1.5 accidentes por semana. Calcule la probabilidad de que ocurran más de 2 accidentes en una semana dada.
+4. Una ruleta de casino tiene números del 0 al 36. Se considera éxito que caiga el número elegido. Si se juega 15 veces: (a) determine $p$; (b) calcule $P(X < 3)$; (c) obtenga $E(X)$ y $Var(X)$.
 :::
 
-## Material complementario: distribuciones adicionales y distribuciones conjuntas
+## Material complementario: distribuciones adicionales
 
-Esta sección incorpora, a partir de las diapositivas del curso, dos familias
-discretas adicionales (Geométrica y Binomial Negativa) y la teoría de
-distribuciones conjuntas para dos variables aleatorias discretas. Todas las
-gráficas se generan con código.
+Esta sección presenta, a partir de los apuntes del Prof. Magín Zúñiga Estrada, dos familias discretas adicionales (Geométrica y Binomial Negativa), así como las distribuciones conjuntas para variables discretas.
 
 ### Distribución Geométrica
 
-Sea $X$ el número de fracasos antes de obtener el primer éxito en ensayos
-Bernoulli independientes, cada uno con probabilidad de éxito $p$. Su función
-de probabilidad y momentos son:
+La **distribución geométrica** modela el número de fracasos que ocurren *antes* de obtener el primer éxito en ensayos Bernoulli independientes, cada uno con probabilidad de éxito $p$. Se denota $X \sim \text{geo}(p)$.
 
-$$p(x; p) = (1-p)^x \cdot p = q^x p, \qquad x = 0, 1, 2, \ldots$$
+**Función masa de probabilidad y momentos:**
+
+$$p(k;\,p) = (1-p)^k\,p, \quad k = 0, 1, 2, \ldots$$
+
 $$E(X) = \frac{1-p}{p}, \qquad Var(X) = \frac{1-p}{p^2}$$
 
-Una propiedad importante de esta distribución es la **falta de memoria**: no
-importa cuántos fracasos hayan ocurrido ya, la distribución de los fracasos
-restantes hasta el próximo éxito es siempre la misma.
+Una propiedad importante es la **falta de memoria**: dado que han ocurrido $k$ fracasos, la distribución de los fracasos adicionales hasta el primer éxito sigue siendo $\text{geo}(p)$.
 
-```{r, echo=TRUE, fig.align='center', fig.width=6, fig.height=4}
-#| label: fig-geometrica
-#| fig-cap: "Distribución Geométrica para distintos valores de p"
+```{r geom-plot, fig.align='center', fig.width=6, fig.height=4}
 library(ggplot2)
-
 x <- 0:15
-df_geom <- do.call(rbind, lapply(c(0.2, 0.5), function(p) {
-  data.frame(x = x, prob = dgeom(x, p), p = paste0("p = ", p))
+ps <- c(0.2, 0.4, 0.6)
+df_geom <- do.call(rbind, lapply(ps, function(p) {
+  data.frame(x = x, prob = dgeom(x, prob = p), p = paste0("p = ", p))
 }))
-
-ggplot(df_geom, aes(x = x, y = prob, fill = p)) +
-  geom_col(position = "dodge") +
-  scale_fill_manual(values = c("p = 0.2" = "#006341", "p = 0.5" = "#C8962E")) +
-  labs(title = "Distribución Geométrica", x = "Número de fracasos (x)",
-       y = "P(X = x)", fill = NULL) +
-  theme_minimal()
+ggplot(df_geom, aes(x = factor(x), y = prob, fill = p)) +
+  geom_col(position = "dodge", width = 0.7) +
+  scale_fill_manual(values = c("#004D31", "#C8962E", "#006699")) +
+  theme_minimal() +
+  labs(title = "Distribución Geométrica", x = "Fracasos antes del primer éxito",
+       y = "P(X = x)", fill = NULL)
 ```
 
-**Ejemplo:** cada intento de conexión tiene una probabilidad de éxito de
-$p = 0.2$. El número esperado de intentos hasta lograr la conexión es:
+::: {.callout-tip icon=false}
+## Ejemplo: Planificación familiar (Magín Zúñiga)
 
-```{r geometrica_ejemplo, echo=TRUE}
-p <- 0.2
-cat("P(conectarse en menos de 4 intentos):", round(pgeom(2, p), 4), "\n")
-cat("Número esperado de fracasos antes del éxito, E(X):", (1 - p) / p, "\n")
-cat("Número esperado de intentos totales:", 1 / p, "\n")
+Los habitantes de una isla tienen hijos hasta que nace la primera niña (cada embarazo: niña con $p = 0.5$, independiente). Sea $X$ = número de niños (varones) antes de la primera niña. Entonces $X \sim \text{geo}(0.5)$.
+
+```{r geom-familia}
+p_f <- 0.5
+k_vals <- 0:8
+probs  <- dgeom(k_vals, prob = p_f)
+cat("k  |  P(X=k)\n")
+for (i in seq_along(k_vals))
+  cat(sprintf("%d  |  %.5f\n", k_vals[i], probs[i]))
+cat("\nE[X] =", (1-p_f)/p_f, "niños varones en promedio antes de la primera niña\n")
 ```
+
+Aunque cada familia puede tener muchos niños, la razón niños/niñas en la isla sigue siendo 1:1 en promedio.
+:::
 
 ### Distribución Binomial Negativa
 
-Generaliza a la Geométrica: $X$ representa el número de fracasos antes de
-alcanzar $k$ éxitos en ensayos Bernoulli con probabilidad de éxito $p$.
+La **distribución binomial negativa** generaliza la geométrica: modela el número de fracasos $X$ antes de obtener exactamente $r$ éxitos. Se denota $X \sim \text{NegBin}(r, p)$.
 
-$$p(x; k, p) = \binom{k + x - 1}{x} p^k (1-p)^x, \qquad x = 0, 1, 2, \ldots$$
-$$E(X) = \frac{k(1-p)}{p}, \qquad Var(X) = \frac{k(1-p)}{p^2}$$
+**Función masa de probabilidad:**
 
-```{r, echo=TRUE, fig.align='center', fig.width=6, fig.height=4}
-#| label: fig-binneg
-#| fig-cap: "Distribución Binomial Negativa (k = 3, p = 0.3)"
-x <- 0:25
-df_bn <- data.frame(x = x, prob = dnbinom(x, size = 3, prob = 0.3))
+$$p(k;\,r,p) = \binom{k+r-1}{r-1}(1-p)^k\,p^r, \qquad k = 0, 1, 2, \ldots$$
 
-ggplot(df_bn, aes(x = x, y = prob)) +
-  geom_col(fill = "#006341") +
-  labs(title = "Binomial Negativa (k = 3 éxitos, p = 0.3)",
-       x = "Número de fracasos (x)", y = "P(X = x)") +
-  theme_minimal()
+**Esperanza y varianza:**
+
+$$E(X) = \frac{r(1-p)}{p}, \qquad Var(X) = \frac{r(1-p)}{p^2}$$
+
+::: {.callout-note icon=false}
+## Observación
+La distribución geométrica es el caso $r = 1$: $\text{Geo}(p) = \text{NegBin}(1, p)$.
+:::
+
+```{r negbin-plot, fig.align='center', fig.width=7, fig.height=4}
+x  <- 0:25
+rs <- c(1, 3, 5)
+df_nb <- do.call(rbind, lapply(rs, function(r) {
+  data.frame(x = x, prob = dnbinom(x, size = r, prob = 0.3),
+             r = paste0("r = ", r))
+}))
+ggplot(df_nb, aes(x = x, y = prob, color = r)) +
+  geom_line(linewidth = 1) + geom_point(size = 1.5) +
+  scale_color_manual(values = c("#004D31", "#C8962E", "#006699")) +
+  theme_minimal() +
+  labs(title = "Binomial Negativa (p = 0.3)", x = "Fracasos (X)", y = "P(X = x)", color = NULL)
 ```
 
-**Ejemplo:** la probabilidad de que una persona tenga un perro se estima en
-$p = 0.3$. La probabilidad de que la décima persona entrevistada sea la
-tercera que tiene un perro ($k = 3$ éxitos, $x = 7$ fracasos):
+::: {.callout-tip icon=false}
+## Ejemplo: Call center (Magín Zúñiga)
 
-```{r binneg_ejemplo, echo=TRUE}
-k <- 3; p <- 0.3
-cat("p(7; 3, 0.3) =", round(dnbinom(7, size = k, prob = p), 4), "\n")
-cat("E(X) =", k * (1 - p) / p, "personas sin perro en promedio\n")
+Cada llamada concreta una venta con $p = 0.2$. Sea $X$ el número de rechazos antes de lograr $r = 3$ ventas. $X \sim \text{NegBin}(3, 0.2)$.
+
+```{r negbin-callcenter}
+r <- 3; p <- 0.2
+cat("P(X = 5) =", round(dnbinom(5, size = r, prob = p), 5), "\n")
+cat("E[X] = r(1-p)/p =", r*(1-p)/p, "rechazos esperados\n")
+cat("Var[X] =", r*(1-p)/p^2, "\n")
+x_vals <- 0:30
+barplot(dnbinom(x_vals, size = r, prob = p),
+        names.arg = x_vals, col = "#C8962E", border = "white",
+        main = "NegBin(r=3, p=0.2) — Rechazos antes de 3 ventas",
+        xlab = "Rechazos (X)", ylab = "Probabilidad")
 ```
+:::
+
+::: {.callout-tip icon=false}
+## Ejemplo: Ensayo clínico (Magín Zúñiga)
+
+Tratamiento con probabilidad de respuesta positiva $p = 0.30$. Se desea lograr $r = 5$ respuestas positivas. Sea $X \sim \text{NegBin}(5, 0.3)$.
+
+**¿Cuál es la probabilidad de exactamente 8 pacientes sin respuesta antes de las 5 positivas?**
+
+$$P(X = 8) = \binom{12}{4}(0.7)^8(0.3)^5 \approx 0.0692$$
+
+```{r negbin-clinico}
+cat("P(X = 8) =", round(dnbinom(8, size = 5, prob = 0.3), 5), "\n")
+cat("E[X] =", 5*(1-0.3)/0.3, "\n")
+```
+:::
 
 ### Distribuciones discretas conjuntas
 
-La **función de probabilidad conjunta** de dos variables aleatorias discretas
-$X$ y $Y$ se define como $p(x,y) = P(X = x, Y = y)$, con $p(x,y) \ge 0$ y
-$\sum_x \sum_y p(x,y) = 1$. A partir de ella se obtienen:
+Cuando se estudian dos variables aleatorias discretas $X$ e $Y$ simultáneamente, se define la **función de probabilidad conjunta** $p(x, y) = P(X = x,\; Y = y)$, que satisface:
 
-- **Función de probabilidad marginal:** $p_X(x) = \sum_y p(x,y)$ y $p_Y(y) = \sum_x p(x,y)$.
-- **Función de probabilidad condicional:** $p_{Y\mid X}(y \mid x) = p(x,y)/p_X(x)$.
-- **Independencia:** $X$ y $Y$ son independientes si $p(x,y) = p_X(x) \cdot p_Y(y)$ para todo par $(x,y)$.
+$$p(x, y) \ge 0, \qquad \sum_x \sum_y p(x,y) = 1$$
 
-**Ejemplo (deducibles de seguros).** Sea $X$ el deducible de una póliza de
-auto (\$100 o \$250) y $Y$ el deducible de una póliza de casa (\$0, \$100 o
-\$200), con la siguiente función de probabilidad conjunta:
+Las **distribuciones marginales** se obtienen:
+$$p_X(x) = \sum_y p(x, y), \qquad p_Y(y) = \sum_x p(x, y)$$
 
-```{r, echo=TRUE, fig.align='center', fig.width=6, fig.height=4.5}
-#| label: fig-conjunta-discreta
-#| fig-cap: "Función de probabilidad conjunta p(x,y): deducibles de auto y casa"
-library(ggplot2)
+$X$ e $Y$ son **independientes** si y sólo si $p(x, y) = p_X(x)\cdot p_Y(y)$ para todo $(x, y)$.
 
-tabla <- expand.grid(x = c(100, 250), y = c(0, 100, 200))
-tabla$p <- c(0.20, 0.05, 0.10, 0.15, 0.20, 0.30)
-
-ggplot(tabla, aes(x = factor(y), y = factor(x), fill = p)) +
-  geom_tile(color = "white") +
-  geom_text(aes(label = p), color = "white", fontface = "bold") +
-  scale_fill_gradient(low = "#C8962E", high = "#004D31") +
-  labs(title = "p(x, y): deducible auto (X) vs. deducible casa (Y)",
-       x = "Deducible casa (y)", y = "Deducible auto (x)", fill = "p(x,y)") +
-  theme_minimal()
+```{r conjunta-suma-dados, fig.align='center', fig.width=6, fig.height=4}
+# Distribución de la suma S = X + Y para dos dados
+S_vals <- 2:12
+pS <- c(1,2,3,4,5,6,5,4,3,2,1)/36
+barplot(pS, names.arg = S_vals, col = "#004D31", border = "white",
+        main = "Distribución de la suma de dos dados (S = X + Y)",
+        xlab = "S", ylab = "P(S = s)")
+cat("P(S = 7) =", 6/36, "\n")
 ```
 
-```{r conjunta_marginales, echo=TRUE}
-# Probabilidades marginales y condicionales a partir de la tabla conjunta
-mat <- matrix(tabla$p, nrow = 2, byrow = TRUE,
-              dimnames = list(x = c("100", "250"), y = c("0", "100", "200")))
-p_x <- rowSums(mat)   # marginal de X
-p_y <- colSums(mat)   # marginal de Y
-cat("p_X(x):\n"); print(p_x)
-cat("\np_Y(y):\n"); print(p_y)
-
-# Independencia: ¿p(100,100) == p_X(100) * p_Y(100)?
-cat("\np(100,100) =", mat["100", "100"],
-    " vs.  p_X(100)*p_Y(100) =", p_x["100"] * p_y["100"], "\n")
-cat("Como no coinciden, X y Y NO son independientes.\n")
-```
-
-Como $p(100,100) = 0.10 \ne p_X(100) \cdot p_Y(100) = 0.50 \times 0.25 =
-0.125$, las variables $X$ y $Y$ no son independientes: conocer el deducible
-de una póliza aporta información sobre el deducible de la otra.
-
-
-::: {.callout-note icon=false}
 ## Resumen del capítulo
 
-- **Variable aleatoria discreta:** asigna números reales a los resultados de un experimento aleatorio con espacio muestral finito o infinito numerable.
-- **Función de probabilidad** $P(X=x)$ y **función de probabilidad acumulada** $F(x) = P(X \le x)$: describen, respectivamente, la probabilidad puntual y la probabilidad acumulada de la variable.
-- **Esperanza** $E[X] = \sum x_i P(x_i)$ y **varianza** $V(X) = \sum (x_i - E[X])^2 P(x_i)$: resumen el valor central y la dispersión de la variable.
-- **Muestreo con reemplazo** (ensayos independientes, probabilidad constante) frente a **muestreo sin reemplazo** (ensayos dependientes, probabilidad cambiante en cada extracción).
-- **Distribución Uniforme discreta:** todos los valores son equiprobables.
-- **Distribución Bernoulli:** un solo ensayo con dos resultados posibles (éxito/fracaso).
-- **Distribución Binomial:** número de éxitos en $n$ ensayos Bernoulli independientes (muestreo con reemplazo, o sin reemplazo en poblaciones grandes).
-- **Distribución Hipergeométrica:** número de éxitos al muestrear sin reemplazo de una población finita.
-- **Distribución Poisson:** modela conteos de eventos raros en un intervalo de tiempo o espacio; también es el límite de la Binomial cuando $n$ es grande y $p$ es pequeña.
-- **Material complementario:** distribución Geométrica, Binomial Negativa y distribuciones discretas conjuntas (probabilidad marginal, condicional e independencia).
+| Distribución | Parámetros | $E(X)$ | $Var(X)$ | Uso típico |
+|:-------------|:----------:|:------:|:--------:|:-----------|
+| Uniforme discreta | $a, b$ | $(a+b)/2$ | $(b-a)(b-a+2)/12$ | Equiprobabilidad |
+| Bernoulli | $p$ | $p$ | $p(1-p)$ | Ensayo éxito/fracaso |
+| Binomial | $n, p$ | $np$ | $np(1-p)$ | Conteo de éxitos en $n$ ensayos |
+| Hipergeométrica | $N, K, n$ | $nK/N$ | $\frac{nK(N-K)}{N^2}\frac{N-n}{N-1}$ | Muestreo sin reemplazo |
+| Poisson | $\lambda$ | $\lambda$ | $\lambda$ | Conteo de eventos raros |
+| Geométrica | $p$ | $(1-p)/p$ | $(1-p)/p^2$ | Ensayos hasta primer éxito |
+| Binomial Negativa | $r, p$ | $r(1-p)/p$ | $r(1-p)/p^2$ | Ensayos hasta $r$-ésimo éxito |
+
+::: {.callout-note icon=false}
+## Criterio de selección del modelo
+
+- Muestreo **con reemplazo** (o población grande): **Binomial**.
+- Muestreo **sin reemplazo** en población finita: **Hipergeométrica**.
+- Eventos raros o conteos en intervalo/espacio: **Poisson**.
+- Ensayos hasta el primer éxito: **Geométrica**.
+- Ensayos hasta el $r$-ésimo éxito: **Binomial Negativa**.
 :::

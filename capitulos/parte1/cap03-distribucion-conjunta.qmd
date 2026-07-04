@@ -954,6 +954,87 @@ ggplot(df_z, aes(x = z, y = fz)) +
   annotate("text", x = 0, y = 0.15, label = "Área = 0.3830", fontface = "bold")
 ```
 
+### Ejemplos adicionales: Distribución Normal
+
+::: {.callout-tip icon=false}
+## Ejemplo: Control de calidad — tornillos
+
+La longitud $X$ de ciertos tornillos (en mm) sigue una distribución $N(\mu=30, \sigma^2=0.04)$. Se aceptan como válidos aquellos con $29.5 < X < 30.4$.
+
+**Preguntas:**
+
+1. Proporción de tornillos no aceptables por cortos ($X \le 29.5$).
+2. Proporción de tornillos no aceptables por largos ($X \ge 30.4$).
+3. Si se produce un lote de 1,000 tornillos, ¿cuántos se esperan defectuosos?
+
+**Solución:**
+
+Estandarizando: $Z = (X - 30)/0.2 \sim N(0,1)$.
+
+```{r normal-tornillos, message=FALSE}
+mu <- 30; sigma <- 0.2
+
+# 1. P(X <= 29.5) = P(Z <= -2.5)
+p_cortos <- pnorm(29.5, mu, sigma)
+cat("P(cortos) = P(X <= 29.5) =", round(p_cortos, 4), "\n")
+cat("  Z = (29.5 - 30)/0.2 =", (29.5 - 30)/0.2, "\n")
+
+# 2. P(X >= 30.4) = P(Z >= 2)
+p_largos <- 1 - pnorm(30.4, mu, sigma)
+cat("P(largos) = P(X >= 30.4) =", round(p_largos, 4), "\n")
+cat("  Z = (30.4 - 30)/0.2 =", (30.4 - 30)/0.2, "\n")
+
+# 3. Total defectuosos en 1,000 piezas
+p_defect <- p_cortos + p_largos
+cat("P(defectuosos total) =", round(p_defect, 4), "\n")
+cat("Esperados en 1,000 piezas: E[Y] = 1000 ×", round(p_defect, 4),
+    "=", round(1000 * p_defect, 1), "\n")
+
+# Visualización
+x_seq <- seq(29, 31, length.out = 300)
+fx    <- dnorm(x_seq, mu, sigma)
+plot(x_seq, fx, type = "l", lwd = 2, col = "#006341",
+     main = expression(paste("X ~ N(30, 0.04) — Tornillos")),
+     xlab = "Longitud (mm)", ylab = "f(x)")
+# Cortos
+x_c <- x_seq[x_seq <= 29.5]
+polygon(c(x_c, rev(x_c)), c(dnorm(x_c, mu, sigma), rep(0, length(x_c))),
+        col = "#C8962E88", border = NA)
+# Largos
+x_l <- x_seq[x_seq >= 30.4]
+polygon(c(x_l, rev(x_l)), c(dnorm(x_l, mu, sigma), rep(0, length(x_l))),
+        col = "#C8962E88", border = NA)
+abline(v = c(29.5, 30.4), lty = 2, col = "gray50")
+legend("topright", legend = c("Región válida", "Defectuosos"),
+       fill = c("white", "#C8962E88"), border = c("#006341", NA))
+```
+:::
+
+::: {.callout-tip icon=false}
+## Ejemplo: Especificación de longitud máxima de clavos
+
+La longitud $X$ de clavos fabricados por una máquina sigue $N(\mu=10\text{ mm},\, \sigma^2=4)$. Se desea determinar la longitud máxima $x^*$ tal que el 90% de los clavos cumpla con la especificación.
+
+**Planteamiento:** Se requiere $P(X \le x^*) = 0.90$.
+
+**Solución:**
+
+$$\Phi\!\left(\frac{x^* - 10}{2}\right) = 0.90 \implies \frac{x^* - 10}{2} = z_{0.90} = 1.28 \implies x^* = 12.56 \text{ mm}$$
+
+```{r normal-clavos, message=FALSE}
+mu_c <- 10; sigma_c <- 2
+
+# Percentil 90 de N(10, 4)
+x_star <- qnorm(0.90, mu_c, sigma_c)
+cat("z_{0.90} =", round(qnorm(0.90), 4), "\n")
+cat("x* = mu + z * sigma =", mu_c, "+", round(qnorm(0.90),4), "*", sigma_c,
+    "=", round(x_star, 4), "mm\n")
+cat("Verificación: P(X <= x*) =", round(pnorm(x_star, mu_c, sigma_c), 4), "\n")
+```
+
+La especificación de longitud máxima debe ser $x^* \approx 12.56$ mm para que el 90% de los clavos la cumpla.
+:::
+
 ::: {.callout-note icon=false}
 ## Ejercicios propuestos
 
@@ -1130,6 +1211,52 @@ $$P(X < 0.25 \text{ horas}) = 1 - e^{-3(0.25)} = 1 - e^{-0.75} \approx 0.528$$
 
 Es exactamente la misma probabilidad calculada en el Ejemplo 1 al inicio del turno. El sistema "no recuerda" que el operario ya llevaba 10 minutos esperando.
 
+### Ejemplo adicional: Distribución Exponencial
+
+::: {.callout-tip icon=false}
+## Ejemplo: Tiempo de respuesta de una terminal
+
+El tiempo de respuesta $X$ (en segundos) de cierta terminal de computadora en línea sigue una distribución exponencial con tiempo esperado de respuesta de 5 segundos, es decir, $E(X) = 1/\lambda = 5$, por lo que $\lambda = 0.2$.
+
+**Preguntas:**
+
+1. Probabilidad de que el tiempo de respuesta sea a lo sumo 10 segundos.
+2. Probabilidad de que el tiempo de respuesta esté entre 5 y 10 segundos.
+
+**Solución:**
+
+```{r expo-terminal, message=FALSE}
+lambda <- 0.2   # tasa (1/media)
+
+# 1. P(X <= 10) = F(10) = 1 - e^{-0.2 * 10}
+p1 <- pexp(10, rate = lambda)
+cat("P(X <= 10) = 1 - e^{-2} =", round(p1, 4), "\n")
+
+# 2. P(5 <= X <= 10) = F(10) - F(5)
+p2 <- pexp(10, lambda) - pexp(5, lambda)
+cat("P(5 <= X <= 10) = F(10) - F(5) =", round(p2, 4), "\n")
+
+# Verificación manual
+cat("Manual: (1 - e^{-2}) - (1 - e^{-1}) = e^{-1} - e^{-2} =",
+    round(exp(-1) - exp(-2), 4), "\n")
+
+# Visualización
+x_seq <- seq(0, 30, length.out = 300)
+fx    <- dexp(x_seq, rate = lambda)
+plot(x_seq, fx, type = "l", lwd = 2, col = "#006341",
+     main = expression(paste("X ~ Exp(", lambda, " = 0.2)  —  Tiempo de respuesta")),
+     xlab = "Tiempo (segundos)", ylab = "f(x)")
+# Sombrear P(X <= 10)
+x_shade <- x_seq[x_seq <= 10]
+polygon(c(x_shade, rev(x_shade)),
+        c(dexp(x_shade, lambda), rep(0, length(x_shade))),
+        col = "#C8962E88", border = NA)
+legend("topright", legend = "P(X ≤ 10) ≈ 0.865", fill = "#C8962E88", border = NA)
+```
+
+El resultado muestra que hay un 86.5% de probabilidad de que la terminal responda en menos de 10 segundos, confirmando que un tiempo esperado de 5 s implica respuestas rápidas la mayor parte del tiempo.
+:::
+
 ::: {.callout-note icon=false}
 ## Ejercicios propuestos
 
@@ -1195,102 +1322,344 @@ Se utiliza para modelar el tiempo o la distancia que transcurre hasta que ocurre
 * **Propiedad de Falta de Memoria (Memoryless):** Es la única distribución continua con esta propiedad. Establece que la probabilidad condicional de que un evento ocurra en el futuro depende solo del tiempo restante, "olvidando" el tiempo que ya ha transcurrido: 
   $$P(X > s+t \mid X > t) = P(X > s)$$
 
-## Material complementario: distribución Weibull y distribuciones continuas conjuntas
 
-A partir de las diapositivas del curso, se incorpora la distribución Weibull
-(una generalización de la Exponencial usada en análisis de confiabilidad) y la
-teoría de distribuciones conjuntas para dos variables aleatorias continuas.
-Las figuras se generan con código.
+## Esperanza y varianza de variables aleatorias {#sec-esperanza-varianza}
 
-### Distribución Weibull
+::: {.callout-tip icon=false}
+## Fuente: Apuntes del curso (Prof. Magín Zúñiga Estrada)
 
-Se dice que $X$ tiene distribución Weibull con parámetros de forma $\beta$ y
-escala $\alpha$ si:
+El desarrollo teórico de esta sección sigue el texto del Dr. Magín
+Zúñiga Estrada, que presenta la teoría de esperanza de forma unificada
+para variables discretas y continuas.
+:::
 
-$$f(x) = \left(\frac{\beta}{\alpha}\right)\left(\frac{x}{\alpha}\right)^{\beta - 1} \exp\left[-\left(\frac{x}{\alpha}\right)^{\beta}\right], \qquad x > 0$$
-$$E(X) = \alpha\, \Gamma(\beta^{-1} + 1), \qquad Var(X) = \alpha^2\left[\Gamma(2\beta^{-1}+1) - \Gamma(\beta^{-1}+1)^2\right]$$
+### Valor esperado
 
-Cuando $\beta = 1$, la Weibull se reduce a la distribución Exponencial. Se
-usa frecuentemente para modelar tiempos de vida y de falla en análisis de
-confiabilidad.
+El **valor esperado** (o esperanza matemática) de una variable aleatoria
+$X$ es la media ponderada de todos los valores posibles de $X$, donde el
+peso de cada valor es su probabilidad.
 
-```{r, echo=TRUE, fig.align='center', fig.width=7, fig.height=4.5}
-#| label: fig-weibull
-#| fig-cap: "Función de densidad Weibull para distintos parámetros de forma (β)"
-library(ggplot2)
+- **Caso discreto.** Si $X$ toma valores $x_1, x_2, \ldots$ con pmf $p(x_i)$:
+$$E[X] = \sum_i x_i\, p(x_i).$$
 
-x <- seq(0, 4, length.out = 300)
-df_weibull <- do.call(rbind, lapply(c(0.8, 1, 2, 3.5), function(beta) {
-  data.frame(x = x, densidad = dweibull(x, shape = beta, scale = 1),
-             beta = paste0("β = ", beta))
-}))
-
-ggplot(df_weibull, aes(x = x, y = densidad, color = beta)) +
-  geom_line(linewidth = 1) +
-  scale_color_manual(values = c("β = 0.8" = "#C8962E", "β = 1" = "#8a6a1f",
-                                 "β = 2" = "#006341", "β = 3.5" = "#004D31")) +
-  labs(title = "Distribución Weibull (escala α = 1)",
-       x = "x", y = "f(x)", color = NULL) +
-  theme_minimal()
-```
-
-### Distribuciones continuas conjuntas
-
-Una función $f(x,y)$ es una **función de densidad de probabilidad conjunta**
-de dos variables aleatorias continuas $X$ y $Y$ si $f(x,y) \ge 0$ y
-$\int_{-\infty}^{\infty}\int_{-\infty}^{\infty} f(x,y)\,dx\,dy = 1$. A partir
-de ella se definen:
-
-- **Densidad marginal:** $g(x) = \int_{-\infty}^{\infty} f(x,y)\,dy$ y $h(y) = \int_{-\infty}^{\infty} f(x,y)\,dx$.
-- **Densidad condicional:** $f(x \mid y) = f(x,y)/h(y)$.
-- **Independencia:** $X$ y $Y$ son independientes si $f(x,y) = g(x) \cdot h(y)$.
-
-**Ejemplo 1:** Sea $f(x,y) = 4xy$ para $0 < x < 1,\ 0 < y < 1$ (y cero en
-cualquier otra parte). Integrando se obtiene $g(x) = 2x$ y $h(y) = 2y$, y como
-$f(x,y) = 4xy = (2x)(2y) = g(x)h(y)$, $X$ y $Y$ son independientes. En lugar
-de reproducir la imagen de la diapositiva, la superficie de densidad conjunta
-se genera directamente con código:
-
-```{r, echo=TRUE, fig.align='center', fig.width=6, fig.height=5}
-#| label: fig-conjunta-continua
-#| fig-cap: "Densidad conjunta f(x,y) = 4xy sobre el cuadrado unitario"
-library(ggplot2)
-
-grid <- expand.grid(x = seq(0, 1, length.out = 60), y = seq(0, 1, length.out = 60))
-grid$densidad <- 4 * grid$x * grid$y
-
-ggplot(grid, aes(x = x, y = y, fill = densidad)) +
-  geom_tile() +
-  scale_fill_gradient(low = "#C8962E", high = "#004D31") +
-  labs(title = "f(x, y) = 4xy,  0 < x < 1,  0 < y < 1",
-       x = "x", y = "y", fill = "f(x,y)") +
-  coord_equal() +
-  theme_minimal()
-```
-
-```{r conjunta_continua_verificacion, echo=TRUE}
-# Verificación numérica de independencia y de que la densidad integra a 1
-f <- function(x, y) 4 * x * y
-g <- function(x) 2 * x       # densidad marginal de X
-h <- function(y) 2 * y       # densidad marginal de Y
-
-# Integral doble aproximada por una malla fina (regla del punto medio)
-n <- 500
-xs <- (seq_len(n) - 0.5) / n
-ys <- (seq_len(n) - 0.5) / n
-integral <- sum(outer(xs, ys, f)) * (1 / n) * (1 / n)
-cat("Integral de f(x,y) sobre [0,1]x[0,1]:", round(integral, 4), "\n")
-
-x0 <- 0.4; y0 <- 0.7
-cat("f(x0,y0) =", f(x0, y0), " vs.  g(x0)*h(y0) =", g(x0) * h(y0), "-> son iguales: X y Y son independientes\n")
-```
-
+- **Caso continuo.** Si $X$ tiene función de densidad $f_X(x)$:
+$$E[X] = \int_{-\infty}^{\infty} x\, f_X(x)\, dx.$$
 
 ::: {.callout-note icon=false}
-## Material complementario: resumen
+## Comentarios
 
-- **Distribución Weibull:** generalización de la Exponencial (se reduce a ella cuando el parámetro de forma $\beta = 1$); muy usada para modelar tiempos de vida y de falla en análisis de confiabilidad.
-- **Distribuciones continuas conjuntas:** una función $f(x,y) \ge 0$ con $\int\int f(x,y)\,dx\,dy = 1$ describe el comportamiento conjunto de dos variables continuas.
-- **Densidades marginales:** $g(x) = \int f(x,y)\,dy$ y $h(y) = \int f(x,y)\,dx$.
-- **Independencia:** $X$ y $Y$ son independientes si y solo si $f(x,y) = g(x)\cdot h(y)$ para todo $(x,y)$.
+- El valor esperado también se llama **media** o **promedio** de $X$ y se denota $\mu$.
+- No necesariamente coincide con un valor posible de $X$; es un promedio ponderado.
+- Proporciona una medida de **tendencia central** de la distribución.
 :::
+
+**Propiedades de la esperanza** (linealidad):
+
+1. $E[X + Y] = E[X] + E[Y]$ para cualquier par de v.a. $X, Y$.
+2. $E[aX + b] = a\,E[X] + b$ para constantes $a, b$.
+
+**Esperanza de funciones.** Si $h$ es una función, la esperanza de $h(X)$
+es:
+
+- Caso discreto: $E[h(X)] = \sum_i h(x_i)\, p(x_i)$.
+- Caso continuo: $E[h(X)] = \int_{-\infty}^{\infty} h(x)\, f_X(x)\, dx$.
+
+```{r esp-ejemplos, message=FALSE, warning=FALSE}
+# Esperanza de un dado (uniforme discreta en {1,...,6})
+valores <- 1:6
+pmf     <- rep(1/6, 6)
+E_dado  <- sum(valores * pmf)
+cat("E[dado] =", E_dado, "\n")
+
+# Esperanza de X ~ Exp(lambda=2): E[X] = 1/lambda
+lambda <- 2
+cat("E[Exp(2)] = 1/lambda =", 1/lambda, "\n")
+
+# Verificación numérica
+E_exp <- integrate(function(x) x * dexp(x, lambda), 0, Inf)$value
+cat("Verificación numérica:", round(E_exp, 6), "\n")
+```
+
+**Tabla resumen de esperanzas** de las distribuciones principales:
+
+| Distribución | Parámetros | $E[X]$ | $\text{Var}(X)$ |
+|:-------------|:-----------|:------:|:---------------:|
+| Bernoulli | $p$ | $p$ | $p(1-p)$ |
+| Binomial | $n, p$ | $np$ | $np(1-p)$ |
+| Geométrica | $p$ | $(1-p)/p$ | $(1-p)/p^2$ |
+| Poisson | $\lambda$ | $\lambda$ | $\lambda$ |
+| Uniforme $[a,b]$ | $a, b$ | $(a+b)/2$ | $(b-a)^2/12$ |
+| Exponencial | $\lambda$ | $1/\lambda$ | $1/\lambda^2$ |
+| Normal | $\mu, \sigma^2$ | $\mu$ | $\sigma^2$ |
+| Gamma | $\alpha, \beta$ | $\alpha\beta$ | $\alpha\beta^2$ |
+
+### Varianza y desviación estándar
+
+Aunque la media proporciona el "centro" de la distribución, no es
+suficiente para caracterizarla. La **varianza** mide cuánto se dispersa
+la probabilidad alrededor de la media.
+
+::: {.callout-note icon=false}
+## Definición: Varianza
+
+Si $X$ es una variable aleatoria con $E[X] = \mu$, entonces:
+$$\text{Var}(X) = E[(X-\mu)^2].$$
+
+La **desviación estándar** es $\sigma = \sqrt{\text{Var}(X)}$.
+:::
+
+**Fórmula computacional** (frecuentemente más práctica):
+$$\text{Var}(X) = E[X^2] - (E[X])^2.$$
+
+**Propiedades de la varianza:**
+
+1. Si $X$ y $Y$ son **independientes**: $\text{Var}(X+Y) = \text{Var}(X) + \text{Var}(Y)$.
+2. Para constantes $a$ y $b$: $\text{Var}(aX+b) = a^2\,\text{Var}(X)$.
+3. $\text{Var}(X) = E[X^2] - \mu^2$.
+
+```{r varianza-ejemplos, fig.align='center', fig.width=8, fig.height=4}
+library(ggplot2)
+library(gridExtra)
+
+set.seed(42)
+# Comparar cuatro distribuciones con misma media pero diferente varianza
+n <- 10000
+df_comp <- data.frame(
+  x    = c(runif(n, 1, 5),     # Uniforme[1,5], mu=3
+            rnorm(n, 3, 0.5),  # Normal(3, 0.5^2), mu=3
+            rnorm(n, 3, 1.5),  # Normal(3, 1.5^2), mu=3
+            c(rep(1,n/2), rep(5,n/2))),  # Bimodal, mu=3
+  dist = rep(c("Uniforme[1,5]","Normal(3,0.25)","Normal(3,2.25)","Bimodal"),
+             each=n)
+)
+
+ggplot(df_comp, aes(x=x, fill=dist)) +
+  geom_density(alpha=0.5) +
+  geom_vline(xintercept=3, color="black", linewidth=1, linetype="dashed") +
+  facet_wrap(~dist, ncol=4) +
+  theme_minimal() +
+  theme(legend.position="none") +
+  labs(title="Distribuciones con la misma media (μ=3) pero diferente varianza",
+       x="x", y="Densidad")
+```
+
+## Covarianza y correlación {#sec-covarianza}
+
+Cuando se trabaja con dos o más variables aleatorias, es natural preguntar
+si estas se "mueven juntas" o de manera independiente.
+
+### Covarianza
+
+::: {.callout-note icon=false}
+## Definición: Covarianza
+
+Sean $X$ y $Y$ dos variables aleatorias. La **covarianza** entre $X$ y $Y$
+se define como:
+$$\text{Cov}(X,Y) = E[(X - E[X])(Y - E[Y])].$$
+
+Equivalentemente: $\text{Cov}(X,Y) = E[XY] - E[X]\,E[Y]$.
+:::
+
+**Interpretación:**
+
+- $\text{Cov}(X,Y) > 0$: cuando $X$ supera su media, $Y$ tiende a superar
+  la suya también (correlación positiva).
+- $\text{Cov}(X,Y) < 0$: cuando $X$ supera su media, $Y$ tiende a estar
+  por debajo (correlación negativa).
+- $\text{Cov}(X,Y) = 0$: $X$ y $Y$ **no están correlacionadas**
+  (aunque no implica independencia en general).
+
+**Consecuencia para la varianza de la suma:**
+$$\text{Var}(X+Y) = \text{Var}(X) + \text{Var}(Y) + 2\,\text{Cov}(X,Y).$$
+
+**Independencia implica no correlación** (pero no al revés): si $X$ e $Y$
+son independientes, entonces $\text{Cov}(X,Y) = 0$.
+
+### Coeficiente de correlación
+
+La covarianza tiene unidades (producto de las unidades de $X$ y $Y$), lo
+que dificulta comparaciones. El **coeficiente de correlación de Pearson**
+es una versión estandarizada e **adimensional**:
+
+::: {.callout-note icon=false}
+## Definición: Correlación de Pearson
+
+$$\rho(X,Y) = \frac{\text{Cov}(X,Y)}{\sqrt{\text{Var}(X)\,\text{Var}(Y)}}.$$
+
+Se cumple que $-1 \leq \rho(X,Y) \leq 1$.
+:::
+
+| Valor de $\rho$ | Interpretación |
+|:----------------|:---------------|
+| $\rho \approx 1$ | Relación lineal positiva casi perfecta |
+| $\rho \approx -1$ | Relación lineal negativa casi perfecta |
+| $\rho \approx 0$ | Sin relación lineal (pueden existir relaciones no lineales) |
+
+```{r covarianza-demo, fig.align='center', fig.width=9, fig.height=3,
+    message=FALSE}
+library(ggplot2)
+library(gridExtra)
+set.seed(123)
+n <- 200
+
+genera_par <- function(rho, n) {
+  x <- rnorm(n)
+  y <- rho * x + sqrt(1 - rho^2) * rnorm(n)
+  data.frame(x=x, y=y, rho=paste0("ρ = ", rho))
+}
+
+df_rho <- rbind(genera_par(-0.9, n), genera_par(0, n), genera_par(0.9, n))
+
+ggplot(df_rho, aes(x=x, y=y)) +
+  geom_point(alpha=0.4, color="#006341") +
+  geom_smooth(method="lm", se=FALSE, color="#C8962E", linewidth=1) +
+  facet_wrap(~rho, ncol=3) +
+  theme_minimal() +
+  labs(title="Efecto del coeficiente de correlación ρ",
+       x="X", y="Y")
+```
+
+## Esperanza y varianza condicional {#sec-esp-condicional}
+
+La **esperanza condicional** $E[Y \mid X = x]$ es el valor esperado de
+$Y$ dado que $X$ toma el valor $x$. Es en sí misma una función de $x$,
+y por tanto una nueva variable aleatoria cuando $X$ es aleatoria.
+
+::: {.callout-note icon=false}
+## Ley de la esperanza total (ley de las esperanzas iteradas)
+
+Para cualesquiera variables aleatorias $X$ y $Y$:
+$$E[Y] = E[E[Y \mid X]].$$
+
+Análogamente, la **ley de la varianza total**:
+$$\text{Var}(Y) = E[\text{Var}(Y \mid X)] + \text{Var}(E[Y \mid X]).$$
+:::
+
+**Ejemplo.** Sea $X \sim \text{Poisson}(\lambda)$ el número de accidentes
+en un día, y dado $X=n$, el costo total $Y \mid X=n \sim \text{Binomial}(n, p)$
+(cada accidente es grave con prob. $p$). Entonces $E[Y] = \lambda p$.
+
+```{r esp-condicional}
+# Simulación: E[Y] = lambda * p
+lambda <- 5; p <- 0.3; N <- 100000
+x <- rpois(N, lambda)
+y <- rbinom(N, size=x, prob=p)
+cat("E[Y] teórico  :", lambda * p, "\n")
+cat("E[Y] simulado :", round(mean(y), 4), "\n")
+```
+
+## Función generatriz de momentos {#sec-fgm}
+
+La **función generatriz de momentos (FGM)** de una variable aleatoria $X$
+es:
+$$M_X(t) = E[e^{tX}], \quad t \in \mathbb{R} \text{ (en una vecindad del 0)}.$$
+
+Su importancia radica en que:
+
+1. **Genera momentos**: $E[X^k] = M_X^{(k)}(0)$ (la $k$-ésima derivada
+   evaluada en $t=0$).
+2. **Caracteriza la distribución**: si dos v.a. tienen la misma FGM en
+   una vecindad del 0, tienen la misma distribución.
+3. **Facilita el análisis de sumas**: si $X_1, \ldots, X_n$ son
+   independientes, $M_{X_1+\cdots+X_n}(t) = \prod_i M_{X_i}(t)$.
+
+| Distribución | FGM $M_X(t)$ |
+|:-------------|:------------|
+| Bernoulli$(p)$ | $1-p+pe^t$ |
+| Binomial$(n,p)$ | $(1-p+pe^t)^n$ |
+| Poisson$(\lambda)$ | $e^{\lambda(e^t-1)}$ |
+| Exponencial$(\lambda)$ | $\lambda/(\lambda-t),\ t<\lambda$ |
+| Normal$(\mu,\sigma^2)$ | $e^{\mu t + \sigma^2 t^2/2}$ |
+
+```{r fgm-ejemplo}
+# Verificación: momentos de Normal(2, 9) usando FGM
+mu <- 2; sigma2 <- 9
+
+# E[X] = derivada 1era en t=0 → mu
+# E[X^2] = derivada 2da en t=0 → sigma2 + mu^2
+cat("E[X]   teórico:", mu, "\n")
+cat("E[X^2] teórico:", sigma2 + mu^2, "\n")
+
+# Verificación simulada
+set.seed(1)
+X <- rnorm(1e6, mu, sqrt(sigma2))
+cat("E[X]   simulado:", round(mean(X), 4), "\n")
+cat("E[X^2] simulado:", round(mean(X^2), 4), "\n")
+```
+
+## Leyes de los grandes números {#sec-lln}
+
+Las leyes de los grandes números formalizan la idea de que el **promedio
+muestral converge a la media poblacional** conforme el tamaño de muestra
+crece.
+
+::: {.callout-note icon=false}
+## Ley débil de los grandes números (Chebyshev)
+
+Sea $X_1, X_2, \ldots$ una sucesión de variables aleatorias i.i.d. con
+media $\mu$ y varianza finita $\sigma^2$. Entonces, para todo
+$\varepsilon > 0$:
+$$P\!\left(\left|\bar{X}_n - \mu\right| > \varepsilon\right) \to 0
+  \quad \text{cuando } n \to \infty.$$
+
+En notación de convergencia: $\bar{X}_n \xrightarrow{p} \mu$.
+:::
+
+::: {.callout-note icon=false}
+## Ley fuerte de los grandes números (Kolmogorov)
+
+Bajo las mismas condiciones:
+$$P\!\left(\lim_{n\to\infty} \bar{X}_n = \mu\right) = 1.$$
+
+Es decir, $\bar{X}_n \to \mu$ con probabilidad 1 (casi seguramente).
+:::
+
+**Nota:** la ley fuerte es más potente que la débil: convergencia casi
+segura implica convergencia en probabilidad, pero no al revés.
+
+```{r lln-demo, fig.align='center', fig.width=8, fig.height=4}
+set.seed(2024)
+n_max <- 2000
+
+# Ejemplo: X_i ~ Exp(lambda=1), mu = 1
+lambda <- 1; mu_teo <- 1/lambda
+x_acum <- cumsum(rexp(n_max, lambda)) / (1:n_max)
+
+df_lln <- data.frame(n = 1:n_max, xbar = x_acum)
+
+ggplot(df_lln, aes(x=n, y=xbar)) +
+  geom_line(color="#006341", linewidth=0.6) +
+  geom_hline(yintercept=mu_teo, color="#C8962E",
+             linewidth=1.2, linetype="dashed") +
+  theme_minimal() +
+  labs(title="Ley de los grandes números — X ~ Exp(1)",
+       subtitle=paste("μ teórica =", mu_teo,
+                      " | x̄ con n=2000 ≈", round(tail(x_acum,1), 4)),
+       x="Tamaño de muestra (n)", y="Promedio muestral")
+```
+
+::: {.callout-note icon=false}
+## Importancia en estadística
+
+La LGN justifica el uso de **promedios muestrales** como estimadores de
+medias poblacionales: con suficientes datos, el promedio muestral estará
+tan cerca de $\mu$ como se quiera. Esta es la base filosófica de la
+**estimación puntual** que se estudiará en el capítulo de inferencia.
+:::
+
+## Ejercicios propuestos {#sec-ejercicios-esp-cov}
+
+1. Sea $X \sim \text{Poisson}(3)$. Calcule $E[X]$, $\text{Var}(X)$ y
+   $E[X(X-1)]$.
+
+2. Sean $X$ y $Y$ v.a. con $E[X]=2$, $E[Y]=5$, $\text{Var}(X)=4$,
+   $\text{Var}(Y)=9$ y $\text{Cov}(X,Y) = -3$. Calcule:
+   a) $E[2X - Y + 1]$.
+   b) $\text{Var}(X + Y)$ y $\text{Var}(3X - 2Y)$.
+   c) $\rho(X,Y)$.
+
+3. Demuestre que si $X$ e $Y$ son independientes, entonces
+   $\text{Cov}(X,Y) = 0$. ¿Es cierto el recíproco? Construya un
+   contraejemplo.
+
+4. Sea $X \sim N(\mu, \

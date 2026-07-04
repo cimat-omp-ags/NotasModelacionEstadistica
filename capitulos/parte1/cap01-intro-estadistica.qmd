@@ -22,6 +22,119 @@ capítulo cierra con material complementario (leyes de operaciones de
 conjuntos, métodos de asignación de probabilidad y dos aplicaciones célebres
 del Teorema de Bayes) y un resumen con las fórmulas clave.
 
+
+## Estadística descriptiva {#sec-estadistica-descriptiva}
+
+La estadística descriptiva se ocupa de organizar, resumir y presentar la
+información contenida en un conjunto de datos sin ir más allá de lo que
+los datos mismos muestran. Es el punto de partida de todo análisis:
+antes de modelar o inferir, es indispensable conocer la distribución
+y el comportamiento de las variables de interés.
+
+En este curso se asume familiaridad con los conceptos básicos de
+estadística descriptiva. Esta sección resume las herramientas más
+utilizadas como referencia.
+
+### Medidas de localización (tendencia central)
+
+Las medidas de tendencia central describen el valor "típico" o
+representativo de un conjunto de observaciones $x_1, x_2, \ldots, x_n$.
+
+**Media aritmética:** el promedio de los datos,
+$$\bar{x} = \frac{1}{n}\sum_{i=1}^n x_i.$$
+
+**Mediana:** el valor que divide a los datos ordenados en dos mitades
+iguales. Es robusta frente a valores atípicos.
+
+**Moda:** el valor (o valores) que aparecen con mayor frecuencia en el
+conjunto de datos.
+
+```{r est-desc-central, message=FALSE, warning=FALSE}
+library(modelEstCIMAT)
+x <- casas_desc <- readRDS(system.file("data", "casas.rds",
+                                       package = "modelEstCIMAT"))$PRECIO
+cat("Media   :", round(mean(x), 2), "\n")
+cat("Mediana :", median(x), "\n")
+cat("Moda    : aprox.", which.max(table(round(x,-2))), "(redond. a 100)\n")
+```
+
+### Medidas de dispersión
+
+Las medidas de dispersión cuantifican cuánto se alejan los datos del
+centro.
+
+**Rango:** $R = x_{(n)} - x_{(1)}$, diferencia entre el máximo y el mínimo.
+
+**Varianza muestral:**
+$$s^2 = \frac{1}{n-1}\sum_{i=1}^n (x_i - \bar{x})^2.$$
+
+**Desviación estándar:** $s = \sqrt{s^2}$, en las mismas unidades que los datos.
+
+**Coeficiente de variación:** $CV = s/\bar{x} \times 100\%$, permite comparar
+dispersiones de variables con diferentes unidades.
+
+```{r est-desc-dispersion}
+cat("Rango   :", diff(range(x)), "\n")
+cat("Varianza:", round(var(x), 2), "\n")
+cat("DE      :", round(sd(x), 2), "\n")
+cat("CV      :", round(sd(x)/mean(x)*100, 1), "%\n")
+```
+
+### Medidas de forma
+
+**Asimetría (sesgo):** mide si la distribución es simétrica o si tiene
+una cola más larga que la otra. Un sesgo positivo indica cola hacia la
+derecha; negativo, hacia la izquierda.
+
+**Curtosis:** describe el "peso" de las colas respecto a la distribución
+normal. Una curtosis alta indica colas pesadas (leptocúrtica).
+
+```{r est-desc-forma, message=FALSE}
+# install.packages("e1071")  # solo si no está instalado
+skewness_val <- mean((x - mean(x))^3) / sd(x)^3
+kurtosis_val <- mean((x - mean(x))^4) / sd(x)^4 - 3
+cat("Sesgo   :", round(skewness_val, 3), "\n")
+cat("Curtosis:", round(kurtosis_val, 3), "(exceso respecto a normal)\n")
+```
+
+### Representaciones gráficas
+
+Las gráficas permiten detectar patrones, valores atípicos y la forma de
+la distribución de manera inmediata.
+
+```{r est-desc-graficas, fig.align='center', fig.width=9, fig.height=4,
+     message=FALSE, warning=FALSE}
+library(ggplot2)
+library(gridExtra)
+
+df <- data.frame(precio = x)
+
+p1 <- ggplot(df, aes(x = precio)) +
+  geom_histogram(bins = 8, fill = "#006341", color = "white", alpha = 0.8) +
+  geom_vline(xintercept = mean(x), color = "#C8962E",
+             linewidth = 1.2, linetype = "dashed") +
+  theme_minimal() +
+  labs(title = "Histograma — Precio de casas",
+       x = "Precio (miles de pesos)", y = "Frecuencia")
+
+p2 <- ggplot(df, aes(y = precio)) +
+  geom_boxplot(fill = "#006341", alpha = 0.7, outlier.color = "red") +
+  theme_minimal() +
+  labs(title = "Diagrama de caja", y = "Precio (miles de pesos)")
+
+gridExtra::grid.arrange(p1, p2, ncol = 2)
+```
+
+::: {.callout-note icon=false}
+## Cuartiles y diagrama de caja
+
+El diagrama de caja (box plot) resume cinco estadísticos:
+mínimo, $Q_1$ (percentil 25), mediana ($Q_2$), $Q_3$ (percentil 75) y
+máximo. Los puntos fuera de los "bigotes" ($\pm 1.5 \times IQR$)
+se consideran valores atípicos candidatos.
+:::
+
+
 ## Combinatoria
 
 
@@ -2008,6 +2121,151 @@ aproximadamente $2/3$ si se cambia, ya que al abrir una puerta con una cabra
 el presentador aporta información adicional sobre la ubicación del premio.
 
 ::: {.callout-note icon=false}
+
+## Ejemplos adicionales de probabilidad {#sec-ejemplos-probabilidad}
+
+::: {.callout-tip icon=false}
+## Fuente: Notas del curso (Prof. Sergio Nava Muñoz)
+
+Los ejemplos de esta sección provienen de las presentaciones de clase
+del Dr. Sergio Nava Muñoz. Su enfoque combina intuición geométrica y
+razonamiento combinatorio para fijar los conceptos de probabilidad.
+:::
+
+### El juego del Melate
+
+**Problema.** En el juego del Melate se seleccionan 6 números de un
+conjunto $\{1, 2, 3, \ldots, 44\}$. ¿Cuántos resultados posibles existen?
+¿Cuál es la probabilidad de acertar los 6 números ganadores?
+
+**Solución.** El número de formas de elegir 6 de 44 sin importar el
+orden es:
+$$\binom{44}{6} = \frac{44!}{6!\,38!} = 7{,}059{,}052.$$
+
+La probabilidad de acertar el premio mayor es:
+$$P(\text{acertar los 6}) = \frac{1}{7{,}059{,}052} \approx 1.4 \times 10^{-7}.$$
+
+```{r melate, message=FALSE}
+n <- 44; k <- 6
+total <- choose(n, k)
+cat("Resultados posibles en Melate:", format(total, big.mark=","), "\n")
+cat("P(premio mayor) =", round(1/total, 10), "\n")
+```
+
+### El problema del cumpleaños
+
+**Problema.** En un grupo de $r = 25$ personas, ¿cuál es la probabilidad
+de que al menos dos compartan el mismo día de cumpleaños? Suponga que
+todos los días del año son igualmente probables.
+
+**Solución.** Sea $A$ = "ninguna coincidencia". Entonces:
+$$P(A) = \frac{365}{365} \cdot \frac{364}{365} \cdots \frac{365-r+1}{365}
+       = \frac{365!/(365-r)!}{365^r}.$$
+
+Y la probabilidad de que sí haya coincidencia es
+$P(\bar{A}) = 1 - P(A)$.
+
+```{r cumpleanos, fig.align='center', fig.width=6, fig.height=4}
+prob_coincidencia <- function(r) {
+  p_no_coinc <- prod(seq(365, 365 - r + 1) / 365)
+  1 - p_no_coinc
+}
+
+r_vals <- 1:60
+probs  <- sapply(r_vals, prob_coincidencia)
+r25    <- prob_coincidencia(25)
+
+cat("P(coincidencia | r=25) =", round(r25, 4), "\n")
+cat("P(coincidencia | r=23) =", round(prob_coincidencia(23), 4),
+    " — supera 0.50\n")
+
+df_b <- data.frame(r = r_vals, p = probs)
+library(ggplot2)
+ggplot(df_b, aes(x = r, y = p)) +
+  geom_line(color = "#006341", linewidth = 1.1) +
+  geom_hline(yintercept = 0.5, linetype = "dashed", color = "#C8962E") +
+  geom_point(data = data.frame(r=25, p=r25), color = "red", size = 3) +
+  theme_minimal() +
+  labs(title = "Problema del cumpleaños",
+       subtitle = paste0("Con r=25 personas, P(coincidencia) ≈ ",
+                         round(r25, 3)),
+       x = "Número de personas (r)", y = "P(al menos una coincidencia)")
+```
+
+::: {.callout-note icon=false}
+## Contradicción con la intuición
+
+Con solo 23 personas la probabilidad de coincidencia ya supera el 50%.
+Este resultado sorpresivo se debe a que el número de *pares posibles*
+crece cuadráticamente: con $r$ personas hay $\binom{r}{2}$
+pares. Con 23 personas ya existen $\binom{23}{2} = 253$ pares.
+:::
+
+### El juego de los dados: ¿conviene jugar?
+
+**Reglas.** Elige un número del 1 al 6; se lanzan 3 dados. Si tu número
+aparece 1, 2 o 3 veces, ganas \$1. Si no aparece ninguna vez, pierdes \$1.
+¿Conviene jugar?
+
+**Solución.** Sea $X$ = número de veces que aparece tu número. Entonces
+$X \sim \text{Bin}(3, 1/6)$.
+
+```{r juego-dados}
+p_exito  <- 1/6
+n_dados  <- 3
+
+# P(X=0): pierdes
+p_pierdes <- dbinom(0, n_dados, p_exito)
+# P(X>=1): ganas
+p_ganas   <- 1 - p_pierdes
+
+ganancia_esp <- p_ganas * 1 + p_pierdes * (-1)
+
+cat("P(no aparece, pierdes) =", round(p_pierdes, 4), "\n")
+cat("P(aparece >= 1, ganas) =", round(p_ganas, 4), "\n")
+cat("Ganancia esperada      =", round(ganancia_esp, 4),
+    "pesos por ronda\n")
+cat("Conviene jugar:", ifelse(ganancia_esp > 0, "SÍ", "NO"), "\n")
+```
+
+::: {.callout-note icon=false}
+## Interpretación
+
+La ganancia esperada es positiva ($\approx \$0.42$ por ronda), por lo que
+a largo plazo *sí conviene jugar*. Este resultado es un ejemplo de cómo
+el cálculo probabilístico contradice la intuición: muchos creen que con
+3 dados hay mayor riesgo de no sacar el número, pero el juego está a
+favor del participante.
+:::
+
+### Ejemplo: Probabilidad condicional — Osteoporosis
+
+En una muestra de 1 000 individuos con osteoporosis, 760 son mujeres.
+Se sabe que entre las mujeres el 25% fuma, y entre los hombres el 33%.
+
+```{r osteoporosis}
+P_M  <- 0.76          # P(Mujer)
+P_H  <- 0.24          # P(Hombre) = 1 - P(M)
+P_F_M <- 0.25         # P(Fuma | Mujer)
+P_F_H <- 1/3          # P(Fuma | Hombre)
+
+# Probabilidad total de fumadores
+P_F <- P_F_M * P_M + P_F_H * P_H
+# Bayes: P(H | F)
+P_H_F <- (P_F_H * P_H) / P_F
+
+cat("P(Fuma)            =", round(P_F, 4), "\n")
+cat("P(Hombre | Fuma)   =", round(P_H_F, 4), "\n")
+cat("P(Mujer  | Fuma)   =", round(1 - P_H_F, 4), "\n")
+```
+
+**Interpretación.** Aunque los hombres son minoría en esta población,
+entre los fumadores representan una proporción mayor de lo esperado:
+el teorema de Bayes actualiza la probabilidad inicial de 24% a
+`r round((1/3 * 0.24)/((1/4)*0.76 + (1/3)*0.24)*100, 1)`% al
+condicionar en el evento "es fumador".
+
+
 ## Resumen del capítulo
 
 - **Conteo:** principio básico del conteo ($n_1 \times n_2 \times \cdots \times n_k$),
