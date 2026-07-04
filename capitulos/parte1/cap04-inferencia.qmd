@@ -726,6 +726,174 @@ ggplot(df_prop, aes(x = x, y = densidad)) +
 3. Explique por qué el Teorema del Límite Central es útil incluso cuando no conocemos la distribución exacta de la población original.
 :::
 
+## Distribuciones de muestreo {#sec-distribuciones-muestreo}
+
+::: {.callout-tip icon=false}
+## Fuente: Apuntes del curso (Prof. Magín Zúñiga Estrada)
+:::
+
+Antes de estimar parámetros o probar hipótesis es indispensable conocer cómo se distribuyen los **estadísticos muestrales** (funciones de la muestra). Las tres distribuciones siguientes son el puente entre los capítulos de distribuciones de probabilidad y la inferencia estadística.
+
+### Media y varianza muestrales
+
+Sea $X_1, \ldots, X_n$ una muestra aleatoria de una población con media $\mu$ y varianza $\sigma^2 < \infty$. Se definen:
+
+$$\bar{X} = \frac{1}{n}\sum_{i=1}^n X_i, \qquad S^2 = \frac{1}{n-1}\sum_{i=1}^n (X_i - \bar{X})^2$$
+
+**Propiedades exactas:**
+
+$$E[\bar{X}] = \mu, \qquad \text{Var}(\bar{X}) = \frac{\sigma^2}{n}, \qquad E[S^2] = \sigma^2$$
+
+La primera igualdad dice que $\bar{X}$ es un estimador **insesgado** de $\mu$; la segunda, que su precisión mejora con el tamaño de la muestra; la tercera, que $S^2$ es un estimador insesgado de $\sigma^2$ (de ahí el divisor $n-1$).
+
+```{r muestral-sim, message=FALSE, fig.align='center', fig.width=8, fig.height=3}
+library(ggplot2)
+set.seed(42)
+n <- 30; B <- 2000
+# Población: Exponencial(1), mu=1, sigma^2=1
+medias <- replicate(B, mean(rexp(n, rate = 1)))
+df_m <- data.frame(xbar = medias)
+ggplot(df_m, aes(x = xbar)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 40,
+                 fill = "#006341", color = "white", alpha = 0.8) +
+  stat_function(fun = dnorm,
+                args = list(mean = 1, sd = 1/sqrt(n)),
+                color = "#C8962E", linewidth = 1.2) +
+  theme_minimal() +
+  labs(title = expression(paste("Distribución muestral de ", bar(X),
+       " (Exp(1), n=30, B=2000 réplicas)")),
+       x = expression(bar(X)), y = "Densidad")
+```
+
+### Distribución Chi-cuadrada ($\chi^2$) {#sec-chi2}
+
+La distribución $\chi^2$ surge naturalmente de la varianza muestral. Si $X_1, \ldots, X_n \sim N(\mu, \sigma^2)$, entonces:
+
+$$\frac{(n-1)S^2}{\sigma^2} \sim \chi^2_{n-1}$$
+
+**Definición formal:** $X$ tiene distribución $\chi^2$ con $k$ grados de libertad si su función de densidad es:
+
+$$f(x) = \frac{1}{\Gamma(k/2)}\left(\frac{1}{2}\right)^{k/2} x^{k/2-1} e^{-x/2}, \quad x > 0$$
+
+**Resultado clave:** si $Z_1, \ldots, Z_n$ son normales estándar independientes, entonces $\sum Z_i^2 \sim \chi^2_n$.
+
+$$E(X) = k, \qquad Var(X) = 2k$$
+
+::: {.callout-note icon=false}
+## Observación
+Al estimar $\mu$ con $\bar{X}$, se pierde un grado de libertad porque la restricción $\sum(X_i - \bar{X}) = 0$ hace que solo $n-1$ desviaciones sean libres. Por eso la distribución de $(n-1)S^2/\sigma^2$ tiene $n-1$ g.l., no $n$.
+:::
+
+```{r chi2-plot, fig.align='center', fig.width=7, fig.height=4}
+x_seq <- seq(0, 30, length.out = 300)
+ks <- c(1, 3, 5, 10)
+df_chi <- do.call(rbind, lapply(ks, function(k)
+  data.frame(x = x_seq, dens = dchisq(x_seq, df = k), k = paste0("k = ", k))))
+ggplot(df_chi, aes(x = x, y = dens, color = k)) +
+  geom_line(linewidth = 1) +
+  scale_color_manual(values = c("#004D31","#006341","#C8962E","#8a6a1f")) +
+  coord_cartesian(ylim = c(0, 0.5)) +
+  theme_minimal() +
+  labs(title = expression(paste("Distribución ", chi^2, " para distintos g.l.")),
+       x = "x", y = "f(x)", color = "G.L.")
+```
+
+**Aplicación — IC para la varianza:** si $x_1, \ldots, x_n$ es una muestra de $N(\mu, \sigma^2)$, el intervalo de confianza de nivel $(1-\alpha)$ para $\sigma^2$ es:
+
+$$\left(\frac{(n-1)s^2}{\chi^2_{n-1,\,\alpha/2}},\; \frac{(n-1)s^2}{\chi^2_{n-1,\,1-\alpha/2}}\right)$$
+
+```{r chi2-ic-var}
+# Ejemplo: muestra de n=20, s^2 = 4.8, IC 95% para sigma^2
+n_e <- 20; s2 <- 4.8; alpha <- 0.05
+chi_lo <- qchisq(alpha/2,   df = n_e - 1)
+chi_hi <- qchisq(1-alpha/2, df = n_e - 1)
+ic_lo <- (n_e-1)*s2 / chi_hi
+ic_hi <- (n_e-1)*s2 / chi_lo
+cat(sprintf("IC 95%% para sigma^2: (%.3f, %.3f)\n", ic_lo, ic_hi))
+cat(sprintf("IC 95%% para sigma:  (%.3f, %.3f)\n", sqrt(ic_lo), sqrt(ic_hi)))
+```
+
+### Distribución $t$ de Student {#sec-t-student}
+
+Cuando $\sigma^2$ es **desconocida**, se reemplaza por $S^2$ y el estadístico pivotal deja de ser normal estándar: se convierte en una $t$ de Student.
+
+**Definición:** si $Z \sim N(0,1)$ y $U \sim \chi^2_k$ son independientes, entonces:
+
+$$T = \frac{Z}{\sqrt{U/k}} \sim t_k$$
+
+con función de densidad:
+
+$$f(x) = \frac{\Gamma\!\left[(k+1)/2\right]}{\Gamma(k/2)\sqrt{k\pi}} \cdot \frac{1}{\left(1+x^2/k\right)^{(k+1)/2}}, \quad x \in \mathbb{R}$$
+
+**Corolario fundamental:** si $X_1,\ldots,X_n \sim N(\mu, \sigma^2)$, entonces:
+
+$$T = \frac{\bar{X} - \mu}{S/\sqrt{n}} \sim t_{n-1}$$
+
+Esto permite construir IC y pruebas sobre $\mu$ **sin conocer $\sigma$**.
+
+```{r t-plot, fig.align='center', fig.width=7, fig.height=4}
+x_t <- seq(-4, 4, length.out = 300)
+ks_t <- c(1, 5, 30)
+df_t <- do.call(rbind, lapply(ks_t, function(k)
+  data.frame(x = x_t, dens = dt(x_t, df = k), dist = paste0("t(", k, ")"))))
+df_t <- rbind(df_t, data.frame(x = x_t, dens = dnorm(x_t), dist = "N(0,1)"))
+ggplot(df_t, aes(x = x, y = dens, color = dist, linetype = dist)) +
+  geom_line(linewidth = 1) +
+  scale_color_manual(values = c("#C8962E","#006341","#004D31","gray40")) +
+  scale_linetype_manual(values = c("solid","solid","solid","dashed")) +
+  theme_minimal() +
+  labs(title = "Distribución t de Student vs. Normal estándar",
+       x = "x", y = "f(x)", color = NULL, linetype = NULL)
+```
+
+::: {.callout-note icon=false}
+## Propiedad
+Cuando $k \to \infty$, $t_k \to N(0,1)$. En la práctica, para $k \geq 30$ la diferencia es despreciable.
+:::
+
+### Distribución $F$ de Fisher {#sec-F-fisher}
+
+La distribución $F$ surge al comparar **varianzas** de dos poblaciones normales independientes.
+
+**Definición:** si $U \sim \chi^2_m$ y $V \sim \chi^2_n$ son independientes, entonces:
+
+$$X = \frac{U/m}{V/n} \sim F_{m,n}$$
+
+con función de densidad:
+
+$$f(x) = \frac{\Gamma[(m+n)/2]}{\Gamma(m/2)\,\Gamma(n/2)} \left(\frac{m}{n}\right)^{m/2} \frac{x^{(m-2)/2}}{\left[1+(m/n)x\right]^{(m+n)/2}}, \quad x>0$$
+
+**Corolario:** si $X_1,\ldots,X_{m+1}$ y $Y_1,\ldots,Y_{n+1}$ son muestras independientes de $N(\mu_x, \sigma^2)$ y $N(\mu_y, \sigma^2)$, entonces:
+
+$$F = \frac{S_X^2}{S_Y^2} \sim F_{m,n}$$
+
+Esto es la base de la prueba $F$ en ANOVA y en pruebas de igualdad de varianzas.
+
+```{r F-plot, fig.align='center', fig.width=7, fig.height=4}
+x_F <- seq(0, 5, length.out = 300)
+params <- list(c(1,1), c(5,5), c(10,30))
+df_F <- do.call(rbind, lapply(params, function(p)
+  data.frame(x = x_F, dens = df(x_F, df1 = p[1], df2 = p[2]),
+             dist = paste0("F(", p[1], ",", p[2], ")"))))
+ggplot(df_F, aes(x = x, y = dens, color = dist)) +
+  geom_line(linewidth = 1) +
+  coord_cartesian(ylim = c(0, 1.5)) +
+  scale_color_manual(values = c("#004D31","#C8962E","#006699")) +
+  theme_minimal() +
+  labs(title = "Distribución F para distintos grados de libertad",
+       x = "x", y = "f(x)", color = NULL)
+```
+
+**Relación entre distribuciones:** $t_k^2 \sim F_{1,k}$.
+
+::: {.callout-note icon=false}
+## Ejercicios propuestos
+
+1. Si $S^2 = 5.2$ con $n = 25$ observaciones de $N(\mu, \sigma^2)$, construya un IC del 90% para $\sigma^2$.
+2. Demuestre que si $T \sim t_k$, entonces $T^2 \sim F_{1,k}$.
+3. Una muestra de $n=16$ de $N(\mu, 4)$ tiene $\bar{x} = 12.3$. Construya un IC del 95% para $\mu$ usando la distribución $t$.
+:::
+
 ::: {.callout-note icon=false}
 
 ## Métodos de estimación puntual {#sec-metodos-estimacion}
@@ -854,71 +1022,288 @@ ggplot(df_ll, aes(x=theta, y=ll)) +
 | $\text{Bern}(p)$ | $p$ | $\hat{p} = \bar{X}$ |
 | $\text{Poisson}(\lambda)$ | $\lambda$ | $\hat{\lambda} = \bar{X}$ |
 
+:::
+
 ## Propiedades de los estimadores {#sec-propiedades-estimadores}
 
-No basta con obtener un estimador; es necesario evaluar su calidad.
+::: {.callout-tip icon=false}
+## Fuente: Apuntes del curso (Prof. Magín Zúñiga Estrada)
+:::
+
+No basta con obtener un estimador; es necesario evaluar su calidad. A
+continuación se presentan los criterios formales para comparar
+estimadores.
 
 ### Sesgo (insesgamiento)
 
 ::: {.callout-note icon=false}
-## Definición: Estimador insesgado
+## Definición: Estimador insesgado y sesgo
 
-Un estimador $\hat{\theta}$ es **insesgado** para $\theta$ si:
-$$E[\hat{\theta}] = \theta \quad \forall\, \theta \in \Theta.$$
+Un estimador $T(X_1,\ldots,X_n)$ es **insesgado** para $\theta$ si:
+$$E[T(X_1,\ldots,X_n)] = \theta.$$
 
-El **sesgo** es $\text{Sesgo}(\hat{\theta}) = E[\hat{\theta}] - \theta$.
+Más generalmente, para una función $g(\theta)$ del parámetro:
+$$E[g(T(X_1,\ldots,X_n))] = g(\theta).$$
+
+El **sesgo** de un estimador es:
+$$\text{Sesgo}(T) = E[T] - \theta.$$
+
+$T$ es sesgado si y solo si $\text{Sesgo}(T) \neq 0$.
 :::
 
-**Ejemplo.** $\bar{X}$ es insesgado para $\mu$: $E[\bar{X}] = \mu$.
-El estimador $\hat{\sigma}^2 = \frac{1}{n}\sum(X_i-\bar{X})^2$ es
-sesgado para $\sigma^2$; el estimador insesgado es $S^2 = \frac{1}{n-1}\sum(X_i-\bar{X})^2$.
+**Ejemplo.** $\bar{X}$ es insesgado para $\mu$. El estimador
+$\hat{\sigma}^2 = \frac{1}{n}\sum(X_i-\bar{X})^2$ es sesgado para
+$\sigma^2$; el insesgado es $S^2 = \frac{1}{n-1}\sum(X_i-\bar{X})^2$.
+
+::: {.callout-note icon=false}
+## Definición: Estimador asintóticamente insesgado
+
+$\hat{\theta}_n$ es **asintóticamente insesgado** para $\theta$ si:
+$$\lim_{n\to\infty} E[\hat{\theta}_n] = \theta.$$
+:::
 
 ### Error cuadrático medio (ECM)
 
-$$\text{ECM}(\hat{\theta}) = E[(\hat{\theta}-\theta)^2]
-  = \text{Var}(\hat{\theta}) + \text{Sesgo}^2(\hat{\theta}).$$
+::: {.callout-note icon=false}
+## Definición: CME
 
-Un buen estimador minimiza el ECM: busca equilibrio entre varianza baja
-y sesgo bajo.
+El **cuadrado medio del error (CME)** o error cuadrático medio de un
+estimador $T$ para $\theta$ es:
+$$\text{CME}(T, \theta) = E_\theta\!\left[(T - \theta)^2\right].$$
 
-### Consistencia
+**Descomposición fundamental:**
+$$\text{CME}(T,\theta) = \text{Var}(T) + \left[\text{Sesgo}(T)\right]^2.$$
+:::
 
-$\hat{\theta}_n$ es **consistente** para $\theta$ si $\hat{\theta}_n
-\xrightarrow{p} \theta$ cuando $n\to\infty$. Intuitivamente: con más
-datos, el estimador se acerca al parámetro verdadero.
+**Ejemplo — Comparación de estimadores de $\sigma^2$:**
+Sea $X_1,\ldots,X_n$ muestra aleatoria de $N(\mu,\sigma^2)$. Considere
+dos estimadores para $\sigma^2$:
 
-### Eficiencia y la cota de Cramér-Rao
+$$S_1^2 = \frac{1}{n-1}\sum_{i=1}^n (X_i-\bar{X})^2 \quad (\text{insesgado}), \qquad
+  S_2^2 = \frac{1}{n+1}\sum_{i=1}^n (X_i-\bar{X})^2 \quad (\text{sesgado}).$$
 
-Entre todos los estimadores insesgados, el más **eficiente** es el de
-menor varianza. La **cota de Cramér-Rao** establece el límite inferior
-para la varianza de cualquier estimador insesgado:
-$$\text{Var}(\hat{\theta}) \geq \frac{1}{n\, \mathcal{I}(\theta)},$$
-donde $\mathcal{I}(\theta) = E\!\left[\left(\frac{\partial \log f(X;\theta)}{\partial\theta}\right)^2\right]$
-es la **información de Fisher**.
+Sus CMEs son: $\text{CME}(S_1^2) = \dfrac{2\sigma^4}{n-1}$ y
+$\text{CME}(S_2^2) = \dfrac{2\sigma^4}{n+1}$.
 
-Un estimador que alcanza esta cota se llama **estimador de varianza
-uniformemente mínima (EVUM)**.
+Como $\dfrac{2\sigma^4}{n-1} > \dfrac{2\sigma^4}{n+1}$, el estimador
+**sesgado** $S_2^2$ tiene menor CME que el insesgado $S_1^2$. Esto
+ilustra que un estimador sesgado puede ser preferible cuando su CME es
+menor.
 
 ```{r propiedades-est, message=FALSE, warning=FALSE}
-# Comparar sesgo y varianza de dos estimadores de sigma^2
+# Comparar CME de S1^2 (insesgado) vs S2^2 (sesgado)
 set.seed(123)
 N_sim <- 5000; n <- 10; sigma2_teo <- 4
 
-est_biased <- numeric(N_sim)   # (1/n)*sum(xi-xbar)^2
-est_unbias <- numeric(N_sim)   # S^2 = (1/(n-1))*sum(xi-xbar)^2
-
+s1_vec <- s2_vec <- numeric(N_sim)
 for (i in seq_len(N_sim)) {
   xi <- rnorm(n, mean=0, sd=sqrt(sigma2_teo))
-  est_biased[i] <- mean((xi - mean(xi))^2)
-  est_unbias[i] <- var(xi)
+  sc <- sum((xi - mean(xi))^2)
+  s1_vec[i] <- sc / (n - 1)   # S1^2 insesgado
+  s2_vec[i] <- sc / (n + 1)   # S2^2 sesgado
 }
 
-cat("--- Estimadores de sigma^2 (n=10, sigma^2=4) ---\n")
-cat("Sesgado  — E[est]:", round(mean(est_biased),4),
-    " Sesgo:", round(mean(est_biased) - sigma2_teo, 4), "\n")
-cat("Insesgado— E[S^2]:", round(mean(est_unbias),4),
-    " Sesgo:", round(mean(est_unbias) - sigma2_teo, 4), "\n")
+cat("--- Comparación S1² vs S2² (n=10, σ²=4) ---\n")
+cat(sprintf("S1² insesgado — E[S1²]=%.4f  Sesgo=%.4f  CME=%.4f\n",
+    mean(s1_vec), mean(s1_vec)-sigma2_teo,
+    mean((s1_vec-sigma2_teo)^2)))
+cat(sprintf("S2² sesgado   — E[S2²]=%.4f  Sesgo=%.4f  CME=%.4f\n",
+    mean(s2_vec), mean(s2_vec)-sigma2_teo,
+    mean((s2_vec-sigma2_teo)^2)))
+cat(sprintf("CME teórico  — S1²: %.4f  S2²: %.4f\n",
+    2*sigma2_teo^2/(n-1), 2*sigma2_teo^2/(n+1)))
 ```
+
+### Consistencia
+
+::: {.callout-note icon=false}
+## Definición: Estimador consistente
+
+$\hat{\theta}_n$ es **consistente** para $\theta$ si:
+$$\lim_{n\to\infty} P(|\hat{\theta}_n - \theta| > \varepsilon) = 0
+  \quad \forall\, \varepsilon > 0.$$
+
+Es decir, $\hat{\theta}_n \xrightarrow{p} \theta$.
+:::
+
+::: {.callout-note icon=false}
+## Teorema: Criterio de consistencia
+
+Sea $\hat{\theta}_n$ estimador puntual para $\theta$. Si
+
+- $\lim_{n\to\infty} E[\hat{\theta}_n] = \theta$ (asintóticamente insesgado), y
+- $\lim_{n\to\infty} \text{Var}(\hat{\theta}_n) = 0$,
+
+entonces $\hat{\theta}_n$ es consistente.
+
+**Corolario:** $\bar{X}$ es consistente para $\mu$ (ya que
+$E[\bar{X}]=\mu$ y $\text{Var}(\bar{X})=\sigma^2/n \to 0$).
+:::
+
+### Estimadores insesgados de varianza uniformemente mínima (EIVUM)
+
+::: {.callout-note icon=false}
+## Definición: EIVUM (UMVUE)
+
+Un estimador $\hat{\theta}_n$ para $\theta$ es un **estimador insesgado
+de varianza uniformemente mínima (EIVUM)** si:
+
+1. Es insesgado: $E[\hat{\theta}_n] = \theta$.
+2. Su varianza es la mínima entre todos los estimadores insesgados para
+   $\theta$, para todo $\theta \in \Theta$.
+:::
+
+**Ejemplo — Poisson:** Sea $X_1,\ldots,X_n$ muestra de $\text{Poi}(\lambda)$.
+Tanto $\bar{X}$ como $S^2$ son insesgados para $\lambda$ (pues
+$E[X_i]=\text{Var}(X_i)=\lambda$). Sus varianzas son:
+$$\text{Var}(\bar{X}) = \frac{\lambda}{n}, \qquad
+  \text{Var}(S^2) = \frac{\lambda}{n} + \frac{2\lambda^2}{n-1}.$$
+Como $\text{Var}(\bar{X}) < \text{Var}(S^2)$, $\bar{X}$ es el mejor
+estimador insesgado entre los dos.
+
+### Cota de Cramér-Rao e información de Fisher
+
+::: {.callout-note icon=false}
+## Teorema: Cota inferior de Cramér-Rao (CICR)
+
+Sea $X_1,\ldots,X_n$ muestra aleatoria de $f(x;\theta)$ y
+$g(T(X_1,\ldots,X_n))$ estimador insesgado para $g(\theta)$. Bajo
+condiciones de regularidad:
+$$\text{Var}(g(T)) \geq
+  \frac{[g'(\theta)]^2}{n\, \mathcal{I}(\theta)},$$
+donde la **información de Fisher** es:
+$$\mathcal{I}(\theta) = E\!\left[\left(\frac{\partial}{\partial\theta}
+  \ln f(X;\theta)\right)^2\right].$$
+
+En particular, para $g(\theta)=\theta$ (estimación directa):
+$$\text{CICR}(\theta) = \frac{1}{n\,\mathcal{I}(\theta)}.$$
+
+Un estimador insesgado que **alcanza** la CICR es automáticamente EIVUM.
+:::
+
+::: {.callout-tip icon=false}
+## Ejemplo: CICR para Bernoulli($\theta$)
+
+Sea $X \sim \text{Bern}(\theta)$. La log-verosimilitud es
+$\ln f(X;\theta) = X\ln\theta + (1-X)\ln(1-\theta)$, luego:
+$$\frac{\partial}{\partial\theta}\ln f(X;\theta) =
+  \frac{X}{\theta} - \frac{1-X}{1-\theta}.$$
+
+Su cuadrado en esperanza:
+$$\mathcal{I}(\theta) = E\!\left[\left(\frac{X}{\theta}-\frac{1-X}{1-\theta}\right)^2\right]
+  = \frac{1}{\theta(1-\theta)}.$$
+
+Por lo tanto:
+$$\text{CICR}(\theta) = \frac{\theta(1-\theta)}{n}.$$
+
+Como $\text{Var}(\bar{X}) = \theta(1-\theta)/n = \text{CICR}(\theta)$,
+el estimador $\bar{X}$ alcanza la cota y es EIVUM.
+:::
+
+```{r cramer-rao-demo, message=FALSE, warning=FALSE}
+# Verificación numérica: CICR para Bernoulli(theta)
+theta_vals <- seq(0.1, 0.9, by=0.1)
+cicr <- theta_vals * (1 - theta_vals) / 20  # n=20
+
+cat("CICR(theta) = theta*(1-theta)/n para Bern(theta), n=20:\n")
+for (i in seq_along(theta_vals)) {
+  cat(sprintf("  theta=%.1f  CICR=%.5f\n", theta_vals[i], cicr[i]))
+}
+```
+
+### Eficiencia
+
+::: {.callout-note icon=false}
+## Definición: Estimador eficiente
+
+Un estimador insesgado es **eficiente** si su varianza alcanza la cota
+inferior de Cramér-Rao. La **eficiencia** de $\hat{\theta}$ es:
+$$\text{Efi}(\hat{\theta}) = \frac{\text{CICR}(\theta)}{\text{Var}(\hat{\theta})}, \quad 0 < \text{Efi} \leq 1.$$
+
+Se dice que $\hat{\theta}_n$ es **asintóticamente eficiente** si:
+$$\lim_{n\to\infty} \text{Efi}(\hat{\theta}_n) = 1.$$
+:::
+
+### Suficiencia
+
+::: {.callout-note icon=false}
+## Definición: Estadístico suficiente
+
+Una estadística $T(X_1,\ldots,X_n)$ es **suficiente** para $\theta$ si
+la distribución conjunta de la muestra $(X_1,\ldots,X_n)$ condicionada
+a $T=t$ no depende de $\theta$, para cualquier valor posible $t$.
+
+**Interpretación:** dado el valor de $T$, la muestra no aporta
+información adicional sobre $\theta$.
+:::
+
+::: {.callout-tip icon=false}
+## Ejemplo: Suficiencia de $T=\sum X_i$ para Bernoulli
+
+Sea $X_1,\ldots,X_n$ muestra de $\text{Bern}(\theta)$, $T=\sum X_i$.
+Como $T\sim\text{Bin}(n,\theta)$:
+$$P(\mathbf{X}=\mathbf{x}\mid T=t)
+  = \frac{\prod_{i=1}^n \theta^{x_i}(1-\theta)^{1-x_i}\,
+    I_{\{t\}}(\sum x_i)}{\binom{n}{t}\theta^t(1-\theta)^{n-t}}
+  = \frac{I_{\{t\}}(\sum x_i)}{\binom{n}{t}},$$
+que no depende de $\theta$. Por tanto $T$ es suficiente.
+:::
+
+::: {.callout-note icon=false}
+## Teorema de Factorización de Neyman
+
+$T(X_1,\ldots,X_n)$ es suficiente para $\theta$ si y solo si la función
+de densidad conjunta puede factorizarse como:
+$$f(x_1,\ldots,x_n;\theta) = g(T(x_1,\ldots,x_n),\,\theta)\cdot h(x_1,\ldots,x_n),$$
+donde $g$ depende de los datos solo a través de $T$, y $h$ no depende
+de $\theta$.
+:::
+
+**Ejemplo:** Para $\text{Bern}(\theta)$:
+$$f(\mathbf{x};\theta) = \theta^{\sum x_i}(1-\theta)^{n-\sum x_i}
+  \prod_{i=1}^n I_{\{0,1\}}(x_i).$$
+Con $g(t,\theta)=\theta^t(1-\theta)^{n-t}$ y
+$h(\mathbf{x})=\prod I_{\{0,1\}}(x_i)$, la factorización confirma que
+$T=\sum X_i$ es suficiente.
+
+### Teorema de Rao-Blackwell
+
+::: {.callout-note icon=false}
+## Teorema de Rao-Blackwell
+
+Sea $\hat{\theta}$ cualquier estimador insesgado para $\theta$ y $T$ una
+estadística suficiente para $\theta$. Define:
+$$\phi(T) = E[\hat{\theta}\mid T].$$
+
+Entonces:
+
+1. $E[\phi(T)] = \theta$ ($\phi(T)$ es insesgado).
+2. $\text{Var}(\phi(T)) \leq \text{Var}(\hat{\theta})$ para todo $\theta$.
+
+Es decir, $\phi(T)$ es un estimador insesgado **uniformemente mejor**
+que $\hat{\theta}$.
+
+**Demostración:** Por la ley de la esperanza total:
+$$E[\phi(T)] = E[E(\hat{\theta}\mid T)] = E[\hat{\theta}] = \theta.$$
+Por la ley de la varianza total:
+$$\text{Var}(\hat{\theta}) = \underbrace{\text{Var}(E[\hat{\theta}\mid T])}_{=\,\text{Var}(\phi(T))}
+  + \underbrace{E[\text{Var}(\hat{\theta}\mid T)]}_{\geq\,0}
+  \geq \text{Var}(\phi(T)).$$
+:::
+
+::: {.callout-note icon=false}
+## Ejercicios propuestos
+
+1. Sea $X_1,\ldots,X_{25}$ muestra aleatoria de $\text{Bern}(p)$.
+   Calcule $E[S/N]$ y su error estándar, donde $S=\sum X_i$.
+2. Demuestre que $S_1^2 = \frac{1}{n-1}\sum(X_i-\bar{X})^2$ es
+   consistente para $\sigma^2$.
+3. Encuentre la información de Fisher $\mathcal{I}(\lambda)$ para la
+   distribución $\text{Poi}(\lambda)$ y la CICR de $\lambda$.
+4. Para $X_1,\ldots,X_n$ muestra de $\text{Exp}(\lambda)$, muestre que
+   $T=\sum X_i$ es suficiente para $\lambda$ usando el teorema de
+   factorización de Neyman.
+:::
 
 ## Intervalos de confianza {#sec-intervalos-confianza}
 
@@ -940,162 +1325,201 @@ Al valor $1-\alpha$ se le llama **coeficiente de confianza** (e.g., 0.95).
 veces, el $(1-\alpha)\times 100\%$ de los intervalos construidos
 contendría al verdadero $\theta$.
 
-### IC para la media ($\sigma^2$ conocida)
+### IC para la medi
 
-Si $X_1,\ldots,X_n \overset{iid}{\sim} N(\mu, \sigma^2)$ con $\sigma^2$
-conocida, entonces $Z = (\bar{X}-\mu)/(\sigma/\sqrt{n}) \sim N(0,1)$, y el IC
-de nivel $1-\alpha$ es:
-$$\bar{X} \pm z_{\alpha/2} \cdot \frac{\sigma}{\sqrt{n}},$$
-donde $z_{\alpha/2}$ es el cuantil $1-\alpha/2$ de la $N(0,1)$.
+## Métodos para encontrar pruebas {#sec-metodos-pruebas}
 
-### IC para la media ($\sigma^2$ desconocida)
-
-Cuando $\sigma^2$ es desconocida se usa $t_{n-1}$ en lugar de $Z$:
-$$\bar{X} \pm t_{\alpha/2, n-1} \cdot \frac{S}{\sqrt{n}}.$$
-
-```{r ic-media, fig.align='center', fig.width=8, fig.height=4}
-library(ggplot2)
-# Cobertura empírica del IC para la media
-set.seed(7)
-mu_teo <- 5; sigma <- 2; n <- 20; alpha <- 0.05
-N_ic <- 200
-ics <- replicate(N_ic, {
-  x <- rnorm(n, mu_teo, sigma)
-  c(mean(x) - qt(1-alpha/2, n-1)*sd(x)/sqrt(n),
-    mean(x) + qt(1-alpha/2, n-1)*sd(x)/sqrt(n))
-})
-
-df_ic <- data.frame(
-  id    = 1:N_ic,
-  lower = ics[1,],
-  upper = ics[2,],
-  cubre = ics[1,] <= mu_teo & mu_teo <= ics[2,]
-)
-
-cat("Cobertura empírica:", round(mean(df_ic$cubre)*100, 1), "%",
-    "(teórica:", (1-alpha)*100, "%)\n")
-
-ggplot(df_ic[1:50,], aes(x=id, ymin=lower, ymax=upper, color=cubre)) +
-  geom_linerange(linewidth=0.7) +
-  geom_hline(yintercept=mu_teo, color="#C8962E", linewidth=1, linetype="dashed") +
-  scale_color_manual(values=c("FALSE"="red","TRUE"="#006341"),
-                     labels=c("No cubre","Cubre")) +
-  theme_minimal() +
-  labs(title="Intervalos de confianza del 95% para μ (primeros 50)",
-       x="Muestra #", y="IC", color="")
-```
-
-**Tabla de IC más utilizados:**
-
-| Parámetro | Condición | Estadístico pivote | IC |
-|:----------|:---------|:------------------|:---|
-| $\mu$ | $\sigma^2$ conocida | $Z \sim N(0,1)$ | $\bar{X} \pm z_{\alpha/2}\sigma/\sqrt{n}$ |
-| $\mu$ | $\sigma^2$ desconocida | $T \sim t_{n-1}$ | $\bar{X} \pm t_{\alpha/2,n-1} S/\sqrt{n}$ |
-| $p$ | $n$ grande | $Z \approx N(0,1)$ | $\hat{p} \pm z_{\alpha/2}\sqrt{\hat{p}(1-\hat{p})/n}$ |
-| $\sigma^2$ | $\mu$ desconocida | $\chi^2_{n-1}$ | $\left(\frac{(n-1)S^2}{\chi^2_U},\frac{(n-1)S^2}{\chi^2_L}\right)$ |
-
-## Pruebas de hipótesis {#sec-pruebas-hipotesis}
-
-Una **prueba de hipótesis** es un procedimiento para decidir, a partir de
-los datos, si hay evidencia suficiente para rechazar una afirmación sobre
-los parámetros de una distribución.
-
-::: {.callout-note icon=false}
-## Elementos de una prueba de hipótesis
-
-- **Hipótesis nula** $H_0$: la afirmación que se pone a prueba (statu quo).
-- **Hipótesis alternativa** $H_1$: lo que se concluye si se rechaza $H_0$.
-- **Estadístico de prueba**: función de los datos que sirve para decidir.
-- **Región de rechazo** $W$: conjunto de valores del estadístico que llevan a rechazar $H_0$.
-- **Nivel de significancia** $\alpha = P(\text{rechazar } H_0 \mid H_0 \text{ verdadera})$ (error tipo I).
-- **Valor-$p$**: la probabilidad de observar un resultado tan extremo como el observado, si $H_0$ fuera verdadera.
+::: {.callout-tip icon=false}
+## Fuente: Apuntes del curso (Prof. Magín Zúñiga Estrada)
 :::
 
-| Tipo de error | Descripción | Probabilidad |
-|:-------------|:-----------|:------------|
-| **Tipo I** ($\alpha$) | Rechazar $H_0$ siendo verdadera | Controlada por el investigador |
-| **Tipo II** ($\beta$) | No rechazar $H_0$ siendo falsa | Depende del tamaño de muestra |
-| **Potencia** | Rechazar $H_0$ siendo falsa | $1 - \beta$ |
+### Pruebas de razón de verosimilitud (LRT)
 
-### Prueba para la media (una muestra)
+Las pruebas de razón de verosimilitud están íntimamente relacionadas con
+los estimadores de máxima verosimilitud y son aplicables en gran
+variedad de situaciones.
 
-$H_0: \mu = \mu_0$ vs $H_1: \mu \neq \mu_0$ (bilateral).
+::: {.callout-note icon=false}
+## Definición: Estadístico de razón de verosimilitud
 
-Con $\sigma^2$ desconocida, el estadístico es:
-$$t = \frac{\bar{X} - \mu_0}{S/\sqrt{n}} \sim t_{n-1} \text{ bajo } H_0.$$
+Sea $X_1,\ldots,X_n$ muestra aleatoria con densidad $f(x;\theta)$ y
+función de verosimilitud $L(\theta;\mathbf{x})=\prod_{i=1}^n f(x_i;\theta)$.
+Para probar $H_0:\theta\in\Theta_0$ vs. $H_1:\theta\in\Theta_0^c$, el
+**estadístico de razón de verosimilitud** es:
+$$\lambda(\mathbf{x}) = \frac{\sup_{\theta\in\Theta_0} L(\theta;\mathbf{x})}
+  {\sup_{\theta\in\Theta} L(\theta;\mathbf{x})}.$$
 
-Se rechaza $H_0$ si $|t| > t_{\alpha/2, n-1}$, o equivalentemente si
-$\text{valor-}p < \alpha$.
+Una **prueba LRT** rechaza $H_0$ cuando $\lambda(\mathbf{x})\leq c$,
+con $0\leq c\leq 1$.
+:::
 
-```{r prueba-hip, message=FALSE, warning=FALSE}
-# Ejemplo: prueba t una muestra
-set.seed(99)
-mu_0 <- 100  # hipótesis nula: mu = 100
-muestra <- rnorm(25, mean = 103, sd = 8)  # mu real = 103
+::: {.callout-tip icon=false}
+## Ejemplo: LRT para media normal con varianza conocida
 
-resultado <- t.test(muestra, mu = mu_0, alternative = "two.sided")
+Sea $X_1,\ldots,X_n \sim N(\theta,1)$. Para probar
+$H_0:\theta=\theta_0$ vs. $H_1:\theta\neq\theta_0$, el EMV es
+$\hat{\theta}=\bar{X}$, y la estadística LRT resulta:
+$$\lambda(\mathbf{x}) = \exp\!\left[-\frac{n(\bar{x}-\theta_0)^2}{2}\right].$$
 
-cat("H0: mu =", mu_0, "vs H1: mu ≠", mu_0, "\n")
-cat("Estadístico t :", round(resultado$statistic, 4), "\n")
-cat("Valor-p       :", round(resultado$p.value, 4), "\n")
-cat("IC 95%        :", round(resultado$conf.int, 3), "\n")
-cat("Conclusión    :", ifelse(resultado$p.value < 0.05,
-     "Rechazamos H0: hay evidencia de que mu ≠ 100.",
-     "No rechazamos H0."), "\n")
+La región de rechazo $\lambda(\mathbf{x})\leq c$ equivale a:
+$$|\bar{x}-\theta_0| \geq \sqrt{-2\log(c)/n},$$
+que corresponde a la prueba bilateral usual sobre $\bar{X}$.
+:::
+
+::: {.callout-tip icon=false}
+## Ejemplo: LRT para distribución exponencial desplazada
+
+Sea $X_i \sim f(x;\theta) = e^{-(x-\theta)} \mathbf{1}_{x\geq\theta}$
+y $H_0:\theta\leq\theta_0$ vs. $H_1:\theta>\theta_0$. El estadístico
+LRT es:
+$$\lambda(\mathbf{x}) = \begin{cases}
+  1 & \text{si } X_{(1)} \leq \theta_0, \\
+  e^{-n(X_{(1)}-\theta_0)} & \text{si } X_{(1)} > \theta_0.
+\end{cases}$$
+
+La LRT rechaza $H_0$ si $X_{(1)} \geq c$, con $c$ elegida para
+controlar el error tipo I.
+:::
+
+**Conexión con suficiencia:** Si $T(\mathbf{X})$ es suficiente para
+$\theta$, la LRT basada en la muestra completa y la basada en $T$ son
+equivalentes.
+
+### Función potencia
+
+::: {.callout-note icon=false}
+## Definición: Función potencia
+
+Dada una región de rechazo $R$, la **función potencia** de la prueba es:
+$$\gamma(\theta) = P(\mathbf{X}\in R\mid\theta).$$
+
+Esta función cumple:
+$$\gamma(\theta) = \begin{cases}
+  \text{prob. de Error Tipo I} & \text{si } \theta\in\Theta_0, \\
+  1 - \text{prob. de Error Tipo II} & \text{si } \theta\in\Theta_0^c.
+\end{cases}$$
+
+Una **prueba de tamaño $\alpha$** satisface $\alpha = \sup_{\theta\in\Theta_0}\gamma(\theta)$.
+Una **prueba de nivel $\alpha$** satisface $\alpha \geq \sup_{\theta\in\Theta_0}\gamma(\theta)$.
+:::
+
+::: {.callout-tip icon=false}
+## Ejemplo: Función potencia para prueba binomial
+
+Sea $X\sim\text{Bin}(5,\theta)$. Para $H_0:\theta\leq 0.5$ vs.
+$H_1:\theta>0.5$:
+
+- Prueba 1 (rechaza si $X=5$): $\gamma_1(\theta)=\theta^5$, error tipo I
+  máximo $= (0.5)^5 = 0.03$.
+- Prueba 2 (rechaza si $X\geq 3$): $\gamma_2(\theta)=\sum_{k=3}^5\binom{5}{k}\theta^k(1-\theta)^{5-k}$,
+  mayor potencia pero también mayor error tipo I.
+:::
+
+```{r potencia-binomial, fig.align='center', fig.width=8, fig.height=4}
+library(ggplot2)
+theta_seq <- seq(0, 1, length.out=300)
+
+# Prueba 1: rechaza si X=5
+potencia1 <- theta_seq^5
+
+# Prueba 2: rechaza si X >= 3
+potencia2 <- sapply(theta_seq, function(t)
+  sum(dbinom(3:5, 5, t)))
+
+df_pot <- data.frame(
+  theta = rep(theta_seq, 2),
+  gamma = c(potencia1, potencia2),
+  Prueba = rep(c("Rechaza si X=5", "Rechaza si X≥3"), each=300)
+)
+
+ggplot(df_pot, aes(x=theta, y=gamma, color=Prueba)) +
+  geom_line(linewidth=1.1) +
+  geom_vline(xintercept=0.5, linetype="dashed", color="gray50") +
+  geom_hline(yintercept=0.05, linetype="dotted", color="gray50") +
+  theme_minimal() +
+  labs(title="Función potencia — X ~ Bin(5,θ)",
+       subtitle="H₀: θ ≤ 0.5  vs  H₁: θ > 0.5",
+       x="θ", y="γ(θ) = P(rechazar H₀ | θ)")
 ```
 
-### Dualidad IC — Prueba de hipótesis
+### Pruebas uniformemente más potentes (UMP) — Lema de Neyman-Pearson
 
-Existe una correspondencia exacta entre los IC y las pruebas de hipótesis:
-un valor $\mu_0$ no es rechazado al nivel $\alpha$ si y solo si $\mu_0$
-pertenece al IC de nivel $1-\alpha$.
+::: {.callout-note icon=false}
+## Definición: Prueba UMP
 
-```{r ejercicios-hip}
-# Ejercicio integrador: ANOVA de una vía con dataset Casas
-library(modelEstCIMAT)
-casas <- readRDS(system.file("data", "casas.rds", package="modelEstCIMAT"))
-# ¿El precio promedio difiere entre zonas?
-modelo_aov <- aov(PRECIO ~ factor(ZONA), data = casas)
-cat("\nANOVA: Precio ~ Zona\n")
-print(summary(modelo_aov))
-cat("\nConclusion: valor-p =",
-    round(summary(modelo_aov)[[1]]$`Pr(>F)`[1], 4),
-    "→", ifelse(summary(modelo_aov)[[1]]$`Pr(>F)`[1] < 0.05,
-    "existen diferencias significativas entre zonas.",
-    "no hay evidencia de diferencias entre zonas."), "\n")
+Sea $\mathcal{C}$ una clase de pruebas de nivel $\alpha$ para
+$H_0:\theta\in\Theta_0$ vs. $H_1:\theta\in\Theta_0^c$. Una prueba en
+$\mathcal{C}$ con función potencia $\gamma(\theta)$ es **uniformemente
+más potente (UMP)** en $\mathcal{C}$ si:
+$$\gamma(\theta) \geq \gamma'(\theta) \quad \forall\,\theta\in\Theta_0^c,$$
+para toda $\gamma'$ función potencia de cualquier otra prueba en
+$\mathcal{C}$.
+:::
+
+::: {.callout-note icon=false}
+## Teorema: Lema de Neyman-Pearson
+
+Para probar $H_0:\theta=\theta_0$ vs. $H_1:\theta=\theta_1$, sea $R$ la
+región de rechazo tal que:
+$$\mathbf{x}\in R \iff f(\mathbf{x};\theta_1) > k\,f(\mathbf{x};\theta_0),$$
+con $k\geq 0$ y $\alpha = P(\mathbf{X}\in R\mid\theta=\theta_0)$.
+
+Entonces:
+
+1. **(Suficiencia)** Esta prueba es UMP de nivel $\alpha$.
+2. **(Necesidad)** Si existe tal prueba con $k>0$, toda prueba UMP de
+   nivel $\alpha$ tiene tamaño $\alpha$ y satisface la condición anterior
+   salvo en un conjunto de probabilidad cero.
+
+**Corolario (estadístico suficiente):** Si $T(\mathbf{X})$ es suficiente
+para $\theta$ y $g(t;\theta_i)$ es su densidad, la prueba UMP de nivel
+$\alpha$ puede construirse rechazando $H_0$ cuando
+$g(T;\theta_1) > k\,g(T;\theta_0)$.
+:::
+
+```{r neyman-pearson-demo, fig.align='center', fig.width=9, fig.height=4}
+# Ejemplo Neyman-Pearson: X ~ N(theta, 1), H0: theta=0 vs H1: theta=1
+# La prueba UMP rechaza H0 si X_bar > c, donde c = z_alpha / sqrt(n)
+
+set.seed(2024)
+n <- 20; N_sim <- 10000
+alpha <- 0.05; theta0 <- 0; theta1 <- 1
+
+# Valor crítico para nivel alpha
+c_val <- qnorm(1 - alpha) / sqrt(n)
+
+# Función potencia: gamma(theta) = P(X_bar > c | theta)
+theta_seq <- seq(-0.5, 2, length.out=200)
+gamma_np   <- pnorm(sqrt(n) * (theta_seq - c_val))
+
+df_np <- data.frame(theta=theta_seq, gamma=gamma_np)
+
+ggplot(df_np, aes(x=theta, y=gamma)) +
+  geom_line(color="#006341", linewidth=1.2) +
+  geom_vline(xintercept=theta0, linetype="dashed", color="#C8962E") +
+  geom_vline(xintercept=theta1, linetype="dashed", color="#004080") +
+  geom_hline(yintercept=alpha,  linetype="dotted", color="gray50") +
+  annotate("text", x=theta0, y=0.12, label="θ₀=0", hjust=-0.1, size=3.5) +
+  annotate("text", x=theta1, y=0.12, label="θ₁=1", hjust=-0.1, size=3.5) +
+  theme_minimal() +
+  labs(title="Función potencia de la prueba UMP (Neyman-Pearson)",
+       subtitle=sprintf("X ~ N(θ,1), H₀: θ=0 vs H₁: θ=1, α=%.2f, n=%d",
+                        alpha, n),
+       x="θ", y="γ(θ) = Potencia")
 ```
 
 ::: {.callout-note icon=false}
 ## Ejercicios propuestos
 
-1. Sea $X_1,\ldots,X_{20} \sim N(\mu, 16)$. Con $\bar{x}=48.5$,
-   construya IC al 90%, 95% y 99% para $\mu$. ¿Cómo cambia el ancho?
-
-2. En una muestra de 150 artículos, 18 son defectuosos.
-   a) Estime $p$ por MV. 
-   b) Construya un IC al 95% para $p$.
-   c) ¿La tasa de defectos es significativamente mayor al 10%?
-
-3. Se comparan dos métodos de enseñanza. Grupo A ($n_1=30$): $\bar{x}_1=72$,
-   $s_1=8$. Grupo B ($n_2=28$): $\bar{x}_2=68$, $s_2=10$.
-   Pruebe $H_0: \mu_1=\mu_2$ vs $H_1: \mu_1>\mu_2$ al nivel 5%.
-
-4. Con el dataset `casas`: estime por MV los parámetros de una
-   distribución normal ajustada al precio. Evalúe el ajuste con una
-   prueba de Shapiro-Wilk.
-:::
-
-
-## Resumen del capítulo
-
-- **Población:** conjunto completo de mediciones de interés; sus valores numéricos resumen (como $\mu$ y $\sigma^2$) se llaman **parámetros**.
-- **Muestra aleatoria:** conjunto de variables aleatorias $X_1, \ldots, X_n$ independientes e idénticamente distribuidas (v.a.i.i.d.).
-- **Estimador:** función de la muestra usada para estimar un parámetro desconocido; su valor calculado a partir de datos observados es la **estimación**.
-- **Distribución muestral:** distribución de probabilidad de un estimador, considerando todas las muestras posibles de tamaño $n$.
-- **Media muestral** $\bar{X}$: $E[\bar{X}] = \mu$, $Var(\bar{X}) = \sigma^2/n$; si la población es normal, $\bar{X}$ también es normal.
-- **Varianza muestral** $S^2$: estimador insesgado de $\sigma^2$; bajo población normal, $(n-1)S^2/\sigma^2 \sim \chi^2_{n-1}$.
-- **Distribución $t$ de Student:** sustituye a la Normal cuando $\sigma$ es desconocida y se estima con $S$; tiene colas más pesadas, y converge a la Normal cuando $n$ crece.
-- **Distribución $F$ de Fisher:** modela el cociente de dos varianzas muestrales independientes; útil para comparar la variabilidad de dos poblaciones.
-- **Proporción muestral** $\hat{P}$: $E[\hat{P}] = P$, $Var(\hat{P}) = P(1-P)/n$.
-- **Teorema del Límite Central:** para $n$ suficientemente grande, $\bar{X}$ (y también $\hat{P}$) se aproxima a una distribución Normal, sin importar la forma de la distribución original de la población.
+1. Sea $X_1,\ldots,X_n \sim N(\theta,\sigma^2)$ con $\sigma^2$ conocida.
+   Use el lema de Neyman-Pearson para encontrar la prueba UMP de nivel
+   $\alpha$ para $H_0:\theta=\theta_0$ vs. $H_1:\theta=\theta_1>\theta_0$.
+2. Para $X\sim\text{Bin}(10,p)$ y $H_0:p=0.3$ vs. $H_1:p=0.7$, encuentre
+   la región de rechazo de tamaño $\alpha\leq 0.05$ basada en el lema
+   de Neyman-Pearson.
+3. Sea $X_1,\ldots,X_n \sim \text{Exp}(\lambda)$. Encuentre la prueba LRT
+   de nivel $\alpha$ para $H_0:\lambda=\lambda_0$ vs.
+   $H_1:\lambda\neq\lambda_0$.
+4. Grafique la función potencia de la prueba del ejercicio anterior para
+   $\lambda_0=1$, $n=15$, $\alpha=0.05$.
 :::

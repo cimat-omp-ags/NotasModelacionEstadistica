@@ -1265,6 +1265,118 @@ El resultado muestra que hay un 86.5% de probabilidad de que la terminal respond
 3. Usando la propiedad de falta de memoria, explique por qué la probabilidad de que un componente exponencial dure 50 horas más, dado que ya ha funcionado 200 horas, es la misma que la probabilidad de que dure más de 50 horas desde nuevo.
 :::
 
+## Distribución Gamma {#sec-gamma}
+
+::: {.callout-tip icon=false}
+## Fuente: Apuntes del curso (Prof. Magín Zúñiga Estrada)
+:::
+
+La distribución Gamma generaliza la distribución exponencial y es ampliamente utilizada para modelar tiempos de espera acumulados y fenómenos con asimetría positiva.
+
+::: {.callout-note icon=false}
+## Definición: Distribución Gamma
+
+Una variable aleatoria continua $X$ tiene **distribución Gamma** con parámetros $\alpha > 0$ (forma) y $\lambda > 0$ (tasa) si su función de densidad es:
+$$f(x) = \frac{\lambda\, e^{-\lambda x}(\lambda x)^{\alpha-1}}{\Gamma(\alpha)}, \quad x \geq 0,$$
+donde la **función Gamma** se define como:
+$$\Gamma(\alpha) = \int_0^{\infty} e^{-x}\, x^{\alpha-1}\, dx.$$
+
+Cuando $\alpha = n$ entero positivo, $\Gamma(n) = (n-1)!$
+
+**Propiedades:**
+
+- $E[X] = \alpha/\lambda$
+- $\text{Var}(X) = \alpha/\lambda^2$
+- La suma de $n$ variables exponenciales independientes $\text{Exp}(\lambda)$ sigue una $\text{Gamma}(n, \lambda)$.
+- Caso especial: si $\alpha = 1$, recuperamos la distribución $\text{Exp}(\lambda)$.
+:::
+
+```{r gamma-plot, fig.align='center', fig.width=8, fig.height=4}
+library(ggplot2)
+
+x <- seq(0, 20, length.out = 500)
+params <- list(
+  list(alpha = 1, lambda = 0.5, label = "α=1, λ=0.5 (Exp)"),
+  list(alpha = 2, lambda = 0.5, label = "α=2, λ=0.5"),
+  list(alpha = 3, lambda = 0.5, label = "α=3, λ=0.5"),
+  list(alpha = 5, lambda = 1,   label = "α=5, λ=1")
+)
+
+df_gamma <- do.call(rbind, lapply(params, function(p) {
+  data.frame(x = x,
+             y = dgamma(x, shape = p$alpha, rate = p$lambda),
+             Distribución = p$label)
+}))
+
+ggplot(df_gamma, aes(x = x, y = y, color = Distribución)) +
+  geom_line(linewidth = 1.1) +
+  theme_minimal() +
+  labs(title = "Distribución Gamma — distintos parámetros",
+       x = "x", y = "f(x)") +
+  scale_color_brewer(palette = "Set1")
+```
+
+::: {.callout-note icon=false}
+## Ejercicios propuestos
+
+1. El tiempo de vida (en años) de cierto tipo de batería sigue una distribución $\text{Gamma}(3, 0.5)$. Calcule la probabilidad de que la batería dure más de 8 años.
+2. Demuestre que $\Gamma(1/2) = \sqrt{\pi}$.
+3. Sea $X_1, \ldots, X_n$ iid $\sim \text{Exp}(\lambda)$. Demuestre que $Y = X_1 + \cdots + X_n \sim \text{Gamma}(n, \lambda)$.
+:::
+
+## Distribución Pareto {#sec-pareto}
+
+::: {.callout-tip icon=false}
+## Fuente: Apuntes del curso (Prof. Magín Zúñiga Estrada)
+:::
+
+La distribución Pareto surge del estudio de distribuciones de ingresos: se observó que los ingresos que superaban un umbral $m$ se aproximaban mediante $C/x^{\alpha}$. Este comportamiento de **cola pesada** también aparece en el tamaño de ciudades, reclamos de seguros y tamaño de empresas.
+
+::: {.callout-note icon=false}
+## Definición: Distribución Pareto
+
+Una variable aleatoria $X$ tiene **distribución Pareto** con parámetros $\alpha > 0$ (índice de cola) y $m > 0$ (mínimo) si su función de densidad es:
+$$f(x) = \frac{\alpha\, m^{\alpha}}{x^{\alpha+1}}, \quad x > m.$$
+
+La función de distribución acumulada es:
+$$F(x) = 1 - \left(\frac{m}{x}\right)^{\alpha}, \quad x > m.$$
+
+**Propiedades:**
+
+- $E[X] = \dfrac{\alpha m}{\alpha - 1}$ si $\alpha > 1$.
+- $\text{Var}(X) = \dfrac{\alpha m^2}{(\alpha-1)^2(\alpha-2)}$ si $\alpha > 2$.
+- Cola más pesada que la exponencial: $P(X > x) = (m/x)^{\alpha}$ decrece como potencia, no exponencialmente.
+:::
+
+```{r pareto-plot, fig.align='center', fig.width=8, fig.height=4}
+f_pareto <- function(x, alpha, m) {
+  ifelse(x > m, alpha * m^alpha / x^(alpha + 1), 0)
+}
+
+x_vals <- seq(1, 10, length.out = 500)
+df_pareto <- rbind(
+  data.frame(x = x_vals, y = f_pareto(x_vals, 1, 1), Parámetros = "α=1, m=1"),
+  data.frame(x = x_vals, y = f_pareto(x_vals, 2, 1), Parámetros = "α=2, m=1"),
+  data.frame(x = x_vals, y = f_pareto(x_vals, 3, 1), Parámetros = "α=3, m=1"),
+  data.frame(x = x_vals, y = f_pareto(x_vals, 2, 2), Parámetros = "α=2, m=2")
+)
+
+ggplot(df_pareto, aes(x = x, y = y, color = Parámetros)) +
+  geom_line(linewidth = 1.1) +
+  theme_minimal() +
+  labs(title = "Distribución Pareto — distintos parámetros",
+       x = "x", y = "f(x)") +
+  scale_color_brewer(palette = "Dark2")
+```
+
+::: {.callout-note icon=false}
+## Ejercicios propuestos
+
+1. Los reclamos de un seguro siguen una distribución Pareto con $\alpha = 3$ y $m = 1000$. Calcule $E[X]$ y la probabilidad de que un reclamo supere \$5000.
+2. Demuestre que $F(x) = 1 - (m/x)^{\alpha}$ es efectivamente una función de distribución (verificando que cumple las propiedades de fda).
+3. Compare la tasa de decaimiento de la cola de una $\text{Pareto}(2, 1)$ con una $\text{Exp}(1)$: grafique $P(X > x)$ para ambas.
+:::
+
 ### Resumen
 
 #### Conceptos Fundamentales
@@ -1645,6 +1757,198 @@ La LGN justifica el uso de **promedios muestrales** como estimadores de
 medias poblacionales: con suficientes datos, el promedio muestral estará
 tan cerca de $\mu$ como se quiera. Esta es la base filosófica de la
 **estimación puntual** que se estudiará en el capítulo de inferencia.
+:::
+
+
+## Estadísticos muestrales {#sec-estadisticos-muestrales}
+
+::: {.callout-tip icon=false}
+## Fuente: Apuntes del curso (Prof. Magín Zúñiga Estrada)
+:::
+
+Un investigador estadístico usa información de una muestra $X_1,\ldots,X_n$
+para obtener conclusiones de la población. Dado que la muestra puede ser una
+larga lista de números difícil de interpretar, se calculan **estadísticos**
+— funciones de la muestra — que resumen sus características clave.
+
+::: {.callout-note icon=false}
+## Definición: Estadístico
+
+Sea $X_1,\ldots,X_n$ una muestra aleatoria de tamaño $n$ de una población
+y $T(x_1,\ldots,x_n)$ una función de valor real con dominio en el espacio
+muestral de $(X_1,\ldots,X_n)$. Entonces la variable aleatoria
+$Y = T(X_1,\ldots,X_n)$ se llama **estadístico**. Su distribución de
+probabilidad se denomina **distribución muestral** de $Y$.
+:::
+
+Los tres estadísticos más importantes son:
+
+::: {.callout-note icon=false}
+## Media, varianza y desviación estándar muestrales
+
+**Media muestral:**
+$$\bar{X} = \frac{1}{n}\sum_{i=1}^{n} X_i.$$
+
+**Varianza muestral:**
+$$S^2 = \frac{1}{n-1}\sum_{i=1}^{n}(X_i - \bar{X})^2.$$
+
+**Desviación estándar muestral:** $S = \sqrt{S^2}$.
+:::
+
+::: {.callout-note icon=false}
+## Teorema: Esperanza y varianza de los estadísticos muestrales
+
+Sea $X_1,\ldots,X_n$ una muestra aleatoria de una población con media
+$\mu$ y varianza $\sigma^2 < \infty$. Entonces:
+
+1. $E[\bar{X}] = \mu$
+2. $\text{Var}(\bar{X}) = \dfrac{\sigma^2}{n}$
+3. $E[S^2] = \sigma^2$
+
+Es decir, $\bar{X}$ es estimador insesgado de $\mu$ y $S^2$ es estimador
+insesgado de $\sigma^2$.
+:::
+
+La identidad útil $(n-1)S^2 = \sum X_i^2 - n\bar{X}^2$ facilita los
+cálculos algebraicos.
+
+```{r estadisticos-muestrales-sim, fig.align='center', fig.width=9, fig.height=4}
+library(ggplot2)
+set.seed(42)
+
+# Distribución Exp(1): mu=1, sigma²=1
+n <- 30; B <- 5000
+xbar_vec <- replicate(B, mean(rexp(n, rate=1)))
+s2_vec   <- replicate(B, var(rexp(n, rate=1)))
+
+df_stats <- data.frame(
+  valor = c(xbar_vec, s2_vec),
+  stat  = rep(c("Media muestral X̄", "Varianza muestral S²"), each=B)
+)
+
+ggplot(df_stats, aes(x=valor)) +
+  geom_histogram(aes(y=after_stat(density)), bins=40,
+                 fill="#006341", color="white", alpha=0.7) +
+  geom_vline(data=data.frame(stat=c("Media muestral X̄","Varianza muestral S²"),
+                              vline=c(1,1)),
+             aes(xintercept=vline), color="#C8962E", linewidth=1.2,
+             linetype="dashed") +
+  facet_wrap(~stat, scales="free") +
+  theme_minimal() +
+  labs(title="Distribuciones muestrales de X̄ y S² — Exp(1), n=30, B=5000",
+       subtitle="Línea naranja = valor teórico (μ=1, σ²=1)",
+       x="Valor del estadístico", y="Densidad")
+```
+
+## Convergencia en probabilidad y TCL {#sec-convergencia-tcl}
+
+::: {.callout-tip icon=false}
+## Fuente: Apuntes del curso (Prof. Magín Zúñiga Estrada)
+:::
+
+Esta sección aborda, desde un enfoque teórico, el comportamiento de
+estadísticos muestrales cuando el tamaño de muestra $n \to \infty$.
+
+### Convergencia en probabilidad
+
+::: {.callout-note icon=false}
+## Definición: Convergencia en probabilidad
+
+Una secuencia de variables aleatorias $X_1, X_2, \ldots$ **converge en
+probabilidad** a una variable aleatoria $X$ (se escribe
+$X_n \xrightarrow{p} X$) si, para todo $\varepsilon > 0$:
+$$\lim_{n \to \infty} P(|X_n - X| \geq \varepsilon) = 0,$$
+o equivalentemente,
+$\lim_{n \to \infty} P(|X_n - X| < \varepsilon) = 1.$
+:::
+
+::: {.callout-note icon=false}
+## Teorema: Ley débil de los grandes números (con prueba)
+
+Sea $X_1, X_2, \ldots$ iid con $E[X_i] = \mu$ y
+$\text{Var}(X_i) = \sigma^2 < \infty$. Entonces
+$\bar{X}_n \xrightarrow{p} \mu$.
+
+**Prueba** (via desigualdad de Chebyshev): Para todo $\varepsilon > 0$,
+$$P(|\bar{X}_n - \mu| \geq \varepsilon) \leq
+  \frac{\text{Var}(\bar{X}_n)}{\varepsilon^2} =
+  \frac{\sigma^2}{n\varepsilon^2} \xrightarrow{n\to\infty} 0.$$
+:::
+
+::: {.callout-note icon=false}
+## Ejemplo: Consistencia de $S^2$
+
+Si $X_1, X_2, \ldots$ son iid con $E[X_i] = \mu$,
+$\text{Var}(X_i) = \sigma^2 < \infty$, entonces por Chebyshev:
+$$P(|S_n^2 - \sigma^2| \geq \varepsilon) \leq
+  \frac{\text{Var}(S_n^2)}{\varepsilon^2} \to 0,$$
+ya que $\text{Var}(S_n^2) \to 0$ cuando $n \to \infty$. Por tanto
+$S_n^2 \xrightarrow{p} \sigma^2$.
+:::
+
+### Teorema Central del Límite
+
+::: {.callout-note icon=false}
+## Teorema Central del Límite (TCL)
+
+Sea $X_1, X_2, \ldots$ iid con $E[X_i] = \mu$ y
+$\text{Var}(X_i) = \sigma^2 > 0$ (ambas finitas). Sea
+$\bar{X}_n = (1/n)\sum_{i=1}^n X_i$. Entonces:
+$$\frac{\sqrt{n}(\bar{X}_n - \mu)}{\sigma}
+  \xrightarrow{d} N(0,1) \quad \text{cuando } n \to \infty,$$
+es decir, para cualquier $x \in \mathbb{R}$:
+$$\lim_{n\to\infty} P\!\left(\frac{\sqrt{n}(\bar{X}_n-\mu)}{\sigma} \leq x\right)
+  = \Phi(x) = \int_{-\infty}^x \frac{1}{\sqrt{2\pi}} e^{-y^2/2}\,dy.$$
+:::
+
+El TCL justifica la aproximación normal para sumas de v.a. con $n$ grande,
+independientemente de la distribución original de las $X_i$.
+
+```{r tcl-demo, fig.align='center', fig.width=9, fig.height=4}
+set.seed(2024)
+B <- 10000
+
+# TCL para distintas distribuciones y tamaños de muestra
+tcl_sim <- function(dist_fun, mu, sigma, n, B) {
+  xbar <- replicate(B, mean(dist_fun(n)))
+  (xbar - mu) / (sigma / sqrt(n))
+}
+
+# Distribución Exp(1): mu=1, sigma=1
+z_n5   <- tcl_sim(function(n) rexp(n,1), 1, 1, 5, B)
+z_n30  <- tcl_sim(function(n) rexp(n,1), 1, 1, 30, B)
+z_n100 <- tcl_sim(function(n) rexp(n,1), 1, 1, 100, B)
+
+df_tcl <- data.frame(
+  z = c(z_n5, z_n30, z_n100),
+  n = rep(c("n = 5", "n = 30", "n = 100"), each=B)
+)
+df_tcl$n <- factor(df_tcl$n, levels=c("n = 5","n = 30","n = 100"))
+
+x_seq <- seq(-4, 4, length.out=200)
+df_norm <- data.frame(x=x_seq, y=dnorm(x_seq))
+
+ggplot(df_tcl, aes(x=z)) +
+  geom_histogram(aes(y=after_stat(density)), bins=50,
+                 fill="#006341", color="white", alpha=0.6) +
+  geom_line(data=df_norm, aes(x=x, y=y),
+            color="#C8962E", linewidth=1.2) +
+  facet_wrap(~n, ncol=3) +
+  coord_cartesian(xlim=c(-4,4)) +
+  theme_minimal() +
+  labs(title="TCL — X ~ Exp(1): convergencia a N(0,1)",
+       subtitle="Curva naranja = densidad N(0,1)",
+       x="Z estandarizado", y="Densidad")
+```
+
+::: {.callout-note icon=false}
+## Ejercicios propuestos
+
+1. Sea $X \sim \text{Poisson}(\lambda)$. Use el TCL para aproximar $P(\bar{X}_n > 5.2)$
+   cuando $\lambda = 5$ y $n = 100$.
+2. Demuestre que si $X_n \xrightarrow{p} c$ (constante), entonces $X_n^2 \xrightarrow{p} c^2$.
+3. ¿Por qué el TCL no aplica directamente cuando $\text{Var}(X_i) = \infty$?
+   Dé un ejemplo de distribución con varianza infinita.
 :::
 
 ## Ejercicios propuestos {#sec-ejercicios-esp-cov}
