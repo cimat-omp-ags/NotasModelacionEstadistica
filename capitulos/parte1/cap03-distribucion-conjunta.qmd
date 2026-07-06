@@ -1607,8 +1607,7 @@ Se cumple que $-1 \leq \rho(X,Y) \leq 1$.
 | $\rho \approx -1$ | Relación lineal negativa casi perfecta |
 | $\rho \approx 0$ | Sin relación lineal (pueden existir relaciones no lineales) |
 
-```{r covarianza-demo, fig.align='center', fig.width=9, fig.height=3,
-    message=FALSE}
+```{r covarianza-demo, fig.align='center', fig.width=9, fig.height=3, message=FALSE}
 library(ggplot2)
 library(gridExtra)
 set.seed(123)

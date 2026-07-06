@@ -102,8 +102,7 @@ cat("Curtosis:", round(kurtosis_val, 3), "(exceso respecto a normal)\n")
 Las gráficas permiten detectar patrones, valores atípicos y la forma de
 la distribución de manera inmediata.
 
-```{r est-desc-graficas, fig.align='center', fig.width=9, fig.height=4,
-     message=FALSE, warning=FALSE}
+```{r est-desc-graficas, fig.align='center', fig.width=9, fig.height=4, message=FALSE, warning=FALSE}
 library(ggplot2)
 library(gridExtra)
 
