@@ -220,7 +220,7 @@ m \times n = 3 \times 3 = 9
 $$
 
 posibles configuraciones.
-```{r diagrama_comites, echo=TRUE, fig.align='center', fig.width=9, fig.height=6}
+```{r diagrama_comites, fig.align='center', fig.width=9, fig.height=6}
 library(ggplot2)
 
 # 1. Generar todas las combinaciones posibles de 2 hombres (de 3)
@@ -463,7 +463,7 @@ $$
 
 Por lo tanto, el cálculo del número de permutaciones es un **caso particular del principio básico del conteo sin repetición**, donde el orden de los elementos es relevante.
 
-```{r diagrama_permutaciones, echo=TRUE, fig.align='center', fig.width=10, fig.height=6}
+```{r diagrama_permutaciones, fig.align='center', fig.width=10, fig.height=6}
 library(ggplot2)
 
 # Crear estructura de datos para el árbol de permutaciones
@@ -880,7 +880,7 @@ Este evento puede denominarse como:
 
 > *El evento donde en la primera moneda se obtiene águila.*
 
-```{r grafica_union, echo=TRUE, fig.align='center', fig.width=6, fig.height=4}
+```{r grafica_union, fig.align='center', fig.width=6, fig.height=4}
 library(ggplot2)
 
 # Crear un marco para el diagrama de Venn conceptual
@@ -919,7 +919,7 @@ Esto ocurre porque **ningún resultado puede ser simultáneamente $(a,a)$ y $(a,
 Los eventos son **mutuamente excluyentes**.
 
 
-```{r grafica_interseccion, echo=TRUE, fig.align='center', fig.width=6, fig.height=4}
+```{r grafica_interseccion, fig.align='center', fig.width=6, fig.height=4}
 # Visualización de conjuntos disjuntos
 ggplot(df_venn, aes(x, y)) +
   geom_rect(aes(xmin=-1.2, xmax=1.2, ymin=-1, ymax=1), fill=NA, color="black") +
@@ -953,7 +953,7 @@ Este evento puede denominarse como:
 
 
 
-```{r grafica_complemento, echo=TRUE, fig.align='center', fig.width=6, fig.height=4}
+```{r grafica_complemento, fig.align='center', fig.width=6, fig.height=4}
 # Resaltar todo lo que NO es (a,a)
 ggplot(df_venn, aes(x, y)) +
   # Fondo para el complemento
@@ -1298,7 +1298,7 @@ $$
 **Anotación:**  
 La ecuación (3) confirma el **axioma 2**, pues la probabilidad del espacio muestral es igual a uno.
 
-```{r grafica_moneda_basica, echo=TRUE, fig.align='center', fig.width=6, fig.height=4}
+```{r grafica_moneda_basica, fig.align='center', fig.width=6, fig.height=4}
 library(ggplot2)
 
 # 1. Definir los datos del espacio muestral y sus probabilidades
@@ -1837,7 +1837,7 @@ En un curso, el 70% son mujeres ($M^c$) y el 30% son hombres ($M$). El 10% de la
 **Cálculo en R:**
 Un diagrama de árbol es ideal para visualizar estas ramificaciones de probabilidad.
 
-```{r ejemplo_fumadores, echo=TRUE}
+```{r ejemplo_fumadores}
 # Definición de probabilidades
 p_mujer <- 0.70
 p_hombre <- 0.30
@@ -1926,7 +1926,7 @@ $$P(A^c|B^c) = \frac{0.95 \cdot 0.999}{1 - 0.05091} \approx 1$$
 
 Podemos visualizar este proceso de decisión mediante un diagrama de árbol de probabilidades:
 
-```{r bayes_tree, echo=TRUE}
+```{r bayes_tree}
 # Ejemplo didáctico de la estructura del Teorema de Bayes
 # Árbol de decisión simple para la prueba de Tuberculosis
 cat("Probabilidad Total de Positivo P(B):", (0.96 * 0.001) + (0.05 * 0.999))
@@ -1972,7 +1972,7 @@ $$\text{Leyes de De Morgan:} \quad \overline{A \cup B} = \overline{A} \cap \over
 A continuación se recrea, mediante código, un diagrama de Venn para ilustrar la
 unión y la intersección de dos eventos $A$ y $B$ dentro del espacio muestral $S$:
 
-```{r, echo=TRUE, fig.align='center', fig.width=6, fig.height=5}
+```{r, fig.align='center', fig.width=6, fig.height=5}
 #| label: fig-venn
 #| fig-cap: "Diagrama de Venn generado por código: eventos A y B en el espacio muestral S"
 library(ggplot2)
@@ -2011,7 +2011,7 @@ $P(\overline{A}) = 1 - \dfrac{365 \times 364 \times \cdots \times (365 - r + 1)}
 En vez de reutilizar la imagen de la diapositiva, esta probabilidad se calcula y
 grafica directamente con código para distintos tamaños de grupo:
 
-```{r, echo=TRUE, fig.align='center', fig.width=7, fig.height=4.5}
+```{r, fig.align='center', fig.width=7, fig.height=4.5}
 #| label: fig-cumpleanos
 #| fig-cap: "Probabilidad de coincidencia de cumpleaños según el tamaño del grupo"
 r <- 1:60
@@ -2055,7 +2055,7 @@ positivo están realmente enfermos, porque la prevalencia de la enfermedad es
 muy baja. Esto se puede verificar simulando una población de un millón de
 personas:
 
-```{r virus_bayes, echo=TRUE}
+```{r virus_bayes}
 set.seed(123)
 n <- 1e6
 tiene_virus <- runif(n) < 0.005
@@ -2074,7 +2074,7 @@ no importa cambiar, pero el Teorema de Bayes muestra que cambiar duplica la
 probabilidad de ganar. En vez de mostrar el enunciado como imagen, se simula
 el juego miles de veces para comparar ambas estrategias:
 
-```{r, echo=TRUE, fig.align='center', fig.width=6, fig.height=4.5}
+```{r, fig.align='center', fig.width=6, fig.height=4.5}
 #| label: fig-montyhall
 #| fig-cap: "Simulación de Monte Carlo: probabilidad de ganar al cambiar vs. mantener la elección"
 set.seed(2024)

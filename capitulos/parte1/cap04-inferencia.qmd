@@ -56,7 +56,7 @@ En el análisis de datos, se hace uso de estas realizaciones (muestras observada
 
 A partir de una realización de muestra aleatoria (por ejemplo, $n=100$ observaciones de resistencia), podemos construir un histograma. Si la muestra es representativa, este histograma se ajustará bien a la curva de densidad poblacional original.
 
-```{r muestra_aleatoria, echo=TRUE, fig.align='center', warning=FALSE, message=FALSE}
+```{r muestra_aleatoria, fig.align='center', warning=FALSE, message=FALSE}
 library(ggplot2)
 
 # Fijamos una semilla para reproducibilidad
@@ -152,7 +152,7 @@ $$s^2 = \frac{9.74}{5 - 1} = \frac{9.74}{4} = 2.435 \text{ ohmios}^2$$ *Conclusi
 
 El siguiente gráfico superpone las observaciones individuales reales de nuestra muestra pequeña ($n=5$) con la curva de distribución Normal teórica que inferimos para toda la producción ($N=10,000$), usando la media estimada ($\bar{x} = 100.0$) y la desviación estándar estimada ($s = \sqrt{2.435} \approx 1.56$).
 
-```{r grafica_ejemplo_resistencias, echo=TRUE, fig.align='center', fig.width=8, fig.height=5, warning=FALSE, message=FALSE}
+```{r grafica_ejemplo_resistencias, fig.align='center', fig.width=8, fig.height=5, warning=FALSE, message=FALSE}
 # 1. Definir los datos de la muestra (Realizaciones)
 df_muestra <- data.frame(
   resistencia = c(101.2, 98.5, 102.1, 99.0, 99.2),
@@ -253,7 +253,7 @@ Definimos $X$: CI de un alumno $\sim N(80, 10^2)$. Como la población es normal,
 
 La desviación estándar de la media muestral (conocida como error estándar) es $\sqrt{4} = 2$. La probabilidad de interés es calcular el área a la derecha de 75: $P(\bar{X} > 75)$.
 
-```{r prob_x_barra, echo=TRUE}
+```{r prob_x_barra}
 # En R, usamos pnorm para calcular el área acumulada a la izquierda y restamos de 1.
 # pnorm(q, mean, sd) -> mean = 80, sd = sqrt(4) = 2
 prob_mayor_75 <- 1 - pnorm(75, mean = 80, sd = 2)
@@ -290,7 +290,7 @@ Por su propia naturaleza de suma de cuadrados, el soporte (campo de variación) 
 
 El parámetro único que define a esta distribución son sus grados de libertad $n$. En la figura siguiente se muestra cómo la forma fuertemente asimétrica a la derecha (sesgada) de la distribución $\chi^2$ va cambiando a medida que aumentan los grados de libertad.
 
-```{r chi_cuadrada_forma, echo=TRUE, fig.align='center', fig.width=8, fig.height=5, warning=FALSE}
+```{r chi_cuadrada_forma, fig.align='center', fig.width=8, fig.height=5, warning=FALSE}
 library(ggplot2)
 
 x_val <- seq(0, 20, length.out = 500)
@@ -328,7 +328,7 @@ En R, la función `pchisq(q, df)` calcula la probabilidad acumulada a la izquier
 
 Para encontrar el área entre dos puntos, calculamos el área acumulada hasta el límite superior y le restamos el área acumulada hasta el límite inferior: $$P(5.23 \le X \le 14.8) = P(X \le 14.8) - P(X \le 5.23)$$
 
-```{r chi_prob_a, echo=TRUE}
+```{r chi_prob_a}
 # Área hasta 14.8
 area_sup <- pchisq(14.8, df=12)
 # Área hasta 5.23
@@ -344,7 +344,7 @@ La probabilidad de caer en este intervalo central es aproximadamente **0.697**.
 
 Al ser una distribución continua, el signo estricto ($<$) es equivalente al no estricto ($\le$).
 
-```{r chi_prob_b, echo=TRUE}
+```{r chi_prob_b}
 round(pchisq(26.2, df=12), 3)
 ```
 
@@ -354,7 +354,7 @@ La probabilidad de observar un valor menor a 26.2 es de **0.99**.
 
 La función `pchisq` por defecto acumula a la izquierda. Para calcular la cola derecha ("área mayor que"), debemos usar la regla del complemento (1 menos el área izquierda). $$P(X > 6.30) = 1 - P(X \le 6.30)$$
 
-```{r chi_prob_c, echo=TRUE}
+```{r chi_prob_c}
 # 1 menos el área acumulada hasta 6.30
 prob_cola_der <- 1 - pchisq(6.30, df=12)
 round(prob_cola_der, 3)
@@ -369,7 +369,7 @@ La probabilidad de observar un valor superior a 6.30 es de **0.90**.
 
 Aquí el problema está invertido. Conocemos el área (0.01) y buscamos el punto de corte en el eje horizontal. En R, las funciones inversas para buscar cuantiles comienzan con la letra 'q'. En este caso usamos `qchisq(p, df)`.
 
-```{r chi_prob_d, echo=TRUE}
+```{r chi_prob_d}
 # Buscamos el cuantil que acumula un 1% (0.01) de área a la izquierda
 valor_a <- qchisq(0.01, df=12)
 round(valor_a, 2)
@@ -377,7 +377,7 @@ round(valor_a, 2)
 
 El valor crítico es $a = 3.57$. Es decir, hay un 1% de probabilidad de que esta variable $\chi^2_{12}$ tome un valor inferior a 3.57.
 
-```{r grafica_cola_izq, echo=TRUE, fig.align='center', fig.width=6, fig.height=4, warning=FALSE}
+```{r grafica_cola_izq, fig.align='center', fig.width=6, fig.height=4, warning=FALSE}
 # Representación visual del inciso d)
 x_rango <- seq(0, 35, length.out=400)
 df_d <- data.frame(x = x_rango, fx = dchisq(x_rango, df=12))
@@ -420,7 +420,7 @@ Multiplicamos por $(n-1)$ y dividimos por $\sigma^2$: $$P\left( S^2 > 12.16 \rig
 
 Ahora el problema se reduce a buscar el área a la derecha del valor 18.24 en una distribución Chi-cuadrada con 24 grados de libertad. En R, calculamos el complemento del área acumulada:
 
-```{r prob_varianza, echo=TRUE}
+```{r prob_varianza}
 # P(X^2_24 > 18.24) = 1 - P(X^2_24 <= 18.24)
 prob_s2 <- 1 - pchisq(18.24, df = 24)
 round(prob_s2, 3)
@@ -470,7 +470,7 @@ Sin embargo, esto es incorrecto. Sabemos que $0.8$ es solo una estimación ($S$)
 
 $$P(\bar{X} \le 1) = P\left( T_{19} \le \frac{1 - 1.5}{0.8 / \sqrt{20}} \right) = P(T_{19} \le -2.80)$$
 
-```{r prob_t_student, echo=TRUE}
+```{r prob_t_student}
 # Probabilidad usando la distribución t con 19 grados de libertad
 prob_t <- pt(-2.80, df = 19)
 round(prob_t, 3)
@@ -478,7 +478,7 @@ round(prob_t, 3)
 
 La probabilidad real es de **0.006**. Observa que es más del doble de lo que estimamos erróneamente con la Normal. Esto ilustra el concepto de las "colas pesadas": la incertidumbre adicional de no conocer $\sigma$ hace que los eventos extremos sean más probables.
 
-```{r grafica_comparativa_t_normal, echo=TRUE, fig.align='center', fig.width=7, fig.height=4, warning=FALSE}
+```{r grafica_comparativa_t_normal, fig.align='center', fig.width=7, fig.height=4, warning=FALSE}
 library(ggplot2)
 
 x_vals <- seq(-4, 4, length.out = 400)
@@ -523,7 +523,7 @@ La probabilidad de interés se convierte directamente en: $$P\left( \frac{S_1^2}
 
 Calculamos esto en R usando la función `pf`, que requiere el cuantil y los dos grados de libertad correspondientes:
 
-```{r prob_f_fisher, echo=TRUE}
+```{r prob_f_fisher}
 # P(F > 2) = 1 - P(F <= 2)
 prob_f <- 1 - pf(2, df1 = 14, df2 = 24)
 round(prob_f, 3)
@@ -531,7 +531,7 @@ round(prob_f, 3)
 
 La probabilidad de que, por puro azar del muestreo, la varianza observada de la aerolínea 1 sea el doble que la de la aerolínea 2 (aun cuando en la realidad sean iguales) es de **0.063** (6.3%).
 
-```{r grafica_f_fisher, echo=TRUE, fig.align='center', fig.width=6, fig.height=4, warning=FALSE}
+```{r grafica_f_fisher, fig.align='center', fig.width=6, fig.height=4, warning=FALSE}
 # Representación de la Distribución F(14, 24)
 x_f <- seq(0, 4, length.out = 400)
 df_fisher <- data.frame(x = x_f, densidad = df(x_f, df1 = 14, df2 = 24))
@@ -557,7 +557,7 @@ Retomando el ejemplo anterior de las dos aerolíneas, la probabilidad de interé
 
 La probabilidad de que la razón de las varianzas muestrales exceda a 2 (sabiendo que la razón de las varianzas poblacionales se asume igual a 1) se calcula en R de la siguiente manera:
 
-```{r prob_f, echo=TRUE}
+```{r prob_f}
 # Calculamos la probabilidad de la cola derecha
 prob_f <- 1 - pf(1.167, df1 = 14, df2 = 24)
 round(prob_f, 3)
@@ -573,7 +573,7 @@ Si $v_1 = 14$, $v_2 = 24$ y $\alpha = 0.05$, se tiene que: $$P(F_{14, 24} > k) =
 
 En R, el código para encontrar este valor crítico $k$ es el siguiente:
 
-```{r cuantil_f, echo=TRUE}
+```{r cuantil_f}
 # Buscamos el valor k que deja un 5% de área a su derecha
 k_valor <- qf(0.05, df1 = 14, df2 = 24, lower.tail = FALSE)
 round(k_valor, 3)
@@ -657,7 +657,7 @@ Suponga que el peso de los paquetes de café de cierto tipo tiene una media de $
 
 Buscamos $P(63 \le T \le 64.4)$. Aunque no conocemos la distribución individual, como $n=64$ es un tamaño grande, aplicamos el TLC para el Total: $$T \sim N\left( \mu_T = 64(1) = 64, \sigma_T^2 = 64(0.05)^2 = 0.16 \right)$$ La desviación estándar del total será $\sigma_T = \sqrt{0.16} = 0.4 \text{ kg}$.
 
-```{r prob_tlc_total, echo=TRUE}
+```{r prob_tlc_total}
 # P(63 <= T <= 64.4) = P(T <= 64.4) - P(T <= 63)
 prob_total <- pnorm(64.4, mean = 64, sd = 0.4) - pnorm(63, mean = 64, sd = 0.4)
 round(prob_total, 3)
@@ -683,7 +683,7 @@ Por el TLC para proporciones, la variable $\hat{P}$ (proporción de reacciones e
 
 La desviación estándar (error estándar de la proporción) es $\sqrt{0.000194} \approx 0.0139$. La probabilidad de interés es $P(\hat{P} > 0.04)$.
 
-```{r prob_tlc_prop, echo=TRUE}
+```{r prob_tlc_prop}
 # Definimos los parámetros
 P_pob <- 0.03
 n_muestra <- 150
@@ -696,7 +696,7 @@ round(prob_prop, 3)
 
 La probabilidad de que más del 4% de la muestra presente reacciones adversas es de **0.236** (23.6%).
 
-```{r grafica_tlc_prop, echo=TRUE, fig.align='center', fig.width=7, fig.height=4, warning=FALSE}
+```{r grafica_tlc_prop, fig.align='center', fig.width=7, fig.height=4, warning=FALSE}
 # Representación visual de la proporción muestral
 library(ggplot2)
 

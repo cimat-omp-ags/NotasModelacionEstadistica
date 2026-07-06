@@ -8,7 +8,7 @@ En este capítulo estudiaremos las variables aleatorias continuas: cómo se desc
 
 **Ejemplo:** Consideremos que se tiene la siguiente rueda de la fortuna:
 
-```{r figura1, echo=TRUE, warning=FALSE, message=FALSE}
+```{r figura1, warning=FALSE, message=FALSE}
 library(ggplot2)
 
 df_rueda <- data.frame(
@@ -47,7 +47,7 @@ $$P(Y=y)=0 \text{ para todo valor específico de } y$$
 
 Visualización de puntos en el intervalo [1,4]:
 
-```{r comparacion_puntos, echo=TRUE, fig.width=8, fig.height=4}
+```{r comparacion_puntos, fig.width=8, fig.height=4}
 # Comparación de dominios: Discreto vs Continuo
 par(mfrow=c(1,2))
 
@@ -78,7 +78,7 @@ Para que una función matemática $f(y)$ sea una función de densidad de probabi
 1.  $f(y) \ge 0$ para todo $y$ (la función no puede ser negativa).
 2.  $\int_{-\infty}^{\infty} f(y)dy = 1$ (el área total bajo la curva debe ser exactamente igual a 1).
 
-```{r figura2_area, echo=TRUE, fig.width=6, fig.height=4}
+```{r figura2_area, fig.width=6, fig.height=4}
 # Probabilidad vista como un área bajo la curva f(y)
 y_vals <- seq(0, 5, length.out = 100)
 f_y <- function(y) dgamma(y, shape=2, rate=1) # Curva de ejemplo típica para tiempos
@@ -113,7 +113,7 @@ Ahora, si queremos calcular la probabilidad de que la proporción de tiempo de o
 
 Por lo tanto, la probabilidad de que el recepcionista esté ocupado menos de la mitad del tiempo de su turno es del 25%.
 
-```{r ejemplo_geometria, echo=TRUE, fig.width=6, fig.height=4}
+```{r ejemplo_geometria, fig.width=6, fig.height=4}
 # Gráfica de la función f(y) = 2y y el área calculada
 y_tri <- c(0, 1)
 fy_tri <- c(0, 2)
@@ -153,7 +153,7 @@ Considerando la función de densidad: $$
 \end{cases}
 $$ La figura 6 ilustra el caso en que debemos calcular $F(X \le 1/2)$ o equivalentemente $F(X \le 0.5)$.
 
-```{r figura6, echo=TRUE, fig.width=6, fig.height=4}
+```{r figura6, fig.width=6, fig.height=4}
 # Figura 6. Cálculo de F(X <= 0.5)
 x_val <- c(0, 2)
 y_val <- c(0, 1)
@@ -189,7 +189,7 @@ $$P(a \le X \le b) \quad (3)$$
 
 Esta probabilidad puede ser calculada como la diferencia entre la probabilidad acumulada hasta el valor $b$ menos la probabilidad acumulada hasta el valor $a$. Podemos representar gráficamente esta situación como los muestra la figura 7.
 
-```{r figura7, echo=TRUE, fig.width=6, fig.height=4}
+```{r figura7, fig.width=6, fig.height=4}
 # Figura 7. Cálculo de P(a <= X <= b) = F(b) - F(a)
 x_gen <- seq(0, 5, length.out=100)
 # Usamos una curva normal genérica para ilustrar el concepto
@@ -214,7 +214,7 @@ $$P(a \le X \le b) = P(X \le b) - P(X \le a) = F(b) - F(a) \quad (4)$$
 
 Si reconsideramos el caso de calcular la probabilidad de que $x$ esté entre 0 y 1, como se muestra en la figura 9, pero ahora empleando la función de probabilidad acumulada, tenemos:
 
-```{r figura9, echo=TRUE, fig.width=6, fig.height=4}
+```{r figura9, fig.width=6, fig.height=4}
 # Figura 9. Cálculo de P(0 <= X <= 1)
 x_val <- c(0, 2)
 y_val <- c(0, 1)
@@ -259,7 +259,7 @@ $$
 
 A diferencia de la función de densidad (que era una línea recta), la función de probabilidad acumulada en este caso es una curva cuadrática que crece desde 0 hasta 1.
 
-```{r figura 10 grafica_acumulada, echo=TRUE, fig.width=6, fig.height=4}
+```{r figura 10 grafica_acumulada, fig.width=6, fig.height=4}
 # Definición de la función de probabilidad acumulada F(x)
 F_x <- function(x) {
   ifelse(x < 0, 0, 
@@ -284,7 +284,7 @@ points(c(0, 1, 2), c(0, 0.25, 1), pch=19, col="blue")
 
 Las variables aleatorias continuas más comúnmente utilizadas son: la variable aleatoria uniforme, variable aleatoria normal, variable aleatoria exponencial, variable aleatoria Ji-cuadrada, variable aleatoria t de Student y la variable aleatoria F de Fisher o de Snedecor.
 
-```{r figura11, echo=TRUE, warning=FALSE, message=FALSE, fig.align='center', fig.width=9, fig.height=5}
+```{r figura11, warning=FALSE, message=FALSE, fig.align='center', fig.width=9, fig.height=5}
 library(ggplot2)
 
 # Diagrama jerárquico generado con código (en vez de un widget HTML),
@@ -352,7 +352,7 @@ La función de densidad de probabilidad del tiempo de espera es:
 
 $$f(y) = \begin{cases} \frac{1}{20} & \text{si } 0 \le y \le 20 \\ 0 & \text{en cualquier otro caso} \end{cases}$$
 
-```{r figura_uniforme, echo=TRUE, fig.width=6, fig.height=4, warning=FALSE}
+```{r figura_uniforme, fig.width=6, fig.height=4, warning=FALSE}
 # Gráfica de la función de densidad para Y ~ U(0, 20)
 library(ggplot2)
 
@@ -393,7 +393,7 @@ $$P(5 \le Y \le 10) = \int_{5}^{10} f(y) dy = (10 - 5) \cdot \frac{1}{20} = 5 \c
 
 Por lo tanto, existe un 25% de probabilidad de que el tiempo de espera oscile entre los 5 y 10 minutos.
 
-```{r figura_prob_acumulada, echo=TRUE, fig.width=6, fig.height=4, warning=FALSE}
+```{r figura_prob_acumulada, fig.width=6, fig.height=4, warning=FALSE}
 # Gráfica del área correspondiente a la probabilidad calculada
 df_area <- data.frame(
   x = c(5, 5, 10, 10),
@@ -437,7 +437,7 @@ Si un médico se tomara el trabajo de pesar, por ejemplo, a 500 niños recién n
 
 Si unimos los puntos medios de los rectángulos de este histograma podemos dibujar una línea curva bastante parecida a una campana simétrica como se muestra a continuación:
 
-```{r figura14_15, echo=TRUE, fig.width=8, fig.height=4, warning=FALSE, message=FALSE}
+```{r figura14_15, fig.width=8, fig.height=4, warning=FALSE, message=FALSE}
 # Figuras 14 y 15 combinadas para ilustración didáctica: Histograma y Curva
 library(ggplot2)
 set.seed(123)
@@ -518,7 +518,7 @@ Un ejemplo de lo expresado en el gráfico 19 podría ser que $\sigma_1$ fuera la
 
 En síntesis, se observa que un cambio en el valor de $\mu$, desplaza toda la distribución normal pero no altera su forma. Por el contrario, si analizamos la Figura 19 vemos que un cambio en el valor de $\sigma$ no desplaza la curva, sino que altera su forma, haciéndola más estrecha a medida que disminuye su valor.
 
-```{r figura19, echo=TRUE, fig.width=8, fig.height=4, warning=FALSE}
+```{r figura19, fig.width=8, fig.height=4, warning=FALSE}
 # Figura 19. Poblaciones normales con distintas varianzas (misma media).
 x_vals_var <- seq(-10, 10, length.out = 300)
 
@@ -563,7 +563,7 @@ Contextualizando las variables, sea la variable continua "altura de niños" de u
 
 Visualmente tenemos lo siguiente:
 
-```{r regla_empirica, echo=TRUE, fig.width=9, fig.height=5, warning=FALSE, message=FALSE}
+```{r regla_empirica, fig.width=9, fig.height=5, warning=FALSE, message=FALSE}
 # Parámetros de la distribución
 mu <- 1.30
 sigma <- 0.12
@@ -658,7 +658,7 @@ $$P(Z \le z_0) = F_Z(z_0) = \int_{-\infty}^{z_0} \frac{1}{\sqrt{2\pi}} e^{-\frac
 
 Vemos que nuevamente aparece el símbolo de integral ($\int$), que como ya hemos dicho, sirve para calcular el área bajo la curva hasta un cierto valor $z_0$. La representación gráfica de la función de densidad de probabilidad de una variable normal estandarizada es la siguiente:
 
-```{r figura_normal_estandar, echo=TRUE, fig.width=7, fig.height=4, warning=FALSE}
+```{r figura_normal_estandar, fig.width=7, fig.height=4, warning=FALSE}
 # Representación de la Distribución Normal Estándar Z ~ N(0,1)
 library(ggplot2)
 
@@ -714,7 +714,7 @@ $$P(X > 450) = P(Z > 1)$$
 
 Sabiendo que la distribución es simétrica y el área total es 1, usando las propiedades o una tabla, determinamos que $P(Z > 1) \approx 0.1587$. Es decir, hay un 15.87% de probabilidad de que el estudiante obtenga más de 450 puntos.
 
-```{r ejemplo_wackerly_1, echo=TRUE, fig.width=7, fig.height=4, warning=FALSE}
+```{r ejemplo_wackerly_1, fig.width=7, fig.height=4, warning=FALSE}
 # Gráfica del ejemplo: Área a la derecha de Z = 1
 z_vals <- seq(-4, 4, length.out = 300)
 df_z <- data.frame(
@@ -751,7 +751,7 @@ $$P(-2 < Z < 1) = 0.8413 - 0.0228 = 0.8185$$
 
 El 81.85% de los estudiantes obtendrán puntajes entre 300 y 450.
 
-```{r ejemplo_wackerly_2, echo=TRUE, fig.width=7, fig.height=4, warning=FALSE}
+```{r ejemplo_wackerly_2, fig.width=7, fig.height=4, warning=FALSE}
 # Gráfica del ejemplo: Área entre Z = -2 y Z = 1
 z_vals <- seq(-4, 4, length.out = 300)
 df_z <- data.frame(
@@ -807,7 +807,7 @@ $$P(X < 3.9) = P\left(\frac{X - \mu}{\sigma} \le \frac{3.9 - 3.5}{1}\right) = P(
 En la tabla de la normal estándar, buscamos el valor $0.4$ en la primera columna (enteros y primer decimal) y $.00$ en la primera fila (segundo decimal). En su intersección encontramos la probabilidad:
 $$F(3.9) = P(X \le 3.9) = P(Z \le 0.4) = 0.6554$$
 
-```{r caso1_z04, echo=TRUE, fig.width=6, fig.height=4, warning=FALSE}
+```{r caso1_z04, fig.width=6, fig.height=4, warning=FALSE}
 # Figura 23. Probabilidad de Z acumulada al valor 0.4
 library(ggplot2)
 z_vals <- seq(-4, 4, length.out = 300)
@@ -831,7 +831,7 @@ Esto se traduce en encontrar $P(Z > 0.4)$. La tabla normal acumula desde $-\inft
 
 $$P(Z > 0.40) = 1 - P(Z \le 0.40) = 1 - F(0.40) = 1 - 0.6554 = 0.3446$$
 
-```{r caso2_z04_mayor, echo=TRUE, fig.width=6, fig.height=4, warning=FALSE}
+```{r caso2_z04_mayor, fig.width=6, fig.height=4, warning=FALSE}
 # Figura 24. Probabilidad de Z para valores mayores a 0.40.
 library(ggplot2)
 z_vals <- seq(-4, 4, length.out = 300)
@@ -859,7 +859,7 @@ $$P(Z \le -1.4) = P(Z \ge 1.4) = 1 - P(Z \le 1.4)$$
 Buscamos $1.4$ en la tabla: $P(Z \le 1.4) = 0.9192$.
 $$P(Z \le -1.4) = 1 - 0.9192 = 0.0808$$
 
-```{r caso3_z14_negativo, echo=TRUE, fig.width=6, fig.height=4, warning=FALSE}
+```{r caso3_z14_negativo, fig.width=6, fig.height=4, warning=FALSE}
 # Figura 25. Probabilidad de Z en cola izquierda por simetría.
 library(ggplot2)
 z_vals <- seq(-4, 4, length.out = 300)
@@ -886,7 +886,7 @@ Para encontrar el área de este "corte central", restamos el área acumulada del
 $$P(0.1 \le Z \le 0.5) = F(0.5) - F(0.1)$$
 $$= 0.6915 - 0.5398 = 0.1517$$
 
-```{r caso4_intervalo_pos, echo=TRUE, fig.width=6, fig.height=4, warning=FALSE}
+```{r caso4_intervalo_pos, fig.width=6, fig.height=4, warning=FALSE}
 # Figura 26. Probabilidad de Z dado un intervalo positivo.
 library(ggplot2)
 z_vals <- seq(-4, 4, length.out = 300)
@@ -911,7 +911,7 @@ Por la propiedad de simetría respecto de $\mu = 0$, este intervalo a la izquier
 $$P(-1.5 \le Z \le -1) = P(1 \le Z \le 1.5) = F(1.5) - F(1)$$
 $$= 0.9332 - 0.8413 = 0.0919$$
 
-```{r caso5_intervalo_neg, echo=TRUE, fig.width=6, fig.height=4, warning=FALSE}
+```{r caso5_intervalo_neg, fig.width=6, fig.height=4, warning=FALSE}
 # Figura 27a. Probabilidad para Z1 y Z2 < 0.
 library(ggplot2)
 z_vals <- seq(-4, 4, length.out = 300)
@@ -940,7 +940,7 @@ $$= F(0.5) - [1 - F(0.5)]$$
 $$= 2F(0.5) - 1$$
 $$= 2(0.6915) - 1 = 1.3830 - 1 = 0.3830$$
 
-```{r caso6_intervalo_cero, echo=TRUE, fig.width=6, fig.height=4, warning=FALSE}
+```{r caso6_intervalo_cero, fig.width=6, fig.height=4, warning=FALSE}
 # Figura 27b. Probabilidad que cruza el cero.
 library(ggplot2)
 z_vals <- seq(-4, 4, length.out = 300)
@@ -1065,7 +1065,7 @@ $$f(x) = \begin{cases} \lambda e^{-\lambda x} & \text{para } x \ge 0, \quad \lam
 
 La forma de la distribución cambia de acuerdo con el valor de $\lambda$. En la figura 28 se presenta la función de densidad de probabilidad de la variable aleatoria exponencial para tres valores distintos de $\lambda$.
 
-```{r figura28_exponencial, echo=TRUE, fig.width=7, fig.height=4, warning=FALSE}
+```{r figura28_exponencial, fig.width=7, fig.height=4, warning=FALSE}
 # Figura 28. Distribución exponencial para tres valores de lambda
 library(ggplot2)
 
@@ -1121,7 +1121,7 @@ $$P(X \le 0.25) = F(0.25) = 1 - e^{-3(0.25)} = 1 - e^{-0.75} \approx 0.5276$$
 
 Existe aproximadamente un 52.8% de probabilidad de recibir la primera llamada en los primeros 15 minutos de la jornada.
 
-```{r ejemplo1_asistencia, echo=TRUE, fig.width=6, fig.height=4, warning=FALSE}
+```{r ejemplo1_asistencia, fig.width=6, fig.height=4, warning=FALSE}
 # Gráfica del Ejemplo 1: P(X <= 0.25) con lambda = 3
 x_val_asist <- seq(0, 2, length.out = 300)
 df_asist <- data.frame(x = x_val_asist, fx = dexp(x_val_asist, rate = 3))

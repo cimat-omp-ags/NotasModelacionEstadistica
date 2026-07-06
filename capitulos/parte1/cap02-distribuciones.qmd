@@ -86,7 +86,7 @@ Gráficamente podemos hacer lo siguiente:
 
 Para representar gráficamente una variable aleatoria discreta (como el número de águilas obtenidas al lanzar 3 monedas), lo más adecuado es utilizar un diagrama de barras o un gráfico de bastones (lollipop chart) que muestre la función de masa de probabilidad $P(X=x)$.
 
-```{r grafica_monedas, echo=TRUE, fig.align='center', fig.width=6, fig.height=4, warning=FALSE, message=FALSE}
+```{r grafica_monedas, fig.align='center', fig.width=6, fig.height=4, warning=FALSE, message=FALSE}
 # Cargar la librería ggplot2
 library(ggplot2)
 
@@ -133,7 +133,7 @@ __Tabla 2:__
 | 2 | P(X=2)=3/8=0.375 |  0.875   |
 | 3 | P(X=3)=1/8=0.125 |  1.00   |
 
-```{r grafica_acumulada_monedas, echo=TRUE, fig.align='center', fig.width=7, fig.height=4, warning=FALSE, message=FALSE}
+```{r grafica_acumulada_monedas, fig.align='center', fig.width=7, fig.height=4, warning=FALSE, message=FALSE}
 # Crear el Data Frame con los segmentos de la función escalonada
 df_acumulada <- data.frame(
   x_inicio = c(-1, 0, 1, 2, 3),
@@ -337,7 +337,7 @@ Como se ha estado trabajando en los ejemplos anteriores. Usando el ejemplo de lo
 | 5 | 1/6    |    5/6    |
 | 6 | 1/6    |    6/6    |
 
-```{r grafica_pmf_dado, echo=TRUE, fig.align='center', fig.width=6, fig.height=4, warning=FALSE, message=FALSE}
+```{r grafica_pmf_dado, fig.align='center', fig.width=6, fig.height=4, warning=FALSE, message=FALSE}
 # Cargar librería
 library(ggplot2)
 
@@ -366,7 +366,7 @@ ggplot(df_dado, aes(x = factor(x), y = probabilidad)) +
     axis.text.x = element_text(size = 12, face = "bold")
   )
 ```
-```{r grafica_cdf_dado, echo=TRUE, fig.align='center', fig.width=7, fig.height=5, warning=FALSE, message=FALSE}
+```{r grafica_cdf_dado, fig.align='center', fig.width=7, fig.height=5, warning=FALSE, message=FALSE}
 # Crear el Data Frame con los segmentos de la función escalonada
 df_acumulada_dado <- data.frame(
   x_inicio = c(0, 1, 2, 3, 4, 5, 6),
@@ -506,7 +506,7 @@ Consideremos ahora el caso en que se extraen unidades experimentales de un conju
 
 La probabilidad de extraer una bola negra en la primera extracción seguirá siendo $p = \dfrac{1}{3}$, pero si la bola no se vuelve a integrar al conjunto original la probabilidad de extraer otra bola negra en la segunda extracción se habrá modificado, y será ahora de $\dfrac{9}{29}$ ya que en la bolsa quedan solo 9 bolas negras y 29 bolas en total. En este caso se dice que el muestreo se realiza sin reemplazo.
 
-```{r grafica_muestreo, echo=TRUE, fig.align='center', fig.width=8, fig.height=5, warning=FALSE, message=FALSE}
+```{r grafica_muestreo, fig.align='center', fig.width=8, fig.height=5, warning=FALSE, message=FALSE}
 # Cargar librería
 library(ggplot2)
 
