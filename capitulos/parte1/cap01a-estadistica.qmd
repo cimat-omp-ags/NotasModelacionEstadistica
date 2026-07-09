@@ -328,38 +328,187 @@ gridExtra::grid.arrange(p_asim, p_kurt, ncol = 2)
 
 ### Representaciones gráficas
 
-Las gráficas permiten detectar patrones, valores atípicos y la forma de
-la distribución de manera inmediata.
+Las gráficas permiten ver de un vistazo todo lo estudiado en estadística
+descriptiva: dónde se concentran los datos (tendencia central), cuánto
+varían (dispersión) y qué forma tiene su distribución (asimetría y
+curtosis).
 
-```{r est-desc-graficas, fig.align='center', fig.width=9, fig.height=4, message=FALSE, warning=FALSE}
+#### Panel integrado de estadística descriptiva
+
+El siguiente panel reúne en cuatro gráficas todas las medidas estudiadas,
+aplicadas al conjunto de datos de precios de casas.
+
+```{r est-desc-graficas, fig.align='center', fig.width=11, fig.height=9, message=FALSE, warning=FALSE}
 library(ggplot2)
 library(gridExtra)
+library(grid)
 
-df <- data.frame(precio = x)
+# ── Estadísticos ────────────────────────────────────────────────────
+mu   <- mean(x);    med  <- median(x)
+sg   <- sd(x);      vr   <- var(x)
+Q1   <- quantile(x, 0.25); Q3 <- quantile(x, 0.75)
+IQR_v <- IQR(x)
+g1   <- mean((x - mu)^3) / sg^3          # asimetría
+g2   <- mean((x - mu)^4) / sg^4 - 3      # curtosis exceso
+moda_aprox <- as.numeric(names(which.max(table(round(x, -2)))))
+df   <- data.frame(precio = x)
 
+# ── P1: Histograma con tendencia central y bandas de dispersión ─────
 p1 <- ggplot(df, aes(x = precio)) +
-  geom_histogram(bins = 8, fill = "#006341", color = "white", alpha = 0.8) +
-  geom_vline(xintercept = mean(x), color = "#C8962E",
-             linewidth = 1.2, linetype = "dashed") +
-  theme_minimal() +
-  labs(title = "Histograma — Precio de casas",
-       x = "Precio (miles de pesos)", y = "Frecuencia")
+  geom_histogram(aes(y = after_stat(density)), bins = 12,
+                 fill = "#006341", color = "white", alpha = 0.7) +
+  geom_density(color = "#004D31", linewidth = 0.8, linetype = "solid") +
+  # Bandas ±1s y ±2s
+  annotate("rect", xmin = mu - sg,  xmax = mu + sg,
+           ymin = -Inf, ymax = Inf, fill = "#C8962E", alpha = 0.08) +
+  annotate("rect", xmin = mu - 2*sg, xmax = mu + 2*sg,
+           ymin = -Inf, ymax = Inf, fill = "#C8962E", alpha = 0.05) +
+  # Líneas de medidas centrales
+  geom_vline(xintercept = mu,         color = "#C8962E", linewidth = 1.3) +
+  geom_vline(xintercept = med,        color = "#1F618D", linewidth = 1.3,
+             linetype = "dashed") +
+  geom_vline(xintercept = moda_aprox, color = "#922B21", linewidth = 1.0,
+             linetype = "dotted") +
+  # Etiquetas
+  annotate("text", x = mu + 15, y = Inf, vjust = 1.8,
+           label = sprintf("Media\n%.0f", mu),
+           color = "#C8962E", fontface = "bold", size = 3) +
+  annotate("text", x = med - 15, y = Inf, vjust = 3.5,
+           label = sprintf("Mediana\n%.0f", med),
+           color = "#1F618D", fontface = "bold", size = 3, hjust = 1) +
+  annotate("text", x = moda_aprox + 15, y = Inf, vjust = 5.5,
+           label = sprintf("Moda\n%.0f", moda_aprox),
+           color = "#922B21", fontface = "bold", size = 3) +
+  theme_minimal(base_size = 10) +
+  labs(title = "① Histograma + tendencia central",
+       subtitle = sprintf("Bandas naranjas: ±1s = [%.0f, %.0f]  y  ±2s", mu-sg, mu+sg),
+       x = "Precio (miles de pesos)", y = "Densidad")
 
-p2 <- ggplot(df, aes(y = precio)) +
-  geom_boxplot(fill = "#006341", alpha = 0.7, outlier.color = "red") +
-  theme_minimal() +
-  labs(title = "Diagrama de caja", y = "Precio (miles de pesos)")
+# ── P2: Box plot anotado con todas las medidas de dispersión ────────
+atip_lim_inf <- Q1 - 1.5 * IQR_v
+atip_lim_sup <- Q3 + 1.5 * IQR_v
 
-gridExtra::grid.arrange(p1, p2, ncol = 2)
+p2 <- ggplot(df, aes(y = precio, x = "")) +
+  # Bigotes y caja
+  geom_boxplot(fill = "#006341", alpha = 0.6,
+               outlier.color = "#C8962E", outlier.size = 2.5,
+               width = 0.4) +
+  # Flecha IQR
+  annotate("segment", x = 1.32, xend = 1.32, y = Q1, yend = Q3,
+           color = "#1F618D", linewidth = 1.5,
+           arrow = arrow(ends = "both", length = unit(0.1, "cm"))) +
+  annotate("text", x = 1.42, y = (Q1+Q3)/2,
+           label = sprintf("IQR\n= %.0f", IQR_v),
+           color = "#1F618D", fontface = "bold", size = 3) +
+  # Etiquetas cuartiles
+  annotate("text", x = 0.58, y = Q1,  label = sprintf("Q1 = %.0f", Q1),
+           color = "#333", size = 2.8, hjust = 1) +
+  annotate("text", x = 0.58, y = med, label = sprintf("Me = %.0f", med),
+           color = "#1F618D", size = 2.8, hjust = 1, fontface = "bold") +
+  annotate("text", x = 0.58, y = Q3,  label = sprintf("Q3 = %.0f", Q3),
+           color = "#333", size = 2.8, hjust = 1) +
+  # Límites de atípicos
+  geom_hline(yintercept = atip_lim_sup, color = "#C8962E",
+             linetype = "dotted", linewidth = 0.8) +
+  annotate("text", x = 1.28, y = atip_lim_sup + 20,
+           label = sprintf("Límite\natípicos\n%.0f", atip_lim_sup),
+           color = "#C8962E", size = 2.5, hjust = 0) +
+  theme_minimal(base_size = 10) +
+  theme(axis.title.x = element_blank(), axis.text.x = element_blank()) +
+  labs(title = "② Diagrama de caja (dispersión)",
+       subtitle = sprintf("Rango: [%.0f, %.0f]  |  DE = %.0f  |  CV = %.1f%%",
+                          min(x), max(x), sg, sg/mu*100),
+       y = "Precio (miles de pesos)")
+
+# ── P3: Densidad con regla empírica ─────────────────────────────────
+p3 <- ggplot(df, aes(x = precio)) +
+  geom_density(fill = "#006341", alpha = 0.3, color = "#004D31", linewidth = 1) +
+  # Regla empírica: 68-95-99.7
+  stat_function(fun = dnorm, args = list(mean = mu, sd = sg),
+                color = "#C8962E", linewidth = 1, linetype = "dashed") +
+  geom_vline(xintercept = c(mu - sg, mu + sg),
+             color = "#C8962E", linetype = "dashed", linewidth = 0.6) +
+  geom_vline(xintercept = c(mu - 2*sg, mu + 2*sg),
+             color = "#922B21", linetype = "dotted", linewidth = 0.6) +
+  annotate("text", x = mu, y = Inf, vjust = 1.5,
+           label = sprintf("g1 = %.2f  (asimetría +)
+g2 = %.2f  (leptocúrtica)",
+                           g1, g2),
+           size = 3, color = "#333", fontface = "italic") +
+  theme_minimal(base_size = 10) +
+  labs(title = "③ Densidad + forma de la distribución",
+       subtitle = "Curva naranja = normal teórica  |  líneas = ±1s y ±2s",
+       x = "Precio (miles de pesos)", y = "Densidad")
+
+# ── P4: Tabla resumen de todos los estadísticos ─────────────────────
+resumen <- data.frame(
+  Medida    = c("Media (x̄)", "Mediana", "Moda (aprox.)",
+                "Desv. estándar (s)", "Varianza (s²)",
+                "Rango", "IQR", "CV",
+                "Q1 / Q3",
+                "Asimetría (g1)", "Curtosis (g2)"),
+  Valor     = c(sprintf("%.2f", mu),
+                sprintf("%.2f", med),
+                sprintf("%.0f", moda_aprox),
+                sprintf("%.2f", sg),
+                sprintf("%.2f", vr),
+                sprintf("%.0f", diff(range(x))),
+                sprintf("%.2f", IQR_v),
+                sprintf("%.1f%%", sg/mu*100),
+                sprintf("%.0f / %.0f", Q1, Q3),
+                sprintf("%.3f", g1),
+                sprintf("%.3f", g2)),
+  Categoría = c("Localización","Localización","Localización",
+                "Dispersión","Dispersión","Dispersión","Dispersión","Dispersión",
+                "Posición",
+                "Forma","Forma")
+)
+
+colores_cat <- c("Localización" = "#1F618D",
+                 "Dispersión"   = "#006341",
+                 "Posición"     = "#7D3C98",
+                 "Forma"        = "#C8962E")
+
+p4 <- ggplot(resumen, aes(x = 1, y = rev(seq_along(Medida)))) +
+  geom_tile(aes(fill = Categoría), width = 2.8, height = 0.85, alpha = 0.15) +
+  geom_text(aes(x = 0.22, label = Medida, color = Categoría),
+            fontface = "bold", size = 3.1, hjust = 0) +
+  geom_text(aes(x = 1.72, label = Valor),
+            size = 3.1, hjust = 1, color = "#1A1A1A", fontface = "plain") +
+  scale_fill_manual(values  = colores_cat) +
+  scale_color_manual(values = colores_cat) +
+  scale_x_continuous(limits = c(0.1, 1.8)) +
+  scale_y_continuous(limits = c(0.3, length(resumen$Medida) + 0.5)) +
+  theme_void(base_size = 10) +
+  theme(legend.position = "right",
+        legend.title     = element_text(size = 8, face = "bold"),
+        legend.text      = element_text(size = 7),
+        plot.title       = element_text(size = 11, face = "bold", hjust = 0.5),
+        plot.subtitle    = element_text(size = 8, hjust = 0.5, color = "#555")) +
+  labs(title = "④ Resumen estadístico completo",
+       subtitle = "Precio de casas (miles de pesos)",
+       fill = "Categoría", color = "Categoría")
+
+# ── Ensamble final ───────────────────────────────────────────────────
+gridExtra::grid.arrange(p1, p2, p3, p4,
+                        ncol = 2, nrow = 2,
+                        top = textGrob("Panel de estadística descriptiva — Precio de casas",
+                                       gp = gpar(fontsize = 13, fontface = "bold")))
 ```
 
 ::: {.callout-note icon=false}
-## Cuartiles y diagrama de caja
+## Lectura del panel
 
-El diagrama de caja (box plot) resume cinco estadísticos:
-mínimo, $Q_1$ (percentil 25), mediana ($Q_2$), $Q_3$ (percentil 75) y
-máximo. Los puntos fuera de los "bigotes" ($\pm 1.5 \times IQR$)
-se consideran valores atípicos candidatos.
+- **① Histograma**: muestra media (naranja), mediana (azul) y moda (rojo).
+  Las bandas naranjas corresponden a $ar{x} \pm s$ y $ar{x} \pm 2s$.
+  Como media > mediana, la distribución tiene asimetría positiva.
+- **② Diagrama de caja**: los bigotes llegan hasta $Q_1 - 1.5\,IQR$ y
+  $Q_3 + 1.5\,IQR$; los puntos fuera son **valores atípicos**.
+- **③ Densidad**: la curva naranja punteada es la normal teórica.
+  La diferencia entre ambas curvas refleja la asimetría ($g_1$) y la
+  curtosis ($g_2$) de los datos reales.
+- **④ Resumen**: concentra todos los estadísticos descriptivos en una
+  tabla codificada por categoría.
 :::
 
 
