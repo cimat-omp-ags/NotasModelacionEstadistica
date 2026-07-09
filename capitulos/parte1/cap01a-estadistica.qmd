@@ -34,44 +34,204 @@ utilizadas como referencia.
 Las medidas de tendencia central describen el valor "típico" o
 representativo de un conjunto de observaciones $x_1, x_2, \ldots, x_n$.
 
-**Media aritmética:** el promedio de los datos,
-$$\bar{x} = \frac{1}{n}\sum_{i=1}^n x_i.$$
+#### Media aritmética
 
-**Mediana:** el valor que divide a los datos ordenados en dos mitades
-iguales. Es robusta frente a valores atípicos.
+El promedio aritmético pondera igual cada observación:
 
-**Moda:** el valor (o valores) que aparecen con mayor frecuencia en el
-conjunto de datos.
+$$\bar{x} = \frac{1}{n}\sum_{i=1}^n x_i$$
 
-```{r est-desc-central, message=FALSE, warning=FALSE}
+Es la medida más usada, pero **sensible a valores atípicos**: un dato
+extremo puede desplazarla considerablemente.
+
+#### Mediana
+
+Ordenados los datos de menor a mayor, la mediana $Me$ es el valor central:
+
+$$Me = \begin{cases} x_{(m+1)} & \text{si } n = 2m+1 \text{ (impar)} \\ \dfrac{x_{(m)} + x_{(m+1)}}{2} & \text{si } n = 2m \text{ (par)} \end{cases}$$
+
+Es **robusta frente a valores atípicos**: los datos extremos no la afectan.
+
+#### Moda
+
+El valor (o valores) que aparecen con mayor frecuencia. Una distribución
+puede ser **unimodal**, **bimodal** o **multimodal**.
+
+#### ¿Cuándo usar cada una?
+
+| Medida | Úsala cuando… | Evítala si… |
+|:---|:---|:---|
+| **Media** | Los datos son simétricos, sin atípicos | Hay valores extremos o datos asimétricos |
+| **Mediana** | Hay atípicos o distribución asimétrica | Necesitas propiedades algebraicas |
+| **Moda** | Datos categóricos o distribuciones multimodales | La distribución es continua y uniforme |
+
+::: {.callout-note icon=false}
+## Relación entre media, mediana y asimetría
+
+- Distribución **simétrica**: $\bar{x} \approx Me$
+- Asimetría **positiva** (cola derecha): $\bar{x} > Me$
+- Asimetría **negativa** (cola izquierda): $\bar{x} < Me$
+:::
+
+```{r est-desc-central, message=FALSE, warning=FALSE, fig.align='center', fig.width=9, fig.height=4}
 library(modelEstCIMAT)
-x <- casas_desc <- readRDS(system.file("data", "casas.rds",
-                                       package = "modelEstCIMAT"))$PRECIO
-cat("Media   :", round(mean(x), 2), "\n")
-cat("Mediana :", median(x), "\n")
-cat("Moda    : aprox.", which.max(table(round(x,-2))), "(redond. a 100)\n")
+library(ggplot2)
+library(gridExtra)
+
+x <- readRDS(system.file("data", "casas.rds",
+                         package = "modelEstCIMAT"))$PRECIO
+
+# Moda aproximada (bin de 100 más frecuente)
+moda_aprox <- as.numeric(names(which.max(table(round(x, -2)))))
+
+cat("=== Medidas de tendencia central: Precio de casas ===\n")
+cat(sprintf("Media   : %8.2f  miles de pesos\n", mean(x)))
+cat(sprintf("Mediana : %8.2f  miles de pesos\n", median(x)))
+cat(sprintf("Moda    : %8.2f  miles de pesos (aprox.)\n", moda_aprox))
+cat(sprintf("\nMedia > Mediana → asimetría positiva (cola a la derecha)\n"))
+
+# Visualización comparativa
+df <- data.frame(precio = x)
+p1 <- ggplot(df, aes(x = precio)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 12,
+                 fill = "#006341", color = "white", alpha = 0.75) +
+  geom_vline(xintercept = mean(x),   color = "#C8962E", linewidth = 1.2,
+             linetype = "solid")   +
+  geom_vline(xintercept = median(x), color = "#1F618D", linewidth = 1.2,
+             linetype = "dashed")  +
+  geom_vline(xintercept = moda_aprox, color = "#922B21", linewidth = 1.2,
+             linetype = "dotted")  +
+  annotate("text", x = mean(x)    + 40, y = Inf, vjust = 2,
+           label = "Media",   color = "#C8962E", fontface = "bold", size = 3.2) +
+  annotate("text", x = median(x)  - 40, y = Inf, vjust = 3.5,
+           label = "Mediana", color = "#1F618D", fontface = "bold", size = 3.2) +
+  annotate("text", x = moda_aprox - 40, y = Inf, vjust = 5,
+           label = "Moda",    color = "#922B21", fontface = "bold", size = 3.2) +
+  theme_minimal() +
+  labs(title = "Medidas de tendencia central",
+       x = "Precio (miles de pesos)", y = "Densidad")
+
+# Comparar comportamiento ante atípicos
+set.seed(7)
+sin_atip <- c(rnorm(50, 500, 80))
+con_atip <- c(sin_atip, 2000, 2200, 2500)   # 3 valores extremos
+
+df2 <- data.frame(
+  medida = rep(c("Media", "Mediana"), 2),
+  valor  = c(mean(sin_atip), median(sin_atip),
+             mean(con_atip), median(con_atip)),
+  grupo  = rep(c("Sin atípicos", "Con atípicos"), each = 2)
+)
+p2 <- ggplot(df2, aes(x = grupo, y = valor, fill = medida)) +
+  geom_bar(stat = "identity", position = "dodge", alpha = 0.85, width = 0.6) +
+  scale_fill_manual(values = c("Media" = "#C8962E", "Mediana" = "#1F618D")) +
+  theme_minimal() +
+  theme(legend.position = "bottom") +
+  labs(title = "Efecto de valores atípicos",
+       x = NULL, y = "Valor estimado", fill = NULL)
+
+gridExtra::grid.arrange(p1, p2, ncol = 2)
 ```
 
 ### Medidas de dispersión
 
 Las medidas de dispersión cuantifican cuánto se alejan los datos del
-centro.
+centro. Dos conjuntos con la misma media pueden tener comportamientos
+muy distintos si su dispersión difiere.
 
-**Rango:** $R = x_{(n)} - x_{(1)}$, diferencia entre el máximo y el mínimo.
+#### Rango
 
-**Varianza muestral:**
-$$s^2 = \frac{1}{n-1}\sum_{i=1}^n (x_i - \bar{x})^2.$$
+$$R = x_{(n)} - x_{(1)}$$
 
-**Desviación estándar:** $s = \sqrt{s^2}$, en las mismas unidades que los datos.
+La diferencia entre el valor máximo y el mínimo. Fácil de calcular pero
+muy sensible a valores extremos.
 
-**Coeficiente de variación:** $CV = s/\bar{x} \times 100\%$, permite comparar
-dispersiones de variables con diferentes unidades.
+#### Varianza muestral
 
-```{r est-desc-dispersion}
-cat("Rango   :", diff(range(x)), "\n")
-cat("Varianza:", round(var(x), 2), "\n")
-cat("DE      :", round(sd(x), 2), "\n")
-cat("CV      :", round(sd(x)/mean(x)*100, 1), "%\n")
+$$s^2 = \frac{1}{n-1}\sum_{i=1}^n (x_i - \bar{x})^2$$
+
+El divisor $n-1$ (en lugar de $n$) produce un estimador **insesgado** de
+la varianza poblacional $\sigma^2$. Las unidades son el cuadrado de las
+unidades originales.
+
+#### Desviación estándar
+
+$$s = \sqrt{s^2}$$
+
+Está en las mismas unidades que los datos, lo que facilita su
+interpretación directa.
+
+#### Rango intercuartílico (IQR)
+
+$$IQR = Q_3 - Q_1$$
+
+Mide la dispersión del 50% central de los datos. Es **robusto frente a
+atípicos** (no depende de los valores extremos).
+
+#### Coeficiente de variación
+
+$$CV = \frac{s}{\bar{x}} \times 100\%$$
+
+Expresa la dispersión como porcentaje de la media. Permite **comparar
+variabilidad entre variables con distintas unidades o magnitudes**.
+
+| Medida | Fórmula | Robustez | Uso principal |
+|:---|:---:|:---:|:---|
+| Rango | $x_{(n)}-x_{(1)}$ | Baja | Vista rápida del recorrido |
+| Varianza | $s^2$ | Media | Base de otros estadísticos |
+| Desv. estándar | $s$ | Media | Interpretación directa |
+| IQR | $Q_3-Q_1$ | **Alta** | Datos con atípicos |
+| CV | $s/\bar{x}$ | Media | Comparar variables distintas |
+
+```{r est-desc-dispersion, fig.align='center', fig.width=9, fig.height=4, message=FALSE, warning=FALSE}
+library(ggplot2)
+library(gridExtra)
+
+Q1  <- quantile(x, 0.25)
+Q3  <- quantile(x, 0.75)
+IQR_val <- IQR(x)
+
+cat("=== Medidas de dispersión: Precio de casas ===\n")
+cat(sprintf("Rango   : %8.2f  miles de pesos\n", diff(range(x))))
+cat(sprintf("Varianza: %8.2f  (miles)²\n",        var(x)))
+cat(sprintf("DE      : %8.2f  miles de pesos\n",  sd(x)))
+cat(sprintf("IQR     : %8.2f  miles de pesos  [Q1=%.1f, Q3=%.1f]\n",
+            IQR_val, Q1, Q3))
+cat(sprintf("CV      : %8.1f%%\n", sd(x)/mean(x)*100))
+
+# Gráfica 1: dispersión comparada con y sin atípicos
+set.seed(42)
+baja <- rnorm(80, mean(x), sd(x)*0.4)
+alta <- rnorm(80, mean(x), sd(x)*1.6)
+df_comp <- data.frame(
+  valor = c(baja, alta),
+  grupo = rep(c(sprintf("Baja dispersión\nDE=%.0f", sd(baja)),
+                sprintf("Alta dispersión\nDE=%.0f", sd(alta))), each = 80)
+)
+p1 <- ggplot(df_comp, aes(x = valor, fill = grupo)) +
+  geom_density(alpha = 0.55, color = NA) +
+  geom_vline(xintercept = mean(x), color = "#333", linetype = "dashed") +
+  scale_fill_manual(values = c("#006341", "#C8962E")) +
+  theme_minimal() +
+  theme(legend.position = "bottom", legend.title = element_blank()) +
+  labs(title = "Misma media, distinta dispersión",
+       x = "Valor", y = "Densidad")
+
+# Gráfica 2: box plot anotado con IQR
+df2 <- data.frame(precio = x)
+p2 <- ggplot(df2, aes(y = precio)) +
+  geom_boxplot(fill = "#006341", alpha = 0.7,
+               outlier.color = "#C8962E", outlier.size = 2) +
+  annotate("segment", x = 0.35, xend = 0.35,
+           y = Q1, yend = Q3, color = "#1F618D", linewidth = 1.2,
+           arrow = arrow(ends = "both", length = unit(0.12, "cm"))) +
+  annotate("text", x = 0.5, y = (Q1+Q3)/2,
+           label = sprintf("IQR\n= %.0f", IQR_val),
+           color = "#1F618D", size = 3, fontface = "bold") +
+  theme_minimal() +
+  labs(title = "Diagrama de caja con IQR",
+       y = "Precio (miles de pesos)", x = NULL)
+
+gridExtra::grid.arrange(p1, p2, ncol = 2)
 ```
 
 ### Medidas de forma
