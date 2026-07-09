@@ -1829,6 +1829,10 @@ cat("Probabilidad Total de Positivo P(B):", (0.96 * 0.001) + (0.05 * 0.999))
 
 ## Material complementario: métodos y aplicaciones
 
+:::: {.content-visible when-format="html"}
+[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
+::::
+
 Esta sección complementa la teoría anterior con material adicional tomado de las
 diapositivas del curso: las leyes que rigen las operaciones de conjuntos, los
 métodos clásicos para asignar probabilidades y dos aplicaciones célebres del
@@ -2163,6 +2167,4 @@ condicionar en el evento "es fumador".
 - **Probabilidad total:** si $A_1, \dots, A_k$ particionan $S$, entonces
   $P(B) = \sum_{i=1}^{k} P(B \mid A_i)P(A_i)$.
 - **Teorema de Bayes:** permite "invertir" probabilidades condicionales,
-  $P(A_j \mid B) = \dfrac{P(B \mid A_j)P(A_j)}{\sum_i P(B \mid A_i)P(A_i)}$,
-  y es la base de la interpretación de pruebas diagnósticas.
-
+  $P(A_j \mid B) = \dfrac{P(B \m
