@@ -76,19 +76,94 @@ cat("CV      :", round(sd(x)/mean(x)*100, 1), "%\n")
 
 ### Medidas de forma
 
-**Asimetría (sesgo):** mide si la distribución es simétrica o si tiene
-una cola más larga que la otra. Un sesgo positivo indica cola hacia la
-derecha; negativo, hacia la izquierda.
+Las medidas de forma describen cómo se distribuyen los datos alrededor
+del centro, más allá de su promedio y dispersión.
 
-**Curtosis:** describe el "peso" de las colas respecto a la distribución
-normal. Una curtosis alta indica colas pesadas (leptocúrtica).
+#### Asimetría (sesgo)
 
-```{r est-desc-forma, message=FALSE}
-# install.packages("e1071")  # solo si no está instalado
+La asimetría mide si la distribución es simétrica o si tiene una cola
+más pronunciada hacia alguno de los lados.
+
+$$g_1 = \frac{1}{n}\sum_{i=1}^n \left(\frac{x_i - \bar{x}}{s}\right)^3$$
+
+| Valor de $g_1$ | Interpretación |
+|:---:|:---|
+| $g_1 \approx 0$ | Distribución simétrica |
+| $g_1 > 0$ | Asimetría positiva: cola larga hacia la **derecha** (datos concentrados a la izquierda, pocos valores muy altos) |
+| $g_1 < 0$ | Asimetría negativa: cola larga hacia la **izquierda** (datos concentrados a la derecha, pocos valores muy bajos) |
+
+En distribuciones con sesgo positivo la media suele ser mayor que la mediana; en sesgo negativo, menor.
+
+#### Curtosis (exceso)
+
+La curtosis mide el "peso" de las colas y la altura del pico central
+en comparación con la distribución normal.
+
+$$g_2 = \frac{1}{n}\sum_{i=1}^n \left(\frac{x_i - \bar{x}}{s}\right)^4 - 3$$
+
+El valor $-3$ centra la escala en la distribución normal (curtosis de exceso = 0).
+
+| Valor de $g_2$ | Tipo | Interpretación |
+|:---:|:---:|:---|
+| $g_2 = 0$ | **Mesocúrtica** | Igual que la normal (distribución normal) |
+| $g_2 > 0$ | **Leptocúrtica** | Pico más alto y colas más pesadas: mayor probabilidad de valores extremos |
+| $g_2 < 0$ | **Platocúrtica** | Pico más bajo y colas más ligeras: valores más uniformemente distribuidos |
+
+```{r est-desc-forma, message=FALSE, warning=FALSE, fig.align='center', fig.width=10, fig.height=4}
+library(ggplot2)
+library(gridExtra)
+
+# Calcular estadísticos de forma sobre datos reales
 skewness_val <- mean((x - mean(x))^3) / sd(x)^3
 kurtosis_val <- mean((x - mean(x))^4) / sd(x)^4 - 3
-cat("Sesgo   :", round(skewness_val, 3), "\n")
-cat("Curtosis:", round(kurtosis_val, 3), "(exceso respecto a normal)\n")
+
+cat("=== Medidas de forma: Precio de casas ===\n")
+cat(sprintf("Sesgo (g1)    : %+.3f  → %s\n",
+    skewness_val,
+    ifelse(abs(skewness_val) < 0.5, "aproximadamente simétrica",
+    ifelse(skewness_val > 0, "asimetría positiva (cola derecha)", "asimetría negativa (cola izquierda)"))))
+cat(sprintf("Curtosis (g2) : %+.3f  → %s\n",
+    kurtosis_val,
+    ifelse(abs(kurtosis_val) < 0.5, "mesocúrtica (similar a normal)",
+    ifelse(kurtosis_val > 0, "leptocúrtica (colas pesadas)", "platocúrtica (colas ligeras)"))))
+
+# Gráfica: histograma con curva normal superpuesta para visualizar asimetría
+df_f <- data.frame(precio = x)
+mu <- mean(x); sg <- sd(x)
+
+p_asim <- ggplot(df_f, aes(x = precio)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 10,
+                 fill = "#006341", color = "white", alpha = 0.75) +
+  stat_function(fun = dnorm, args = list(mean = mu, sd = sg),
+                color = "#C8962E", linewidth = 1.2, linetype = "dashed") +
+  geom_vline(xintercept = mu, color = "#C8962E", linewidth = 0.8) +
+  geom_vline(xintercept = median(x), color = "#1F618D", linewidth = 0.8) +
+  annotate("text", x = mu + sg*0.3, y = Inf, vjust = 1.5,
+           label = "media", color = "#C8962E", size = 3) +
+  annotate("text", x = median(x) - sg*0.3, y = Inf, vjust = 1.5,
+           label = "mediana", color = "#1F618D", size = 3) +
+  theme_minimal() +
+  labs(title = sprintf("Asimetría g₁ = %.3f", skewness_val),
+       subtitle = "Curva normal teórica superpuesta (línea naranja)",
+       x = "Precio (miles de pesos)", y = "Densidad")
+
+# Gráfica: comparación de distribuciones con distinta curtosis
+set.seed(42)
+df_kurt <- data.frame(
+  valor = c(rnorm(500), rt(500, df=3), runif(500, -3, 3)),
+  tipo  = rep(c("Normal (g₂=0)", "t(3) leptocúrtica (g₂>0)",
+                 "Uniforme platocúrtica (g₂<0)"), each = 500)
+)
+p_kurt <- ggplot(df_kurt, aes(x = valor, color = tipo, fill = tipo)) +
+  geom_density(alpha = 0.15, linewidth = 1) +
+  scale_color_manual(values = c("#006341", "#C8962E", "#1F618D")) +
+  scale_fill_manual(values  = c("#006341", "#C8962E", "#1F618D")) +
+  theme_minimal() +
+  theme(legend.position = "bottom", legend.title = element_blank(),
+        legend.text = element_text(size = 8)) +
+  labs(title = "Tipos de curtosis", x = "Valor estandarizado", y = "Densidad")
+
+gridExtra::grid.arrange(p_asim, p_kurt, ncol = 2)
 ```
 
 ### Representaciones gráficas
