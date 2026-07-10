@@ -16,14 +16,14 @@ book:
     search: true
     style: "docked"
 
-  repo-url: https://github.com/mop-cimat-ags/NotasModelacionEstadistica
+  repo-url: https://github.com/cimat-omp-ags/NotasModelacionEstadistica
   repo-actions: [edit, issue]
 
   navbar:
     logo: imagenes/logo-cimat.png
     right:
       - icon: github
-        href: https://github.com/mop-cimat-ags/NotasModelacionEstadistica
+        href: https://github.com/cimat-omp-ags/NotasModelacionEstadistica
         aria-label: GitHub
 
   favicon: imagenes/logo-cimat.png
