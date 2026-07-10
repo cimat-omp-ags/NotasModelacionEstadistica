@@ -797,6 +797,24 @@ Obsérvese que, al no haber reemplazo, la probabilidad de éxito **disminuye en 
 
 ## Distribución Binomial
 
+:::: {.content-visible when-format="html"}
+[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
+::::
+
+::: {.callout-tip icon=false}
+## Definición formal: distribución Binomial
+
+Suponga $n$ ensayos Bernoulli independientes, cada uno con probabilidad de éxito $p$. La variable aleatoria $X$ = número de éxitos tiene distribución **binomial** con parámetros $(n, p)$, denotada $X \sim \text{Bin}(n, p)$. Su función masa de probabilidad es:
+
+$$P(X = k) = \binom{n}{k} p^{k}(1-p)^{n-k}, \quad k = 0, 1, 2, \ldots, n$$
+
+| $k$ | $0$ | $1$ | $2$ | $\cdots$ | $n-1$ | $n$ |
+|-----|-----|-----|-----|-----------|--------|-----|
+| $p(k)$ | $(1-p)^n$ | $\binom{n}{1}p(1-p)^{n-1}$ | $\binom{n}{2}p^2(1-p)^{n-2}$ | $\cdots$ | $\binom{n}{n-1}p^{n-1}(1-p)$ | $p^n$ |
+
+**Relación con Bernoulli:** $\text{Bin}(1,p) = \text{Ber}(p)$.
+:::
+
 Un **experimento de tipo Bernoulli** surge cuando se selecciona al azar una unidad experimental y, con base en una característica de interés, dicha unidad se clasifica en **una de dos categorías mutuamente excluyentes**, comúnmente denominadas **éxito** o **fracaso**.
 
 Un ejemplo típico de una variable aleatoria Bernoulli es el caso de un **biólogo** que toma una planta y la clasifica de acuerdo con si **presenta floración o no**.
@@ -1133,28 +1151,6 @@ plot(
 
 
 ```
-
-:::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
-::::
-
-::: {.callout-tip icon=false}
-## Definición formal: distribución Binomial
-
-Una variable aleatoria $X$ con distribución **binomial** y parámetros $(n, p)$ se denota $X \sim \text{Bin}(n, p)$. Su función masa de probabilidad es:
-
-$$P(X = k) = \binom{n}{k} p^{k}(1-p)^{n-k}, \quad k = 0, 1, 2, \ldots, n$$
-
-En forma tabular:
-
-| $k$ | $0$ | $1$ | $2$ | $\cdots$ | $n-1$ | $n$ |
-|-----|-----|-----|-----|-----------|--------|-----|
-| $p(k)$ | $(1-p)^n$ | $\binom{n}{1}p(1-p)^{n-1}$ | $\binom{n}{2}p^2(1-p)^{n-2}$ | $\cdots$ | $\binom{n}{n-1}p^{n-1}(1-p)$ | $p^n$ |
-
-**Relación con Bernoulli:** $\text{Bin}(1,p) = \text{Ber}(p)$, es decir, un solo ensayo Bernoulli es un caso particular de la binomial.
-
-**Ejercicio:** ¿Cuál es la probabilidad de obtener tres o más caras en cinco lanzamientos de una moneda?
-:::
 
 ### Ejemplos adicionales: Distribución Binomial
 
@@ -1978,28 +1974,6 @@ barplot(pS, names.arg = S_vals, col = "#004D31", border = "white",
 cat("P(S = 7) =", 6/36, "\n")
 ```
 
-## Resumen del capítulo
-
-| Distribución | Parámetros | $E(X)$ | $Var(X)$ | Uso típico |
-|:-------------|:----------:|:------:|:--------:|:-----------|
-| Uniforme discreta | $a, b$ | $(a+b)/2$ | $(b-a)(b-a+2)/12$ | Equiprobabilidad |
-| Bernoulli | $p$ | $p$ | $p(1-p)$ | Ensayo éxito/fracaso |
-| Binomial | $n, p$ | $np$ | $np(1-p)$ | Conteo de éxitos en $n$ ensayos |
-| Hipergeométrica | $N, K, n$ | $nK/N$ | $\frac{nK(N-K)}{N^2}\frac{N-n}{N-1}$ | Muestreo sin reemplazo |
-| Poisson | $\lambda$ | $\lambda$ | $\lambda$ | Conteo de eventos raros |
-| Geométrica | $p$ | $(1-p)/p$ | $(1-p)/p^2$ | Ensayos hasta primer éxito |
-| Binomial Negativa | $r, p$ | $r(1-p)/p$ | $r(1-p)/p^2$ | Ensayos hasta $r$-ésimo éxito |
-
-::: {.callout-note icon=false}
-## Criterio de selección del modelo
-
-- Muestreo **con reemplazo** (o población grande): **Binomial**.
-- Muestreo **sin reemplazo** en población finita: **Hipergeométrica**.
-- Eventos raros o conteos en intervalo/espacio: **Poisson**.
-- Ensayos hasta el primer éxito: **Geométrica**.
-- Ensayos hasta el $r$-ésimo éxito: **Binomial Negativa**.
-:::
-
 :::: {.content-visible when-format="html"}
 [📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 ::::
@@ -2034,5 +2008,29 @@ cat("P(S = 7) =", 6/36, "\n")
 
    a. ¿Cuál es la probabilidad de reprobar?
    b. ¿Cuál es la puntuación mediana?
+:::
+
+
+
+## Resumen del capítulo
+
+| Distribución | Parámetros | $E(X)$ | $Var(X)$ | Uso típico |
+|:-------------|:----------:|:------:|:--------:|:-----------|
+| Uniforme discreta | $a, b$ | $(a+b)/2$ | $(b-a)(b-a+2)/12$ | Equiprobabilidad |
+| Bernoulli | $p$ | $p$ | $p(1-p)$ | Ensayo éxito/fracaso |
+| Binomial | $n, p$ | $np$ | $np(1-p)$ | Conteo de éxitos en $n$ ensayos |
+| Hipergeométrica | $N, K, n$ | $nK/N$ | $\frac{nK(N-K)}{N^2}\frac{N-n}{N-1}$ | Muestreo sin reemplazo |
+| Poisson | $\lambda$ | $\lambda$ | $\lambda$ | Conteo de eventos raros |
+| Geométrica | $p$ | $(1-p)/p$ | $(1-p)/p^2$ | Ensayos hasta primer éxito |
+| Binomial Negativa | $r, p$ | $r(1-p)/p$ | $r(1-p)/p^2$ | Ensayos hasta $r$-ésimo éxito |
+
+::: {.callout-note icon=false}
+## Criterio de selección del modelo
+
+- Muestreo **con reemplazo** (o población grande): **Binomial**.
+- Muestreo **sin reemplazo** en población finita: **Hipergeométrica**.
+- Eventos raros o conteos en intervalo/espacio: **Poisson**.
+- Ensayos hasta el primer éxito: **Geométrica**.
+- Ensayos hasta el $r$-ésimo éxito: **Binomial Negativa**.
 :::
 

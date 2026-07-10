@@ -1422,7 +1422,7 @@ ggplot(df_pareto, aes(x = x, y = y, color = Parámetros)) +
 3. Compare la tasa de decaimiento de la cola de una $\text{Pareto}(2, 1)$ con una $\text{Exp}(1)$: grafique $P(X > x)$ para ambas.
 :::
 
-### Resumen
+### Resumen: distribuciones continuas básicas
 
 #### Conceptos Fundamentales
 
@@ -1981,58 +1981,6 @@ cat("E[X]   simulado:", round(mean(X), 4), "\n")
 cat("E[X^2] simulado:", round(mean(X^2), 4), "\n")
 ```
 
-## Leyes de los grandes números {#sec-lln}
-
-Las leyes de los grandes números formalizan la idea de que el **promedio
-muestral converge a la media poblacional** conforme el tamaño de muestra
-crece.
-
-::: {.callout-note icon=false}
-## Ley débil de los grandes números (Chebyshev)
-
-Sea $X_1, X_2, \ldots$ una sucesión de variables aleatorias i.i.d. con
-media $\mu$ y varianza finita $\sigma^2$. Entonces, para todo
-$\varepsilon > 0$:
-$$P\!\left(\left|\bar{X}_n - \mu\right| > \varepsilon\right) \to 0
-  \quad \text{cuando } n \to \infty.$$
-
-En notación de convergencia: $\bar{X}_n \xrightarrow{p} \mu$.
-:::
-
-::: {.callout-note icon=false}
-## Ley fuerte de los grandes números (Kolmogorov)
-
-Bajo las mismas condiciones:
-$$P\!\left(\lim_{n\to\infty} \bar{X}_n = \mu\right) = 1.$$
-
-Es decir, $\bar{X}_n \to \mu$ con probabilidad 1 (casi seguramente).
-:::
-
-**Nota:** la ley fuerte es más potente que la débil: convergencia casi
-segura implica convergencia en probabilidad, pero no al revés.
-
-```{r lln-demo, fig.align='center', fig.width=8, fig.height=4}
-set.seed(2024)
-n_max <- 2000
-
-# Ejemplo: X_i ~ Exp(lambda=1), mu = 1
-lambda <- 1; mu_teo <- 1/lambda
-x_acum <- cumsum(rexp(n_max, lambda)) / (1:n_max)
-
-df_lln <- data.frame(n = 1:n_max, xbar = x_acum)
-
-ggplot(df_lln, aes(x=n, y=xbar)) +
-  geom_line(color="#006341", linewidth=0.6) +
-  geom_hline(yintercept=mu_teo, color="#C8962E",
-             linewidth=1.2, linetype="dashed") +
-  theme_minimal() +
-  labs(title="Ley de los grandes números — X ~ Exp(1)",
-       subtitle=paste("μ teórica =", mu_teo,
-                      " | x̄ con n=2000 ≈", round(tail(x_acum,1), 4)),
-       x="Tamaño de muestra (n)", y="Promedio muestral")
-```
-
-::: {.callout-note icon=false}
 ## Importancia en estadística
 
 La LGN justifica el uso de **promedios muestrales** como estimadores de
@@ -2231,17 +2179,15 @@ ggplot(df_tcl, aes(x=z)) +
        x="Z estandarizado", y="Densidad")
 ```
 
-::: {.callout-note icon=false}
-## Ejercicios propuestos
+## Ejercicios propuestos {#sec-ejercicios-esp-cov}
+
+Los siguientes ejercicios cubren esperanza, varianza, covarianza, distribuciones conjuntas y el TCL.
 
 1. Sea $X \sim \text{Poisson}(\lambda)$. Use el TCL para aproximar $P(\bar{X}_n > 5.2)$
    cuando $\lambda = 5$ y $n = 100$.
 2. Demuestre que si $X_n \xrightarrow{p} c$ (constante), entonces $X_n^2 \xrightarrow{p} c^2$.
 3. ¿Por qué el TCL no aplica directamente cuando $\text{Var}(X_i) = \infty$?
    Dé un ejemplo de distribución con varianza infinita.
-:::
-
-## Ejercicios propuestos {#sec-ejercicios-esp-cov}
 
 1. Sea $X \sim \text{Poisson}(3)$. Calcule $E[X]$, $\text{Var}(X)$ y
    $E[X(X-1)]$.
@@ -2256,4 +2202,6 @@ ggplot(df_tcl, aes(x=z)) +
    $\text{Cov}(X,Y) = 0$. ¿Es cierto el recíproco? Construya un
    contraejemplo.
 
-4. Sea $X \sim N(\mu, \
+4. Sea $X \sim N(\mu, \sigma^2)$. Demuestre que $\text{Cov}(X, X) = \text{Var}(X)$.
+
+5. Si $X$ e $Y$ son independientes con $E[X]=3$, $E[Y]=4$, $\text{Var}(X)=2$, $\text{Var}(Y)=5$, calcule $E[XY]$, $\text{Cov}(X,Y)$ y $\text{Var}(2X-3Y+1)$.
