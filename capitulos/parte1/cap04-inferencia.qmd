@@ -1414,8 +1414,6 @@ $$\text{Var}(\hat{\theta}) = \underbrace{\text{Var}(E[\hat{\theta}\mid T])}_{=\,
   \geq \text{Var}(\phi(T)).$$
 :::
 
-::: {.callout-note icon=false}
-
 ## Pruebas de bondad de ajuste {#sec-bondad-ajuste}
 
 Las pruebas de bondad de ajuste responden la pregunta: **¿los datos observados son compatibles con una distribución teórica propuesta?** Son el puente entre la exploración de datos y la elección formal del modelo probabilístico.
@@ -1595,7 +1593,6 @@ legend("bottomright", c("F_n(x) empírica", "F_0(x) = Exp(λ̂)"),
 4. Para $X_1,\ldots,X_n$ muestra de $\text{Exp}(\lambda)$, muestre que
    $T=\sum X_i$ es suficiente para $\lambda$ usando el teorema de
    factorización de Neyman.
-:::
 
 ## Intervalos de confianza {#sec-intervalos-confianza}
 ::: {.content-visible when-format="html"}
