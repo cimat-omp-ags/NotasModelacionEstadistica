@@ -16,6 +16,34 @@ Se denominan ___variables___ a las características particulares de cualquier el
 __Nota__:
 Una variable aleatoria (v.a) es aquella cuyos valores son números reales asignados a los resultados de un experimento aleatorio.
 
+:::: {.content-visible when-format="html"}
+[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
+::::
+
+### Definición formal
+
+::: {.callout-tip icon=false}
+## Definición — Variable aleatoria
+Sea $\Omega$ un espacio muestral. Se define $X$ como una **variable aleatoria** si es una función:
+$$X : \Omega \longrightarrow \mathbb{R}$$
+que asigna un número real a cada resultado del experimento aleatorio. Se clasifica en:
+
+- **Discreta**: si toma un conjunto discreto (finito o infinito numerable) de valores.
+- **Continua**: si toma valores en un intervalo de la recta real.
+:::
+
+**¿Por qué se llama "aleatoria"?** Porque su valor depende del resultado aleatorio del experimento; no se conoce hasta que éste se realiza.
+
+**Ejemplo motivador (Magín).** Se lanzan dos dados; el resultado se denota $(i,j)$, con $P(i,j)=1/36$. Se define la apuesta:
+$$X(i,j) = \begin{cases} 1000, & \text{si } i+j=7 \\ -200, & \text{en otro caso} \end{cases}$$
+$X$ es una variable aleatoria que asigna una ganancia o pérdida monetaria a cada resultado del espacio muestral.
+
+### Relación entre evento y variable aleatoria
+
+Para cualquier valor $a$, la expresión $\{X = a\}$ denota el **evento** formado por todos los resultados $\omega \in \Omega$ tales que $X(\omega) = a$. Por ejemplo, en el juego de dados anterior, $\{X = 1000\}$ es el conjunto $\{(1,6),(2,5),(3,4),(4,3),(5,2),(6,1)\}$, de modo que $P(X=1000) = 6/36$.
+
+De igual forma, las desigualdades también describen eventos: $\{X \leq a\}$ es el conjunto de todos los $\omega$ tales que $X(\omega) \leq a$.
+
 :::: {.callout-note icon=false}
 ## Ejemplo 1
 Una moneda ordinaria cuenta con dos posibles resultados a: águila y c: sol. El experimento consiste en lanzar al mismo tiempo tres monedas y observar las caras que aparecen, el procedimiento se realiza 8 veces, entonces el espacio 
@@ -176,6 +204,28 @@ ggplot(df_acumulada) +
 La última columna de la __Tabla 2__ proporciona la probabilidad de ocurrencia acumulada para cada valor de la variable aleatoria, a dicha columna se le denomina función de probabilidad acumulada y se denota como $F(X)$.
 
 Recordemos que una distribución de probabilidad siempre está dada en el intervalo $(0,1)$
+
+### Propiedades formales de la pmf y la cdf
+
+::: {.callout-tip icon=false}
+## Propiedades de la función masa de probabilidad (pmf)
+Sea $p(a) = P(X = a)$ la pmf de una v.a. discreta $X$. Entonces:
+
+1. $0 \leq p(a) \leq 1$ para todo $a$.
+2. Si $a$ es un valor que $X$ nunca toma, entonces $p(a) = 0$.
+3. $\displaystyle\sum_{\text{todos los } a} p(a) = 1$.
+:::
+
+::: {.callout-tip icon=false}
+## Propiedades de la función de distribución acumulada (cdf)
+La **cdf** de una v.a. discreta $X$ se define como $F(a) = P(X \leq a)$. Satisface:
+
+1. $F$ es **no decreciente**: si $a \leq b$ entonces $F(a) \leq F(b)$.
+2. $0 \leq F(a) \leq 1$ para todo $a$.
+3. $\displaystyle\lim_{a \to \infty} F(a) = 1$ y $\displaystyle\lim_{a \to -\infty} F(a) = 0$.
+:::
+
+> **Nota:** La cdf incluye el "igual a", por lo que $F(a) = P(X \leq a)$. Esto importa al calcular probabilidades del tipo $P(X > a) = 1 - F(a)$ o $P(a < X \leq b) = F(b) - F(a)$.
 
 ### Valor esperado de una variable aleatoria discreta
 
