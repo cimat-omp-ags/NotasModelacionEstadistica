@@ -379,7 +379,7 @@ ggplot() +
 
 En primer lugar, haremos revisión de la variable aleatoria uniforme y luego trataremos de manera especial la variable aleatoria normal. *La variable aleatoria normal tiene alta importancia, debido a que una gran parte de las metodologías de estadísticas inferenciales la emplean como base.*
 
-## Distribución uniforme continua
+## Distribución uniforme continua {#sec-uniforme-continua}
 
 Una de las distribuciones continuas más simples e intuitivas es la distribución uniforme continua. Decimos que una variable aleatoria $Y$ tiene una distribución uniforme en el intervalo $[a, b]$ si su probabilidad es constante para cualquier subintervalo de la misma longitud dentro de ese rango. En otras palabras, la función de densidad de probabilidad es plana y constante sobre el intervalo de valores posibles.
 
@@ -477,7 +477,7 @@ ggplot(df_tiempo, aes(x = x, y = y)) +
 
 :::
 
-## Distribución normal
+## Distribución normal {#sec-normal}
 
 Cuando nace un bebé, el médico lo lleva a la balanza y observa que pesa 3.5 kg. Lo primero que dirá, casi con certeza, es que tiene un peso normal. Luego, cuando el niño comienza su vida escolar, es probable que alguna psicopedagoga luego de efectuar un test informe a la maestra que tiene una inteligencia normal. Cuando ya adolescente asista a un colegio secundario y termine el año con 5 amonestaciones, la madre probablemente tratará de justificarlo diciendo que es un chico normal. Si al llegar a adulto se dedica a sembrar papas y dice que ha obtenido un rendimiento de 10000 kg por ha seguramente pensará que eso es lo normal.
 
@@ -1114,7 +1114,7 @@ La especificación de longitud máxima debe ser $x^* \approx 12.56$ mm para que 
 
 :::
 
-## Distribución exponencial
+## Distribución exponencial {#sec-exponencial}
 
 La variable aleatoria exponencial surge en la práctica como el modelo para la probabilidad de la cantidad de tiempo u espacio que transcurre hasta que ocurre un evento de interés. Esta ocurrencia se da de manera independiente y a una tasa constante.
 

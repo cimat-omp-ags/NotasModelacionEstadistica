@@ -350,7 +350,7 @@ Lo invitamos a calcular $E[X]$, así como las correspondientes varianzas de cada
 
 Dada la naturaleza de ciertos eventos, como lanzar una moneda, arrojar un dado, seleccionar de manera indistinta a una persona de un grupo, se desarrollaron ciertos procedimientos para analizar esos casos, pues en cada ejemplo cada uno de los valores de las posibles variables aleatorias tiene la misma probabilidad de ocurrir
 
-### Distribución aleatoria discreta Uniforme
+### Distribución aleatoria discreta Uniforme {#sec-uniforme-discreta}
 
 Sea el experimento que consiste en lanzar un dado. El resultado de interés es el número de la cara del dado, la cual se denota con la variable aleatoria X. En un dado existen 6 caras, por lo que la variable aleatoria puede tomar valores de 1 a 6 y si se asume que cada cara tiene la misma probabilidad de aparecer, entonces la función masa de probabilidad de la variable aleatoria X es la mostrada en la tabla 7.
 
@@ -510,7 +510,7 @@ Entonces, $\text{Var}(X)= (1-3.5)^2 +(2-3.5)^2+(3-3.5)^2+(4-3.5)^2+(5-3.5)^2+(6-
 =$2.91$
  
  
-### Distribución aleatoria discreta Bernoulli
+### Distribución aleatoria discreta Bernoulli {#sec-bernoulli}
 
 Es la distribución más sencilla que podemos construir, y es aquella cuyo espacio de eventos está compuesto por dos eventos complementarios, donde a uno de ellos lo designamos por el evento de éxito y el otro por el de fracaso; lo cual implica que en la realización de un solo experimento se podrá presentar uno u otro, pero no ambos. 
 
@@ -835,7 +835,7 @@ La Binomial supone ensayos *independientes* con probabilidad de éxito constante
 
 :::
 
-## Distribución Binomial
+## Distribución Binomial {#sec-binomial}
 
 :::: {.content-visible when-format="html"}
 [📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
@@ -1235,7 +1235,7 @@ Los resultados muestran que la probabilidad de exactamente 6 ventas es baja dado
 
 :::
 
-## Distribución Hipergeométrica
+## Distribución Hipergeométrica {#sec-hipergeometrica}
 
 La **distribución hipergeométrica** surge en situaciones experimentales donde se extraen elementos de una **población finita**, sin reemplazo, y cada elemento puede clasificarse en una de **dos categorías mutuamente excluyentes**, denominadas **éxito** y **fracaso**.
 
@@ -1618,7 +1618,7 @@ Con $K/N = 0.75$ (75% apoyan A), la probabilidad de que ninguno de los 4 selecci
 
 :::
 
-## Distribución Poisson
+## Distribución Poisson {#sec-poisson}
 
 
 La **variable aleatoria Poisson** puede estudiarse desde dos enfoques fundamentales:
@@ -1908,7 +1908,7 @@ Los valores confirman que con $\lambda = 10$, obtener 0 partículas es un evento
 
 Esta sección presenta, a partir de los apuntes del Prof. Magín Zúñiga Estrada, dos familias discretas adicionales (Geométrica y Binomial Negativa), así como las distribuciones conjuntas para variables discretas.
 
-### Distribución Geométrica
+### Distribución Geométrica {#sec-geometrica}
 
 La **distribución geométrica** modela el número de fracasos que ocurren *antes* de obtener el primer éxito en ensayos Bernoulli independientes, cada uno con probabilidad de éxito $p$. Se denota $X \sim \text{geo}(p)$.
 
@@ -1974,7 +1974,7 @@ Aunque cada familia puede tener muchos niños, la razón niños/niñas en la isl
 
 :::
 
-### Distribución Binomial Negativa
+### Distribución Binomial Negativa {#sec-binomial-negativa}
 
 La **distribución binomial negativa** generaliza la geométrica: modela el número de fracasos $X$ antes de obtener exactamente $r$ éxitos. Se denota $X \sim \text{NegBin}(r, p)$.
 

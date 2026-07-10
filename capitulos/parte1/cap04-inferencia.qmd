@@ -53,7 +53,7 @@ Si a un componente extraído de la población $P(x; \theta)$ se le mide su resis
 
 La expresión anterior señala que $x$ representa una *medición específica* de la característica en un elemento perteneciente a la población.
 
-¿Es $X$ una variable aleatoria? La respuesta es “sí”, porque si se realiza la medición a otro componente distinto, su valor no necesariamente será el mismo (otra medición posible sería $x = 63.2 \text{ kg/mm}^2$). Notemos que $x \in S_X$ (el soporte de la variable) y que su resultado no es constante. Si se obtuviera un gran número de mediciones, el comportamiento de los datos mostraría una regularidad similar al de las variables aleatorias teóricas (Normal, Uniforme, Poisson, etc.). A este valor observado $x$ se le denomina una **realización** de la variable aleatoria $X$.
+¿Es $X$ una variable aleatoria? La respuesta es “sí”, porque si se realiza la medición a otro componente distinto, su valor no necesariamente será el mismo (otra medición posible sería $x = 63.2 \text{ kg/mm}^2$). Notemos que $x \in S_X$ (el soporte de la variable) y que su resultado no es constante. Si se obtuviera un gran número de mediciones, el comportamiento de los datos mostraría una regularidad similar al de las variables aleatorias teóricas (Normal [@sec-normal], Uniforme [@sec-uniforme-continua], Poisson [@sec-poisson], etc.). A este valor observado $x$ se le denomina una **realización** de la variable aleatoria $X$.
 
 En estadística, no se trabaja con un único individuo, sino con una colección o muestra de variables aleatorias asociadas a $n$ elementos. Para que la inferencia estadística sea válida, Wackerly, Mendenhall y Scheaffer establecen que esta recolección debe cumplir con ciertas propiedades matemáticas rigurosas:
 
@@ -626,11 +626,11 @@ Al especificar `lower.tail = FALSE` en la función `qf`, le indicamos al softwar
 
 Cuando estudiamos una característica cualitativa en una población (por ejemplo: artículo defectuoso vs. no defectuoso, alquila vivienda vs. no alquila), trabajamos con variables que asumen solo dos valores.
 
-Sea $X_i$ una variable de Bernoulli tal que: $$X_i = \begin{cases} 1, & \text{si se presenta la característica de interés} \\ 0, & \text{si no se presenta la característica de interés} \end{cases}$$
+Sea $X_i$ una variable de Bernoulli (ver @sec-bernoulli) tal que: $$X_i = \begin{cases} 1, & \text{si se presenta la característica de interés} \\ 0, & \text{si no se presenta la característica de interés} \end{cases}$$
 
 La **proporción muestral** ($\hat{P}$ o $\bar{P}$) se define como el promedio de estas variables: $$\hat{P} = \frac{X_1 + X_2 + \dots + X_n}{n} = \frac{\sum_{i=1}^n X_i}{n}$$
 
-Sea $X_1, X_2, \dots, X_n$ una muestra aleatoria extraída de una distribución Bernoulli con parámetro poblacional $P$ (la verdadera proporción de "éxitos" en la población). Según la teoría estadística (Mendenhall et al.), las propiedades del estimador $\hat{P}$ son:
+Sea $X_1, X_2, \dots, X_n$ una muestra aleatoria extraída de una distribución Bernoulli (@sec-bernoulli) con parámetro poblacional $P$ (la verdadera proporción de "éxitos" en la población). Según la teoría estadística (Mendenhall et al.), las propiedades del estimador $\hat{P}$ son:
 
 **Esperanza matemática:** $$E[\hat{P}] = \mu_{\hat{P}} = P \quad (18)$$ *(El estimador de la proporción es insesgado).*
 
@@ -689,7 +689,7 @@ La regla $n \geq 30$ es una guía general. En distribuciones con colas muy pesad
 
 $$\bar{X} \approx N\left(\mu, \frac{\sigma^2}{n}\right)$$
 
-**¿Qué tan grande debe ser** $n$? El valor necesario de $n$ depende de qué tan asimétrica sea la distribución original de la población: \* Si la población es bastante simétrica, un $n \ge 5$ puede ser suficiente. \* Si la distribución original está muy sesgada o es altamente irregular (ej. exponencial, bimodal), la regla de oro en estadística dicta que un tamaño de muestra $n \ge 30$ garantiza una aproximación excelente a la Normal.
+**¿Qué tan grande debe ser** $n$? El valor necesario de $n$ depende de qué tan asimétrica sea la distribución original de la población: \* Si la población es bastante simétrica, un $n \ge 5$ puede ser suficiente. \* Si la distribución original está muy sesgada o es altamente irregular (ej. Exponencial [@sec-exponencial], bimodal), la regla de oro en estadística dicta que un tamaño de muestra $n \ge 30$ garantiza una aproximación excelente a la Normal.
 
 **El TLC para el Estimador del Total (**$T$): El teorema también se aplica a la suma total de las observaciones $T = \sum_{i=1}^n X_i$. Si $n$ es grande: $$T \approx N\left( \mu_T = n\mu, \sigma_T^2 = n\sigma^2 \right)$$
 
@@ -713,7 +713,7 @@ La probabilidad es de **0.835**.
 
 ## Teorema del límite central para el estimador de la proporción
 
-Dado que la proporción muestral $\hat{P}$ es, matemáticamente, un promedio de variables aleatorias Bernoulli (1s y 0s), **el Teorema del Límite Central también aplica a las proporciones**.
+Dado que la proporción muestral $\hat{P}$ es, matemáticamente, un promedio de variables aleatorias Bernoulli (@sec-bernoulli; 1s y 0s), **el Teorema del Límite Central también aplica a las proporciones**.
 
 Si $n$ es grande, el proceso de tomar muestras y estimar la proporción genera una distribución que se puede modelar con una curva Normal: $$\hat{P} \approx N\left( \mu_{\hat{P}} = P, \sigma_{\hat{P}}^2 = \frac{P(1-P)}{n} \right)$$
 

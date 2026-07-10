@@ -1,0 +1,106 @@
+# Apéndice: Tabla de distribuciones de probabilidad {#sec-apendice-dist .unnumbered}
+
+Referencia rápida de todas las distribuciones estudiadas en el curso. Para cada una se indica: parámetros, función de masa/densidad (pmf/pdf), valor esperado, varianza y soporte.
+
+## Distribuciones discretas {.unnumbered}
+
+| Distribución | Parámetros | pmf $p(x)$ | $E[X]$ | $\text{Var}(X)$ | Soporte |
+|:---|:---|:---|:---:|:---:|:---:|
+| **Uniforme** | $N \in \mathbb{Z}^+$ | $\frac{1}{N}$ | $\frac{N+1}{2}$ | $\frac{N^2-1}{12}$ | $\{1,\ldots,N\}$ |
+| **Bernoulli** | $p \in (0,1)$ | $p^x(1-p)^{1-x}$ | $p$ | $p(1-p)$ | $\{0,1\}$ |
+| **Binomial** | $n\in\mathbb{Z}^+$, $p$ | $\binom{n}{x}p^x(1-p)^{n-x}$ | $np$ | $np(1-p)$ | $\{0,\ldots,n\}$ |
+| **Hipergeométrica** | $N,K,n$ | $\frac{\binom{K}{x}\binom{N-K}{n-x}}{\binom{N}{n}}$ | $\frac{nK}{N}$ | $\frac{nK(N-K)(N-n)}{N^2(N-1)}$ | $\{0,\ldots,\min(n,K)\}$ |
+| **Poisson** | $\lambda > 0$ | $\frac{e^{-\lambda}\lambda^x}{x!}$ | $\lambda$ | $\lambda$ | $\{0,1,2,\ldots\}$ |
+| **Geométrica** | $p \in (0,1)$ | $(1-p)^{x-1}p$ | $\frac{1}{p}$ | $\frac{1-p}{p^2}$ | $\{1,2,\ldots\}$ |
+| **Binomial Negativa** | $r\in\mathbb{Z}^+$, $p$ | $\binom{x-1}{r-1}p^r(1-p)^{x-r}$ | $\frac{r}{p}$ | $\frac{r(1-p)}{p^2}$ | $\{r,r{+}1,\ldots\}$ |
+
+: Distribuciones discretas {#tbl-dist-discretas}
+
+**Ver:** @sec-uniforme-discreta, @sec-bernoulli, @sec-binomial, @sec-hipergeometrica, @sec-poisson, @sec-geometrica, @sec-binomial-negativa.
+
+---
+
+## Distribuciones continuas {.unnumbered}
+
+| Distribución | Parámetros | pdf $f(x)$ | $E[X]$ | $\text{Var}(X)$ | Soporte |
+|:---|:---|:---|:---:|:---:|:---:|
+| **Uniforme** | $a < b$ | $\frac{1}{b-a}$ | $\frac{a+b}{2}$ | $\frac{(b-a)^2}{12}$ | $[a,b]$ |
+| **Normal** | $\mu\in\mathbb{R}$, $\sigma^2>0$ | $\frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}$ | $\mu$ | $\sigma^2$ | $(-\infty,\infty)$ |
+| **Exponencial** | $\lambda > 0$ | $\lambda e^{-\lambda x}$ | $\frac{1}{\lambda}$ | $\frac{1}{\lambda^2}$ | $[0,\infty)$ |
+| **Gamma** | $\alpha>0$, $\beta>0$ | $\frac{1}{\beta^\alpha\Gamma(\alpha)}x^{\alpha-1}e^{-x/\beta}$ | $\alpha\beta$ | $\alpha\beta^2$ | $(0,\infty)$ |
+| **Pareto** | $\alpha>0$, $x_m>0$ | $\frac{\alpha x_m^\alpha}{x^{\alpha+1}}$ | $\frac{\alpha x_m}{\alpha-1}$ | $\frac{\alpha x_m^2}{(\alpha-1)^2(\alpha-2)}$ | $[x_m,\infty)$ |
+| **Weibull** | $k>0$, $\lambda>0$ | $\frac{k}{\lambda}\left(\frac{x}{\lambda}\right)^{k-1}e^{-(x/\lambda)^k}$ | $\lambda\,\Gamma(1+\tfrac{1}{k})$ | $\lambda^2\left[\Gamma(1+\tfrac{2}{k})-\Gamma(1+\tfrac{1}{k})^2\right]$ | $[0,\infty)$ |
+| **Chi-cuadrada** | $k\in\mathbb{Z}^+$ | $\frac{x^{k/2-1}e^{-x/2}}{2^{k/2}\Gamma(k/2)}$ | $k$ | $2k$ | $(0,\infty)$ |
+| **$t$ de Student** | $k\in\mathbb{Z}^+$ | $\frac{\Gamma(\frac{k+1}{2})}{\sqrt{k\pi}\,\Gamma(k/2)}\left(1+\frac{x^2}{k}\right)^{-\frac{k+1}{2}}$ | $0$ $(k>1)$ | $\frac{k}{k-2}$ $(k>2)$ | $(-\infty,\infty)$ |
+| **$F$ de Fisher** | $m,n\in\mathbb{Z}^+$ | (ver @sec-F-fisher) | $\frac{n}{n-2}$ $(n>2)$ | $\frac{2n^2(m+n-2)}{m(n-2)^2(n-4)}$ $(n>4)$ | $(0,\infty)$ |
+
+: Distribuciones continuas {#tbl-dist-continuas}
+
+**Ver:** @sec-uniforme-continua, @sec-normal, @sec-exponencial, @sec-gamma, @sec-pareto, @sec-weibull, @sec-chi2, @sec-t-student, @sec-F-fisher.
+
+---
+
+## Relaciones entre distribuciones {.unnumbered}
+
+Los siguientes son los casos especiales y límites más usados en el curso:
+
+- $\text{Bernoulli}(p) = \text{Binomial}(1,\,p)$.
+- $\text{Binomial}(n,p) \xrightarrow{\;n\to\infty,\;np=\lambda\;} \text{Poisson}(\lambda)$ (aproximación cuando $n$ grande y $p$ pequeño).
+- $\text{Geométrica}(p)$ es el caso $r=1$ de la Binomial Negativa.
+- $\text{Exponencial}(\lambda)$ es la Gamma con $\alpha=1$ y $\beta=1/\lambda$.
+- $\chi^2(k)$ es la Gamma con $\alpha=k/2$ y $\beta=2$.
+- Si $Z_1,\ldots,Z_k \overset{\text{i.i.d.}}{\sim} N(0,1)$, entonces $\displaystyle\sum_{i=1}^k Z_i^2 \sim \chi^2(k)$.
+- Si $Z\sim N(0,1)$ y $V\sim\chi^2(k)$ son independientes: $T = \dfrac{Z}{\sqrt{V/k}} \sim t(k)$.
+- Si $U\sim\chi^2(m)$ y $V\sim\chi^2(n)$ son independientes: $F = \dfrac{U/m}{V/n} \sim F(m,n)$.
+
+```{r apendice-relaciones, echo=FALSE, fig.width=9, fig.height=4.5, fig.cap="Mapa de relaciones entre distribuciones del curso. Azul: discretas; verde: continuas; flechas sólidas: caso especial; flechas punteadas: aproximación o límite."}
+par(mar=c(0,0,0.5,0), bg="white")
+plot(NA, xlim=c(0,10), ylim=c(0,6), axes=FALSE, xlab="", ylab="")
+
+# Discreta — fila superior
+nodos_d <- list(
+  c(0.5,5,"Bernoulli(p)"),
+  c(2.5,5,"Binomial(n,p)"),
+  c(4.5,5,"Poisson(λ)"),
+  c(0.5,3.5,"Geométrica(p)"),
+  c(2.5,3.5,"BinNeg(r,p)")
+)
+for(n in nodos_d){
+  rect(n[[1]]-0.85,n[[2]]-0.45,n[[1]]+0.85,n[[2]]+0.45,col="#D6E8F7",border="#2E75B6",lwd=1.5)
+  text(n[[1]],n[[2]],n[[3]],cex=0.65,font=2)
+}
+
+# Continua — fila derecha
+nodos_c <- list(
+  c(6.5,5,"Normal(μ,σ²)"),
+  c(8.5,5,"χ²(k)"),
+  c(8.5,3.5,"t(k)"),
+  c(8.5,2,"F(m,n)"),
+  c(6.5,3.5,"Exponencial(λ)"),
+  c(6.5,2,"Gamma(α,β)")
+)
+for(n in nodos_c){
+  rect(n[[1]]-0.9,n[[2]]-0.45,n[[1]]+0.9,n[[2]]+0.45,col="#D5ECD4",border="#375623",lwd=1.5)
+  text(n[[1]],n[[2]],n[[3]],cex=0.65,font=2)
+}
+
+# Flechas
+arr <- function(x1,y1,x2,y2,lty=1)
+  arrows(x1,y1,x2,y2,length=0.08,col="gray30",lwd=1.2,lty=lty)
+arr(1.35,5,1.65,5)           # Bern→Binom
+arr(3.35,5,3.65,5,lty=2)     # Binom→Poisson (aprox)
+arr(0.5,4.55,0.5,3.95)       # Bern→Geom
+arr(2.5,4.55,2.5,3.95)       # Binom→BinNeg
+arr(6.5,4.55,6.5,3.95)       # Normal→Exp (distribución muestral)
+arr(6.5,3.05,6.5,2.45)       # Exp→Gamma (esp. caso)
+arr(6.5,5,7.6,5)             # Normal→Chi2
+arr(8.5,4.55,8.5,3.95)       # Chi2→t
+arr(8.5,3.05,8.5,2.45)       # t→F
+
+legend("bottomleft",
+  legend=c("Discreta","Continua","→ caso especial","--→ aproximación"),
+  fill=c("#D6E8F7","#D5ECD4",NA,NA),
+  lty=c(NA,NA,1,2), col=c(NA,NA,"gray30","gray30"),
+  border=c("#2E75B6","#375623",NA,NA),
+  cex=0.6, bty="n", ncol=2)
+```

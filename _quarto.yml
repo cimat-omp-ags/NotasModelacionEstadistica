@@ -45,6 +45,9 @@ book:
       chapters:
         - capitulos/parte2/cap05-casas.qmd
         - capitulos/parte2/cap06-autos.qmd
+    - part: "Apéndices"
+      chapters:
+        - capitulos/apendice-distribuciones.qmd
     - referencias.qmd
 
 bibliography: referencias.bib
