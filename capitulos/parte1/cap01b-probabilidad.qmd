@@ -2167,4 +2167,5 @@ condicionar en el evento "es fumador".
 - **Probabilidad total:** si $A_1, \dots, A_k$ particionan $S$, entonces
   $P(B) = \sum_{i=1}^{k} P(B \mid A_i)P(A_i)$.
 - **Teorema de Bayes:** permite "invertir" probabilidades condicionales,
-  $P(A_j \mid B) = \dfrac{P(B \m
+  $P(A_j \mid B) = \dfrac{P(B \mid A_j)P(A_j)}{\sum_i P(B \mid A_i)P(A_i)}$,
+  y es la base de la interpretación de pruebas diagnósticas.
