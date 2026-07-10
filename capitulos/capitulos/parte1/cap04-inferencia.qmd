@@ -2,6 +2,18 @@
 
 En esta unidad, estudiaremos las distribuciones generadas por características medidas a conjuntos de individuos (muestras). Antes de revisar las distribuciones de muestreo se definen conceptos importantes en la modelación estadística.
 
+::: {.callout-tip icon=false}
+## Objetivos de aprendizaje
+
+Al finalizar este capítulo, el estudiante será capaz de:
+
+- Distinguir entre población y muestra, y entre parámetro y estimador, identificando las propiedades deseables de un buen estimador (insesgamiento, consistencia y eficiencia).
+- Derivar y usar la distribución muestral de $\bar{X}$, $S^2$ y $\hat{P}$ para calcular probabilidades sobre estadísticos muestrales.
+- Aplicar las distribuciones $\chi^2$, $t$ de Student y $F$ de Fisher para resolver problemas de inferencia sobre varianzas y medias.
+- Enunciar el Teorema del Límite Central y aplicarlo para aproximar distribuciones de sumas y promedios de muestras grandes.
+- Implementar pruebas de bondad de ajuste (chi-cuadrada y Kolmogórov-Smirnov) para evaluar si un conjunto de datos proviene de una distribución específica.
+:::
+
 En este capítulo estudiaremos los conceptos básicos de la inferencia estadística: población, muestra aleatoria, parámetros y estimadores. A partir de ahí revisaremos las distribuciones muestrales de los principales estimadores (la media $\bar{X}$, la varianza $S^2$ y la proporción $\hat{P}$), así como las distribuciones teóricas asociadas (Chi-cuadrada, $t$ de Student y $F$ de Fisher), que nos permiten calcular probabilidades sobre el comportamiento de las muestras. Cerraremos el capítulo con el Teorema del Límite Central, una de las herramientas más importantes de la estadística inferencial. A lo largo del capítulo se incluyen ejemplos resueltos y ejercicios propuestos para practicar los conceptos.
 
 ## Población
@@ -217,6 +229,17 @@ Como ya hemos visto, una vez que se tienen los datos observados de una muestra, 
 Los estimadores "aproximan" a los parámetros poblacionales. Esto quiere decir que, aunque una estimación puntual nunca coincidirá de manera exacta con el parámetro (debido a la variabilidad aleatoria de la muestra), si la muestra fue seleccionada correctamente y es lo suficientemente grande, el resultado tenderá a concentrarse muy cerca del valor real del parámetro.
 
 > **Distribución muestral de un estimador:** Es la distribución teórica de probabilidad de todos los posibles valores que puede tomar un estimador, calculados a partir de todas las muestras posibles de tamaño $n$ extraídas de la misma población.
+::: {.callout-caution icon=false}
+## Errores comunes: parámetros y estimadores
+
+**Error 1 — Confundir el parámetro con el estimador.**  
+El parámetro $\mu$ (media poblacional) es un número fijo pero desconocido; el estimador $ar{X}$ es una *variable aleatoria* que cambia de muestra a muestra. Solo $ar{X}$ tiene distribución muestral; $\mu$ no.
+
+**Error 2 — Dividir por $n$ en lugar de $n-1$ al estimar la varianza.**  
+$s^2 = rac{\sum(x_i - ar{x})^2}{n-1}$ es el estimador *insesgado* de $\sigma^2$. Dividir por $n$ produce un estimador sesgado que subestima sistemáticamente la varianza poblacional, especialmente con muestras pequeñas.
+:::
+
+
 
 La distribución muestral proporciona:
 
@@ -639,7 +662,18 @@ Comprobando la Ecuación (19) para la varianza: $$\text{Var}(\hat{P}) = \frac{P(
 
 ## Teorema del Límite Central (TLC)
 
-Este es, quizás, el teorema de mayor importancia práctica en la estadística inferencial. Especifica cuál es el comportamiento de las distribuciones de promedios o sumas cuando el tamaño de la muestra crece.
+Este es, quizás, el teorema de mayor importancia práctica en la estadística inferencial.
+::: {.callout-caution icon=false}
+## Errores comunes: Teorema del Límite Central
+
+**Error 1 — Creer que el TLC dice que *los datos* se distribuyen normal.**  
+El TLC habla de la distribución del *promedio muestral* $ar{X}$, no de los datos individuales $X_i$. Una muestra de 100 observaciones de una distribución exponencial seguirá siendo exponencial; lo que se aproxima a la normal es la distribución de $ar{X}$ entre muestras repetidas.
+
+**Error 2 — Aplicar el TLC con $n$ pequeño en distribuciones muy asimétricas.**  
+La regla $n \geq 30$ es una guía general. En distribuciones con colas muy pesadas o alta asimetría, puede necesitarse $n$ mucho mayor para que la aproximación normal sea razonable.
+:::
+
+ Especifica cuál es el comportamiento de las distribuciones de promedios o sumas cuando el tamaño de la muestra crece.
 
 > **Teorema del Límite Central:** Sea $X_1, X_2, \dots, X_n$ una muestra aleatoria de tamaño $n$, extraída de una población con **cualquier** distribución de probabilidad (no necesariamente normal), que posea una media finita $\mu$ y una varianza finita $\sigma^2$. A medida que el tamaño de la muestra $n$ se vuelve grande ($n \to \infty$), la distribución muestral del promedio $\bar{X}$ se aproxima a una distribución Normal con media $\mu_{\bar{X}} = \mu$ y varianza $\sigma_{\bar{X}}^2 = \frac{\sigma^2}{n}$.
 
@@ -1790,3 +1824,38 @@ ggplot(df_np, aes(x=theta, y=gamma)) +
    $\lambda_0=1$, $n=15$, $\alpha=0.05$.
 :::
 
+
+## Resumen del capítulo
+
+| Distribución | Origen | Parámetros | $E[X]$ | $\text{Var}(X)$ | Uso típico |
+|:-------------|:------:|:----------:|:------:|:---------------:|:-----------|
+| $\chi^2_\nu$ | $\sum_{i=1}^\nu Z_i^2$ | $\nu$ (g.l.) | $\nu$ | $2\nu$ | Pruebas sobre varianzas |
+| $t_\nu$ | $Z/\sqrt{\chi^2_\nu/\nu}$ | $\nu$ (g.l.) | $0$ ($\nu>1$) | $\nu/(\nu-2)$ | IC y pruebas sobre $\mu$ con $\sigma^2$ desconocida |
+| $F_{\nu_1,\nu_2}$ | $\chi^2_{\nu_1}/\chi^2_{\nu_2}$ | $\nu_1, \nu_2$ | $\nu_2/(\nu_2-2)$ | — | Comparación de varianzas |
+
+::: {.callout-note icon=false}
+## Distribuciones muestrales clave
+
+Dada una muestra aleatoria $X_1,\ldots,X_n \sim N(\mu,\sigma^2)$:
+
+$$\bar{X} \sim N\!\left(\mu,\frac{\sigma^2}{n}\right), \qquad
+\frac{(n-1)S^2}{\sigma^2} \sim \chi^2_{n-1}, \qquad
+\frac{\bar{X}-\mu}{S/\sqrt{n}} \sim t_{n-1}$$
+
+Para muestras **grandes** (cualquier distribución), el TCL garantiza:
+$$\bar{X} \approx N\!\left(\mu,\frac{\sigma^2}{n}\right), \qquad
+\hat{P} \approx N\!\left(p,\frac{p(1-p)}{n}\right)$$
+:::
+
+::: {.callout-tip icon=false}
+## Ideas clave del capítulo
+
+- Un **parámetro** ($\mu, \sigma^2, p$) es una constante poblacional desconocida; un **estimador** ($\bar{X}, S^2, \hat{P}$) es una variable aleatoria calculada con la muestra.
+- Un estimador es **insesgado** si $E[\hat{\theta}] = \theta$, **consistente** si converge en probabilidad al parámetro, y **eficiente** si minimiza la varianza entre los insesgados.
+- Las distribuciones $\chi^2$, $t$ y $F$ son herramientas para construir intervalos de confianza y pruebas de hipótesis en poblaciones normales.
+- El **Teorema del Límite Central** aplica a $\bar{X}$ (y $\hat{P}$), no a los datos individuales. Con $n \geq 30$, la aproximación suele ser excelente.
+:::
+
+## Cierre del curso
+
+Con este capítulo completamos el recorrido del curso: de la probabilidad básica y las distribuciones discretas, pasando por las distribuciones continuas y conjuntas, hasta llegar a la inferencia estadística. Las distribuciones muestrales que aquí estudiamos — $\chi^2$, $t$, $F$ y el TLC — son los cimientos sobre los que se construyen los temas avanzados de estadística: intervalos de confianza, pruebas de hipótesis, regresión y modelos lineales generalizados. El pensamiento probabilístico y la distinción entre parámetro y estimador que desarrollaste aquí te acompañarán en cualquier análisis estadístico futuro.

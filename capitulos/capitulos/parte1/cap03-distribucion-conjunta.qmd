@@ -2,6 +2,18 @@
 
 Ciertos fenómenos originan resultados en un espectro continuo. En la modelación analítica y la simulación de procesos, podríamos estar interesados en estudiar el tiempo de espera de un paciente en la sala de urgencias de un hospital, la duración de una llamada en una línea telefónica de atención, o el tiempo exacto que toma el proceso de pintado de un automóvil en una línea de ensamblaje. Este tipo de variable aleatoria, que puede tomar cualquier valor dentro de un intervalo (o unión de intervalos), se denomina *continua*.
 
+::: {.callout-tip icon=false}
+## Objetivos de aprendizaje
+
+Al finalizar este capítulo, el estudiante será capaz de:
+
+- Definir variable aleatoria continua y calcular probabilidades como áreas bajo la función de densidad de probabilidad (pdf).
+- Obtener e interpretar la función de distribución acumulada (cdf) de una variable aleatoria continua, y calcular cuantiles.
+- Calcular el valor esperado, la varianza y otras medidas de resumen para las distribuciones Uniforme, Normal, Exponencial, Gamma y Weibull.
+- Estandarizar variables normales y usar la tabla $Z$ (o R) para obtener probabilidades y percentiles.
+- Describir la distribución conjunta de dos variables aleatorias continuas mediante su pdf conjunta, calcular distribuciones marginales y determinar si son independientes.
+:::
+
 En este capítulo estudiaremos las variables aleatorias continuas: cómo se describen mediante su función de densidad de probabilidad y su función de probabilidad acumulada, y cómo calcular probabilidades como áreas bajo una curva. Revisaremos las distribuciones continuas más utilizadas en la práctica: la Uniforme continua, la Normal (junto con su versión estandarizada y el uso de tablas) y la Exponencial, incluyendo su propiedad de falta de memoria. Cerraremos con material complementario sobre la distribución Weibull y las distribuciones continuas conjuntas. A lo largo del capítulo se incluyen ejemplos resueltos y ejercicios propuestos para practicar los conceptos.
 
 ## Variable aleatoria continua
@@ -825,6 +837,17 @@ Esta es la probabilidad acumulada desde $-\infty$ hasta $z_0$, donde este últim
 ## Nota
 En las distribuciones de probabilidad continuas, la probabilidad de que la variable aleatoria asuma exactamente un valor particular es cero ($P(X = x) = 0$). Por lo tanto, los signos de desigualdad estricta ($<$, $>$) o no estricta ($\le$, $\ge$) son probabilísticamente equivalentes. Es decir, $P(X \le x) = P(X < x)$.
 :::
+::: {.callout-caution icon=false}
+## Errores comunes: variables aleatorias continuas
+
+**Error 1 — Interpretar $P(X = x) = 0$ como "el evento es imposible".**  
+Para una variable continua, cada punto tiene probabilidad cero, pero eso no significa que sea imposible observar ese valor — de hecho, siempre se observa algún valor exacto. Lo que es cero es la probabilidad de *un solo punto*; la probabilidad de un intervalo puede ser positiva.
+
+**Error 2 — Confundir el valor de la pdf con una probabilidad.**  
+La función de densidad $f(x)$ puede tomar valores mayores que 1 (por ejemplo, $U(0, 0.5)$ tiene $f(x) = 2$). Lo que siempre está en $[0,1]$ es el *área* bajo la curva en un intervalo, que es la probabilidad real: $P(a \leq X \leq b) = \int_a^b f(x)\,dx$.
+:::
+
+
 
 **Ejemplo 2**
 El peso de los niños al nacer en la localidad de Tequila tiene el comportamiento de una variable aleatoria normal con media $\mu = 3.5 \text{ kg}$ y desviación estándar $\sigma = 1 \text{ kg}$. 
@@ -2331,6 +2354,37 @@ ggplot(df_tcl, aes(x=z)) +
        x="Z estandarizado", y="Densidad")
 ```
 
+
+## Resumen del capítulo
+
+| Distribución | Parámetros | $E[X]$ | $\text{Var}(X)$ | Propiedad clave |
+|:-------------|:----------:|:------:|:---------------:|:----------------|
+| Uniforme continua | $a, b$ | $\frac{a+b}{2}$ | $\frac{(b-a)^2}{12}$ | Densidad constante en $[a,b]$ |
+| Normal | $\mu, \sigma^2$ | $\mu$ | $\sigma^2$ | Simétrica, campana de Gauss |
+| Exponencial | $\lambda$ | $\frac{1}{\lambda}$ | $\frac{1}{\lambda^2}$ | Falta de memoria |
+| Gamma | $\alpha, \lambda$ | $\frac{\alpha}{\lambda}$ | $\frac{\alpha}{\lambda^2}$ | Suma de $\alpha$ Exp($\lambda$) |
+| Weibull | $k, \lambda$ | $\lambda\,\Gamma(1+1/k)$ | $\lambda^2[\Gamma(1+2/k)-\Gamma(1+1/k)^2]$ | Tasa de fallo variable |
+
+::: {.callout-note icon=false}
+## Criterio de selección del modelo continuo
+
+- Valor en un intervalo sin preferencia: **Uniforme** continua.
+- Fenómeno gobernado por muchos factores aditivos: **Normal**.
+- Tiempo hasta el primer evento, sin memoria: **Exponencial**.
+- Suma de $k$ tiempos exponenciales independientes: **Gamma**.
+- Tiempo de vida con tasa de fallo creciente/decreciente: **Weibull**.
+:::
+
+::: {.callout-tip icon=false}
+## Ideas clave del capítulo
+
+- Para una VA continua $X$, $P(X = x) = 0$ siempre; las probabilidades son áreas bajo $f(x)$.
+- La **estandarización** $Z = (X - \mu)/\sigma$ transforma cualquier $N(\mu,\sigma^2)$ en $N(0,1)$.
+- **Distribuciones conjuntas**: $f_{X,Y}(x,y)$ describe el comportamiento simultáneo; las marginales se obtienen integrando sobre la otra variable.
+- **Independencia**: $X$ e $Y$ son independientes si y solo si $f_{X,Y}(x,y) = f_X(x)\,f_Y(y)$.
+- **TCL**: para muestras grandes, $\bar{X} \approx N(\mu, \sigma^2/n)$ sin importar la distribución original.
+:::
+
 ## Ejercicios propuestos {#sec-ejercicios-esp-cov}
 
 Los siguientes ejercicios cubren esperanza, varianza, covarianza, distribuciones conjuntas y el TCL.
@@ -2357,3 +2411,7 @@ Los siguientes ejercicios cubren esperanza, varianza, covarianza, distribuciones
 4. Sea $X \sim N(\mu, \sigma^2)$. Demuestre que $\text{Cov}(X, X) = \text{Var}(X)$.
 
 5. Si $X$ e $Y$ son independientes con $E[X]=3$, $E[Y]=4$, $\text{Var}(X)=2$, $\text{Var}(Y)=5$, calcule $E[XY]$, $\text{Cov}(X,Y)$ y $\text{Var}(2X-3Y+1)$.
+
+## Conexión con el siguiente capítulo
+
+Hasta aquí hemos trabajado con distribuciones teóricas conocidas: sabíamos exactamente qué distribución seguía $X$ y cuáles eran sus parámetros. En la práctica, los parámetros $\mu$, $\sigma^2$ o $p$ son *desconocidos*: solo tenemos una muestra. En el siguiente capítulo estudiaremos cómo estimarlos a partir de datos y cómo cuantificar la incertidumbre de esas estimaciones mediante distribuciones muestrales — en particular, la $\chi^2$, la $t$ de Student y la $F$ de Fisher, que son directamente derivadas de la distribución Normal que acabas de aprender.

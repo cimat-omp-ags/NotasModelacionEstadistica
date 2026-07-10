@@ -1,10 +1,16 @@
 # Variable Aleatoria Discreta {#cap-distribuciones}
 
-**Introducción al análisis estadístico**
+::: {.callout-tip icon=false}
+## Objetivos de aprendizaje
 
-**Objetivo general**
+Al finalizar este capítulo, el estudiante será capaz de:
 
-Al término de este curso, el participante conocerá los fundamentos de la probabilidad, las  características de las distribuciones de probabilidades discretas y continuas más utilizadas, así como,  conceptos básicos de inferencia estadística y las distribuciones derivadas del muestreo más  frecuentes en la modelación estadística. 
+- Definir variable aleatoria discreta y construir su función de probabilidad (pmf) y función de distribución acumulada (cdf) a partir de un experimento aleatorio.
+- Calcular el valor esperado $E[X]$ y la varianza $\text{Var}(X)$ de una variable aleatoria discreta mediante sus definiciones y propiedades.
+- Reconocer y aplicar las distribuciones discretas más importantes (Bernoulli, Binomial, Hipergeométrica, Poisson, Geométrica y Binomial Negativa), identificando en qué situación usar cada una.
+- Distinguir entre muestreo con y sin reemplazo, y elegir el modelo probabilístico adecuado (Binomial vs Hipergeométrica) según el contexto.
+- Calcular probabilidades de eventos complejos usando las distribuciones discretas vistas, tanto manualmente como con R.
+:::
 
 En este capítulo estudiaremos las variables aleatorias discretas: qué son, cómo se describen mediante su función de probabilidad y su función de probabilidad acumulada, y cómo resumir su comportamiento mediante la esperanza y la varianza. Después revisaremos las distribuciones discretas más utilizadas en la práctica (Uniforme, Bernoulli, Binomial, Hipergeométrica y Poisson), discutiremos las diferencias entre el muestreo con y sin reemplazo, y cerraremos con material complementario sobre las distribuciones Geométrica, Binomial Negativa y las distribuciones discretas conjuntas. A lo largo del capítulo se incluyen ejemplos resueltos y ejercicios propuestos para practicar los conceptos.
 
@@ -226,6 +232,17 @@ La **cdf** de una v.a. discreta $X$ se define como $F(a) = P(X \leq a)$. Satisfa
 :::
 
 > **Nota:** La cdf incluye el "igual a", por lo que $F(a) = P(X \leq a)$. Esto importa al calcular probabilidades del tipo $P(X > a) = 1 - F(a)$ o $P(a < X \leq b) = F(b) - F(a)$.
+::: {.callout-caution icon=false}
+## Errores comunes: pmf y cdf
+
+**Error 1 — Usar la pmf cuando se necesita la cdf (o viceversa).**  
+La pmf da $P(X = k)$; la cdf da $P(X \leq k)$. Para preguntas como "¿cuál es la probabilidad de obtener *a lo más* 3 éxitos?", siempre se usa la cdf: $F(3) = \sum_{k=0}^{3} P(X=k)$.
+
+**Error 2 — Creer que la pmf puede tomar cualquier valor entre 0 y 1.**  
+Cada valor individual de la pmf sí está en $[0,1]$, pero la condición que realmente la define es que la *suma* sobre todos los valores sea 1: $\sum_k P(X=k) = 1$. Una pmf con tres valores iguales a 0.4, por ejemplo, sería inválida.
+:::
+
+
 
 ### Valor esperado de una variable aleatoria discreta
 
@@ -786,6 +803,14 @@ Obsérvese que, al no haber reemplazo, la probabilidad de éxito **disminuye en 
 - Cuando las extracciones se realizan **con reemplazo en poblaciones finitas**, o **sin reemplazo en poblaciones infinitas** (como se verá más adelante), los ensayos son independientes y el experimento se modela mediante una **variable aleatoria binomial**, al tratarse de repeticiones de un ensayo tipo Bernoulli.
 
 - En cambio, cuando las extracciones se realizan **sin reemplazo en poblaciones finitas**, las probabilidades cambian en cada repetición, por lo que el experimento se modela mediante una **variable aleatoria hipergeométrica**.
+::: {.callout-caution icon=false}
+## Errores comunes: Binomial vs Hipergeométrica
+
+**Error — Usar Binomial cuando el muestreo es sin reemplazo en población finita.**  
+La Binomial supone ensayos *independientes* con probabilidad de éxito constante. Cuando se extrae sin reemplazo de una población pequeña, la probabilidad cambia en cada extracción y el modelo correcto es la **Hipergeométrica**. La Binomial solo es una buena aproximación cuando $n < 5\%$ del total $N$.
+:::
+
+
 
 ::: {.callout-note icon=false}
 ## Ejercicios propuestos
@@ -2100,3 +2125,6 @@ cat("P(S = 7) =", 6/36, "\n")
 - Ensayos hasta el $r$-ésimo éxito: **Binomial Negativa**.
 :::
 
+## Conexión con el siguiente capítulo
+
+En este capítulo modelamos variables que toman valores *contables* (0, 1, 2, ...). Muchos fenómenos reales — tiempos de espera, medidas físicas, proporciones — producen en cambio valores en un continuo. En el siguiente capítulo generalizaremos las ideas de pmf, $E[X]$ y $\text{Var}(X)$ al mundo continuo, donde la probabilidad se mide como área bajo una curva de densidad, y conoceremos las distribuciones Normal, Exponencial, Gamma y Weibull.
