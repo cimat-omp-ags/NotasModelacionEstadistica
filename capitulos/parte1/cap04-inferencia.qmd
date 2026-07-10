@@ -12,6 +12,7 @@ Al finalizar este capítulo, el estudiante será capaz de:
 - Aplicar las distribuciones $\chi^2$, $t$ de Student y $F$ de Fisher para resolver problemas de inferencia sobre varianzas y medias.
 - Enunciar el Teorema del Límite Central y aplicarlo para aproximar distribuciones de sumas y promedios de muestras grandes.
 - Implementar pruebas de bondad de ajuste (chi-cuadrada y Kolmogórov-Smirnov) para evaluar si un conjunto de datos proviene de una distribución específica.
+
 :::
 
 En este capítulo estudiaremos los conceptos básicos de la inferencia estadística: población, muestra aleatoria, parámetros y estimadores. A partir de ahí revisaremos las distribuciones muestrales de los principales estimadores (la media $\bar{X}$, la varianza $S^2$ y la proporción $\hat{P}$), así como las distribuciones teóricas asociadas (Chi-cuadrada, $t$ de Student y $F$ de Fisher), que nos permiten calcular probabilidades sobre el comportamiento de las muestras. Cerraremos el capítulo con el Teorema del Límite Central, una de las herramientas más importantes de la estadística inferencial. A lo largo del capítulo se incluyen ejemplos resueltos y ejercicios propuestos para practicar los conceptos.
@@ -37,6 +38,7 @@ Se esperaría que las variables no comunes tengan poca influencia sobre la varia
 ::: {.callout-note icon=false}
 ## Nota
 En la teoría estadística, la población no solo es el conjunto de individuos u objetos físicos, sino el **conjunto completo de mediciones o respuestas** de interés para el experimentador. Por lo tanto, si nos interesa el ingreso mensual, la población conceptual estaría formada por todos los valores monetarios posibles de ese grupo, más que por los individuos mismos. Los valores numéricos constantes que resumen las características de esta población en su totalidad (como el verdadero ingreso medio $\mu$ o la varianza del ingreso $\sigma^2$) reciben el nombre de **parámetros**.
+
 :::
 
 ## Muestra aleatoria
@@ -55,7 +57,7 @@ La expresión anterior señala que $x$ representa una *medición específica* de
 
 En estadística, no se trabaja con un único individuo, sino con una colección o muestra de variables aleatorias asociadas a $n$ elementos. Para que la inferencia estadística sea válida, Wackerly, Mendenhall y Scheaffer establecen que esta recolección debe cumplir con ciertas propiedades matemáticas rigurosas:
 
-> **Muestra aleatoria:** Es un conjunto de variables aleatorias $X_1, X_2, \dots, X_n$ que son **independientes e idénticamente distribuidas (v.a.i.i.d.)**.
+> **Muestra aleatoria:** Es un conjunto de variables aleatorias $X_1, X_2, \dots, X_n$ que son **independientes e idénticamente distribuidas (i.i.d.)**.
 >
 > -   **Idénticamente distribuidas:** Significa que cada elemento de la muestra tiene exactamente la misma función de densidad o masa de probabilidad que la población de la cual proviene.
 > -   **Independientes:** Significa que el resultado de una medición no afecta ni aporta información sobre el resultado de otra medición dentro de la muestra.
@@ -220,6 +222,7 @@ ggplot() +
 1. Una muestra aleatoria de tamaño $n=8$ pesos (en kg) de paquetes de arroz es: 1.02, 0.98, 1.01, 1.00, 0.99, 1.03, 0.97, 1.00. Calcule la estimación de la media $\bar{x}$ y de la varianza $s^2$.
 2. De un lote de 500 piezas se revisan 20 y se encuentran 3 defectuosas. Calcule la estimación de la proporción de piezas defectuosas $\bar{p}$ en el lote.
 3. Explique con sus propias palabras la diferencia entre un parámetro y un estimador, y entre un estimador y una estimación.
+
 :::
 
 ## Distribución muestral de un estimador
@@ -229,6 +232,7 @@ Como ya hemos visto, una vez que se tienen los datos observados de una muestra, 
 Los estimadores "aproximan" a los parámetros poblacionales. Esto quiere decir que, aunque una estimación puntual nunca coincidirá de manera exacta con el parámetro (debido a la variabilidad aleatoria de la muestra), si la muestra fue seleccionada correctamente y es lo suficientemente grande, el resultado tenderá a concentrarse muy cerca del valor real del parámetro.
 
 > **Distribución muestral de un estimador:** Es la distribución teórica de probabilidad de todos los posibles valores que puede tomar un estimador, calculados a partir de todas las muestras posibles de tamaño $n$ extraídas de la misma población.
+
 ::: {.callout-caution icon=false}
 ## Errores comunes: parámetros y estimadores
 
@@ -237,6 +241,7 @@ El parámetro $\mu$ (media poblacional) es un número fijo pero desconocido; el 
 
 **Error 2 — Dividir por $n$ en lugar de $n-1$ al estimar la varianza.**  
 $s^2 = \frac{\sum(x_i - \bar{x})^2}{n-1}$ es el estimador *insesgado* de $\sigma^2$. Dividir por $n$ produce un estimador sesgado que subestima sistemáticamente la varianza poblacional, especialmente con muestras pequeñas.
+
 :::
 
 
@@ -429,6 +434,7 @@ $$\frac{(n-1)S^2}{\sigma^2} \sim \chi^2_{n-1} \quad (8)$$
 ::: {.callout-note icon=false}
 ## Nota
 Esta relación es el núcleo de la inferencia para varianzas, pero depende fuertemente de la suposición de que la población original sea Normal. Si la población no es Normal, este estadístico no seguirá una distribución Chi-cuadrada.
+
 :::
 
 **Ejemplo 1**
@@ -457,6 +463,7 @@ La probabilidad de que la varianza muestral sea mayor a 12.16 es de **0.791** (7
 1. El tiempo de vida de cierto componente se distribuye $N(\mu, \sigma^2)$ con $\sigma = 5$. Si se toma una muestra de $n=16$, calcule $P(\bar{X} > \mu + 2)$.
 2. Si $Y \sim \chi^2_{15}$, use R (funciones `pchisq`/`qchisq`) para calcular $P(Y > 22)$ y el valor crítico $a$ tal que $P(Y < a) = 0.05$.
 3. Una muestra de $n=10$ observaciones normales tiene $\sigma^2 = 9$. Calcule $P(S^2 > 14)$ usando la relación entre $S^2$ y la distribución Chi-cuadrada.
+
 :::
 
 ------------------------------------------------------------------------
@@ -610,6 +617,7 @@ Al especificar `lower.tail = FALSE` en la función `qf`, le indicamos al softwar
 1. Una muestra de $n=12$ observaciones normales tiene $\bar{x}=48$ y $s=6$. Pruebe si es razonable suponer $\mu=50$ calculando $P(\bar{X} \le 48)$ usando la distribución $t$ con los grados de libertad correspondientes.
 2. Use R (`qt`) para encontrar el valor crítico $t$ que deja un área de 0.025 en la cola derecha de una distribución $t$ con 18 grados de libertad.
 3. Se comparan las varianzas de dos máquinas con muestras de tamaño $n_1=10$ y $n_2=13$. Calcule $P(F_{9,12} > 1.5)$ usando R (`pf`).
+
 :::
 
 ------------------------------------------------------------------------
@@ -663,6 +671,7 @@ Comprobando la Ecuación (19) para la varianza: $$\text{Var}(\hat{P}) = \frac{P(
 ## Teorema del Límite Central (TLC)
 
 Este es, quizás, el teorema de mayor importancia práctica en la estadística inferencial.
+
 ::: {.callout-caution icon=false}
 ## Errores comunes: Teorema del Límite Central
 
@@ -671,6 +680,7 @@ El TLC habla de la distribución del *promedio muestral* $\bar{X}$, no de los da
 
 **Error 2 — Aplicar el TLC con $n$ pequeño en distribuciones muy asimétricas.**  
 La regla $n \geq 30$ es una guía general. En distribuciones con colas muy pesadas o alta asimetría, puede necesitarse $n$ mucho mayor para que la aproximación normal sea razonable.
+
 :::
 
  Especifica cuál es el comportamiento de las distribuciones de promedios o sumas cuando el tamaño de la muestra crece.
@@ -758,16 +768,20 @@ ggplot(df_prop, aes(x = x, y = densidad)) +
 1. El tiempo de ensamblaje de una pieza tiene media $\mu = 12$ minutos y desviación estándar $\sigma = 3$ minutos (distribución desconocida). Para una muestra de $n = 49$ piezas, use el TLC para calcular $P(\bar{X} > 12.5)$.
 2. En una encuesta a $n = 200$ personas, se asume que la verdadera proporción que prefiere un producto es $P = 0.40$. Calcule, usando el TLC para proporciones, la probabilidad de que la proporción muestral sea menor a 0.35.
 3. Explique por qué el Teorema del Límite Central es útil incluso cuando no conocemos la distribución exacta de la población original.
+
 :::
 
 ## Distribuciones de muestreo {#sec-distribuciones-muestreo}
+
 ::: {.content-visible when-format="html"}
 [📖 Humberto Martínez Bautista]{.fuente-badge .fuente-humberto}
+
 :::
 
 
 ::: {.callout-tip icon=false}
 ## Fuente: Apuntes del curso (Prof. Magín Zúñiga Estrada)
+
 :::
 
 Antes de estimar parámetros o probar hipótesis es indispensable conocer cómo se distribuyen los **estadísticos muestrales** (funciones de la muestra). Las tres distribuciones siguientes son el puente entre los capítulos de distribuciones de probabilidad y la inferencia estadística.
@@ -820,6 +834,7 @@ $$E[X] = k, \qquad \text{Var}(X) = 2k$$
 ::: {.callout-note icon=false}
 ### Observación
 Al estimar $\mu$ con $\bar{X}$, se pierde un grado de libertad porque la restricción $\sum(X_i - \bar{X}) = 0$ hace que solo $n-1$ desviaciones sean libres. Por eso la distribución de $(n-1)S^2/\sigma^2$ tiene $n-1$ g.l., no $n$.
+
 :::
 
 ```{r chi2-plot, fig.align='center', fig.width=7, fig.height=4}
@@ -887,6 +902,7 @@ ggplot(df_t, aes(x = x, y = dens, color = dist, linetype = dist)) +
 ::: {.callout-note icon=false}
 ### Propiedad
 Cuando $k \to \infty$, $t_k \to N(0,1)$. En la práctica, para $k \geq 30$ la diferencia es despreciable.
+
 :::
 
 ### Distribución $F$ de Fisher {#sec-F-fisher}
@@ -930,12 +946,14 @@ ggplot(df_F, aes(x = x, y = dens, color = dist)) +
 1. Si $S^2 = 5.2$ con $n = 25$ observaciones de $N(\mu, \sigma^2)$, construya un IC del 90% para $\sigma^2$.
 2. Demuestre que si $T \sim t_k$, entonces $T^2 \sim F_{1,k}$.
 3. Una muestra de $n=16$ de $N(\mu, 4)$ tiene $\bar{x} = 12.3$. Construya un IC del 95% para $\mu$ usando la distribución $t$.
+
 :::
 
 ## Estadísticas de orden {#sec-order-stats}
 
 :::: {.content-visible when-format="html"}
 [📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
+
 ::::
 
 Las **estadísticas de orden** desempeñan en la inferencia un papel análogo al de los cuantiles poblacionales: son cuantiles muestrales. Dado que los datos observados son una realización de variables aleatorias, las estadísticas de orden son en sí mismas variables aleatorias con distribuciones propias.
@@ -948,6 +966,7 @@ Sea $X_1, \ldots, X_n$ una muestra aleatoria de tamaño $n$ de una distribución
 $$Y_1 = \min(X_1,\ldots,X_n), \quad Y_n = \max(X_1,\ldots,X_n)$$
 
 Las estadísticas de orden **no son independientes**: si $Y_k \geq y$ entonces necesariamente $Y_{k+1} \geq y$.
+
 :::
 
 ::: {.callout-tip icon=false}
@@ -962,6 +981,7 @@ $$F_{Y_k}(y) = \sum_{j=k}^{n} \binom{n}{j} [F(y)]^j [1-F(y)]^{n-j}$$
 $$F_{Y_k}(y) = P(Y_k \leq y) = P\!\left(\sum_{i=1}^n Z_i \geq k\right) = \sum_{j=k}^{n} \binom{n}{j} [F(y)]^j [1-F(y)]^{n-j}$$
 
 El paso clave es la equivalencia $\{Y_k \leq y\} \Leftrightarrow \{\text{al menos } k \text{ de las } X_i \text{ caen en } (-\infty, y]\}$.
+
 :::
 
 ::: {.callout-note icon=false}
@@ -974,6 +994,7 @@ $$F_{Y_n}(y) = [F(y)]^n$$
 $$F_{Y_1}(y) = 1 - [1-F(y)]^n$$
 
 Estos resultados son consecuencia directa de la independencia de la muestra: el máximo es $\leq y$ sii todos los $X_i$ son $\leq y$; el mínimo es $> y$ sii todos los $X_i$ son $> y$.
+
 :::
 
 ```{r order-stats-demo, fig.align='center', fig.width=9, fig.height=4, message=FALSE}
@@ -1009,13 +1030,16 @@ ggplot(df_os, aes(x=valor, color=stat)) +
 1. Sea $X_1,\ldots,X_5 \sim U(0,1)$. Calcula $P(Y_1 > 0.3)$ y $P(Y_5 \leq 0.8)$ usando la cdf de las estadísticas de orden.
 2. Para $X_i \sim \text{Exp}(\lambda)$, muestra que $Y_1 \sim \text{Exp}(n\lambda)$ usando el corolario del mínimo.
 3. Escribe una simulación en R para verificar numéricamente la cdf de $Y_k$ para $k=3$, $n=7$ y $X_i \sim U(0,1)$.
+
 :::
 
 
 
 ## Métodos de estimación puntual {#sec-metodos-estimacion}
+
 ::: {.content-visible when-format="html"}
 [📖 Humberto Martínez Bautista]{.fuente-badge .fuente-humberto}
+
 :::
 
 
@@ -1025,6 +1049,7 @@ ggplot(df_os, aes(x=valor, color=stat)) +
 El desarrollo de esta sección sigue el texto del Dr. Magín Zúñiga
 Estrada. Se presentan los dos métodos clásicos de estimación puntual:
 el método de momentos y el de máxima verosimilitud.
+
 :::
 
 Un **estimador** es un estadístico $T(\mathbf{X})$ que, dada una
@@ -1038,6 +1063,7 @@ La **estimación puntual** consiste en derivar un estadístico
 $\hat{\theta} = T(\mathbf{X})$ que estime $\theta$ mediante un solo
 valor. Por convención $\hat{\theta}$ es una variable aleatoria (depende
 de los datos) y $\theta$ es fijo y desconocido.
+
 :::
 
 ### Método de momentos
@@ -1085,6 +1111,7 @@ Dada una muestra $x_1,\ldots,x_n$ con $X_i \sim f(x;\theta)$, la
 $$L(\theta \mid x_1,\ldots,x_n) = \prod_{i=1}^n f(x_i;\theta).$$
 
 La **log-verosimilitud** es $\ell(\theta) = \log L(\theta)$.
+
 :::
 
 ::: {.callout-note icon=false}
@@ -1093,6 +1120,7 @@ La **log-verosimilitud** es $\ell(\theta) = \log L(\theta)$.
 El **EMV** $\hat{\theta}_{MV}$ es el valor de $\theta$ que maximiza
 $L(\theta)$ (equivalentemente, $\ell(\theta)$):
 $$\hat{\theta}_{MV} = \arg\max_{\theta \in \Theta} L(\theta).$$
+
 :::
 
 **Principio:** se elige el valor de $\theta$ que hace más probable
@@ -1144,13 +1172,16 @@ ggplot(df_ll, aes(x=theta, y=ll)) +
 | $\text{Poisson}(\lambda)$ | $\lambda$ | $\hat{\lambda} = \bar{X}$ |
 
 ## Propiedades de los estimadores {#sec-propiedades-estimadores}
+
 ::: {.content-visible when-format="html"}
 [📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
+
 :::
 
 
 ::: {.callout-tip icon=false}
 ## Fuente: Apuntes del curso (Prof. Magín Zúñiga Estrada)
+
 :::
 
 No basta con obtener un estimador; es necesario evaluar su calidad. A
@@ -1172,6 +1203,7 @@ El **sesgo** de un estimador es:
 $$\text{Sesgo}(T) = E[T] - \theta.$$
 
 $T$ es sesgado si y solo si $\text{Sesgo}(T) \neq 0$.
+
 :::
 
 **Ejemplo.** $\bar{X}$ es insesgado para $\mu$. El estimador
@@ -1183,6 +1215,7 @@ $\sigma^2$; el insesgado es $S^2 = \frac{1}{n-1}\sum(X_i-\bar{X})^2$.
 
 $\hat{\theta}_n$ es **asintóticamente insesgado** para $\theta$ si:
 $$\lim_{n\to\infty} E[\hat{\theta}_n] = \theta.$$
+
 :::
 
 ### Error cuadrático medio (ECM)
@@ -1196,6 +1229,7 @@ $$\text{CME}(T, \theta) = E_\theta\!\left[(T - \theta)^2\right].$$
 
 **Descomposición fundamental:**
 $$\text{CME}(T,\theta) = \text{Var}(T) + \left[\text{Sesgo}(T)\right]^2.$$
+
 :::
 
 **Ejemplo — Comparación de estimadores de $\sigma^2$:**
@@ -1247,6 +1281,7 @@ $$\lim_{n\to\infty} P(|\hat{\theta}_n - \theta| > \varepsilon) = 0
   \quad \forall\, \varepsilon > 0.$$
 
 Es decir, $\hat{\theta}_n \xrightarrow{p} \theta$.
+
 :::
 
 ::: {.callout-note icon=false}
@@ -1261,6 +1296,7 @@ entonces $\hat{\theta}_n$ es consistente.
 
 **Corolario:** $\bar{X}$ es consistente para $\mu$ (ya que
 $E[\bar{X}]=\mu$ y $\text{Var}(\bar{X})=\sigma^2/n \to 0$).
+
 :::
 
 ### Estimadores insesgados de varianza uniformemente mínima (EIVUM)
@@ -1274,6 +1310,7 @@ de varianza uniformemente mínima (EIVUM)** si:
 1. Es insesgado: $E[\hat{\theta}_n] = \theta$.
 2. Su varianza es la mínima entre todos los estimadores insesgados para
    $\theta$, para todo $\theta \in \Theta$.
+
 :::
 
 **Ejemplo — Poisson:** Sea $X_1,\ldots,X_n$ muestra de $\text{Poi}(\lambda)$.
@@ -1302,6 +1339,7 @@ En particular, para $g(\theta)=\theta$ (estimación directa):
 $$\text{CICR}(\theta) = \frac{1}{n\,\mathcal{I}(\theta)}.$$
 
 Un estimador insesgado que **alcanza** la CICR es automáticamente EIVUM.
+
 :::
 
 ::: {.callout-tip icon=false}
@@ -1321,6 +1359,7 @@ $$\text{CICR}(\theta) = \frac{\theta(1-\theta)}{n}.$$
 
 Como $\text{Var}(\bar{X}) = \theta(1-\theta)/n = \text{CICR}(\theta)$,
 el estimador $\bar{X}$ alcanza la cota y es EIVUM.
+
 :::
 
 ```{r cramer-rao-demo, message=FALSE, warning=FALSE}
@@ -1345,6 +1384,7 @@ $$\text{Efi}(\hat{\theta}) = \frac{\text{CICR}(\theta)}{\text{Var}(\hat{\theta})
 
 Se dice que $\hat{\theta}_n$ es **asintóticamente eficiente** si:
 $$\lim_{n\to\infty} \text{Efi}(\hat{\theta}_n) = 1.$$
+
 :::
 
 ### Suficiencia
@@ -1358,6 +1398,7 @@ a $T=t$ no depende de $\theta$, para cualquier valor posible $t$.
 
 **Interpretación:** dado el valor de $T$, la muestra no aporta
 información adicional sobre $\theta$.
+
 :::
 
 ::: {.callout-tip icon=false}
@@ -1370,6 +1411,7 @@ $$P(\mathbf{X}=\mathbf{x}\mid T=t)
     I_{\{t\}}(\sum x_i)}{\binom{n}{t}\theta^t(1-\theta)^{n-t}}
   = \frac{I_{\{t\}}(\sum x_i)}{\binom{n}{t}},$$
 que no depende de $\theta$. Por tanto $T$ es suficiente.
+
 :::
 
 ::: {.callout-note icon=false}
@@ -1380,6 +1422,7 @@ de densidad conjunta puede factorizarse como:
 $$f(x_1,\ldots,x_n;\theta) = g(T(x_1,\ldots,x_n),\,\theta)\cdot h(x_1,\ldots,x_n),$$
 donde $g$ depende de los datos solo a través de $T$, y $h$ no depende
 de $\theta$.
+
 :::
 
 **Ejemplo:** Para $\text{Ber}(\theta)$:
@@ -1412,6 +1455,7 @@ Por la ley de la varianza total:
 $$\text{Var}(\hat{\theta}) = \underbrace{\text{Var}(E[\hat{\theta}\mid T])}_{=\,\text{Var}(\phi(T))}
   + \underbrace{E[\text{Var}(\hat{\theta}\mid T)]}_{\geq\,0}
   \geq \text{Var}(\phi(T)).$$
+
 :::
 
 ## Pruebas de bondad de ajuste {#sec-bondad-ajuste}
@@ -1434,6 +1478,7 @@ Bajo $H_0$, este estadístico sigue aproximadamente una distribución $\chi^2$ c
 **Regla de decisión:** Se rechaza $H_0$ si $\chi^2 > \chi^2_{\alpha, \nu}$.
 
 **Requisito:** $E_i \geq 5$ en cada clase (combinar clases si es necesario).
+
 :::
 
 ::: {.callout-tip icon=false}
@@ -1463,6 +1508,7 @@ resultado  <- chisq.test(observados)   # H0: distribución uniforme
 print(resultado)
 cat("Valor crítico chi2(0.05, 5) =", round(qchisq(0.95, df=5), 4), "\n")
 ```
+
 :::
 
 ::: {.callout-tip icon=false}
@@ -1499,6 +1545,7 @@ cat("\nEstadístico chi2 =", round(chi2_obs, 4),
     "\ngl =", gl,
     "\np-valor =", round(p_valor, 4), "\n")
 ```
+
 :::
 
 ---
@@ -1521,6 +1568,7 @@ Se rechaza $H_0$ si $D_n > d_{\alpha,n}$ (valor crítico de la tabla KS o p-valo
 **Ventajas sobre $\chi^2$:** No requiere agrupar los datos en clases y es exacta para distribuciones continuas con parámetros conocidos.
 
 **Limitación:** Si se estiman parámetros de los datos, el p-valor de `ks.test` es conservador (usar la prueba de Lilliefors para la Normal).
+
 :::
 
 ::: {.callout-tip icon=false}
@@ -1555,6 +1603,7 @@ lines(x_ord, F0, col="darkred", lwd=2, lty=2)
 legend("bottomright", c("F_n(x) empírica", "F_0(x) = Exp(λ̂)"),
        col=c("steelblue","darkred"), lty=c(1,2), lwd=2)
 ```
+
 :::
 
 ::: {.callout-note icon=false}
@@ -1567,6 +1616,7 @@ legend("bottomright", c("F_n(x) empírica", "F_0(x) = Exp(λ̂)"),
 | Parámetros estimados | Descuenta $p$ gl fácilmente | P-valor conservador |
 | Sensibilidad | A diferencias en colas | A diferencias globales |
 | Uso típico | Distribuciones discretas, normalidad con clases | Exponencial, Uniforme, continuas en general |
+
 :::
 
 ::: {.callout-note icon=false}
@@ -1579,6 +1629,7 @@ legend("bottomright", c("F_n(x) empírica", "F_0(x) = Exp(λ̂)"),
 3. Genere en R 100 observaciones de una $\text{Gamma}(2, 1)$ y aplique la prueba KS para evaluar si los datos provienen de: (a) $\text{Exp}(0.5)$ y (b) $\text{Gamma}(2, 1)$. Compare los p-valores.
 
 4. ¿Por qué la prueba KS pierde validez cuando los parámetros de $F_0$ se estiman de los mismos datos? Investigue la prueba de Lilliefors como alternativa para normalidad.
+
 :::
 
 
@@ -1595,8 +1646,10 @@ legend("bottomright", c("F_n(x) empírica", "F_0(x) = Exp(λ̂)"),
    factorización de Neyman.
 
 ## Intervalos de confianza {#sec-intervalos-confianza}
+
 ::: {.content-visible when-format="html"}
 [📖 Humberto Martínez Bautista]{.fuente-badge .fuente-humberto}
+
 :::
 
 
@@ -1612,6 +1665,7 @@ $(\hat{\theta}_L, \hat{\theta}_U)$ tal que:
 $$P(\hat{\theta}_L \leq \theta \leq \hat{\theta}_U) = 1-\alpha.$$
 
 Al valor $1-\alpha$ se le llama **coeficiente de confianza** (e.g., 0.95).
+
 :::
 
 **Interpretación frecuentista:** si el procedimiento se repitiera muchas
@@ -1621,13 +1675,16 @@ contendría al verdadero $\theta$.
 ### IC para la media muestral
 
 ## Métodos para encontrar pruebas {#sec-metodos-pruebas}
+
 ::: {.content-visible when-format="html"}
 [📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
+
 :::
 
 
 ::: {.callout-tip icon=false}
 ## Fuente: Apuntes del curso (Prof. Magín Zúñiga Estrada)
+
 :::
 
 ### Pruebas de razón de verosimilitud (LRT)
@@ -1648,6 +1705,7 @@ $$\lambda(\mathbf{x}) = \frac{\sup_{\theta\in\Theta_0} L(\theta;\mathbf{x})}
 
 Una **prueba LRT** rechaza $H_0$ cuando $\lambda(\mathbf{x})\leq c$,
 con $0\leq c\leq 1$.
+
 :::
 
 ::: {.callout-tip icon=false}
@@ -1661,6 +1719,7 @@ $$\lambda(\mathbf{x}) = \exp\!\left[-\frac{n(\bar{x}-\theta_0)^2}{2}\right].$$
 La región de rechazo $\lambda(\mathbf{x})\leq c$ equivale a:
 $$|\bar{x}-\theta_0| \geq \sqrt{-2\log(c)/n},$$
 que corresponde a la prueba bilateral usual sobre $\bar{X}$.
+
 :::
 
 ::: {.callout-tip icon=false}
@@ -1676,6 +1735,7 @@ $$\lambda(\mathbf{x}) = \begin{cases}
 
 La LRT rechaza $H_0$ si $X_{(1)} \geq c$, con $c$ elegida para
 controlar el error tipo I.
+
 :::
 
 **Conexión con suficiencia:** Si $T(\mathbf{X})$ es suficiente para
@@ -1698,6 +1758,7 @@ $$\gamma(\theta) = \begin{cases}
 
 Una **prueba de tamaño $\alpha$** satisface $\alpha = \sup_{\theta\in\Theta_0}\gamma(\theta)$.
 Una **prueba de nivel $\alpha$** satisface $\alpha \geq \sup_{\theta\in\Theta_0}\gamma(\theta)$.
+
 :::
 
 ::: {.callout-tip icon=false}
@@ -1710,6 +1771,7 @@ $H_1:\theta>0.5$:
   máximo $= (0.5)^5 = 0.03$.
 - Prueba 2 (rechaza si $X\geq 3$): $\gamma_2(\theta)=\sum_{k=3}^5\binom{5}{k}\theta^k(1-\theta)^{5-k}$,
   mayor potencia pero también mayor error tipo I.
+
 :::
 
 ```{r potencia-binomial, fig.align='center', fig.width=8, fig.height=4}
@@ -1751,6 +1813,7 @@ más potente (UMP)** en $\mathcal{C}$ si:
 $$\gamma(\theta) \geq \gamma'(\theta) \quad \forall\,\theta\in\Theta_0^c,$$
 para toda $\gamma'$ función potencia de cualquier otra prueba en
 $\mathcal{C}$.
+
 :::
 
 ::: {.callout-note icon=false}
@@ -1772,6 +1835,7 @@ Entonces:
 para $\theta$ y $g(t;\theta_i)$ es su densidad, la prueba UMP de nivel
 $\alpha$ puede construirse rechazando $H_0$ cuando
 $g(T;\theta_1) > k\,g(T;\theta_0)$.
+
 :::
 
 ```{r neyman-pearson-demo, fig.align='center', fig.width=9, fig.height=4}
@@ -1819,6 +1883,7 @@ ggplot(df_np, aes(x=theta, y=gamma)) +
    $H_1:\lambda\neq\lambda_0$.
 4. Grafique la función potencia de la prueba del ejercicio anterior para
    $\lambda_0=1$, $n=15$, $\alpha=0.05$.
+
 :::
 
 
@@ -1842,6 +1907,7 @@ $$\bar{X} \sim N\!\left(\mu,\frac{\sigma^2}{n}\right), \qquad
 Para muestras **grandes** (cualquier distribución), el TCL garantiza:
 $$\bar{X} \approx N\!\left(\mu,\frac{\sigma^2}{n}\right), \qquad
 \hat{P} \approx N\!\left(p,\frac{p(1-p)}{n}\right)$$
+
 :::
 
 ::: {.callout-tip icon=false}
@@ -1851,6 +1917,7 @@ $$\bar{X} \approx N\!\left(\mu,\frac{\sigma^2}{n}\right), \qquad
 - Un estimador es **insesgado** si $E[\hat{\theta}] = \theta$, **consistente** si converge en probabilidad al parámetro, y **eficiente** si minimiza la varianza entre los insesgados.
 - Las distribuciones $\chi^2$, $t$ y $F$ son herramientas para construir intervalos de confianza y pruebas de hipótesis en poblaciones normales.
 - El **Teorema del Límite Central** aplica a $\bar{X}$ (y $\hat{P}$), no a los datos individuales. Con $n \geq 30$, la aproximación suele ser excelente.
+
 :::
 
 ## Cierre del curso

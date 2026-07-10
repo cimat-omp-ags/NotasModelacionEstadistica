@@ -10,6 +10,7 @@ Al finalizar este capítulo, el estudiante será capaz de:
 - Reconocer y aplicar las distribuciones discretas más importantes (Bernoulli, Binomial, Hipergeométrica, Poisson, Geométrica y Binomial Negativa), identificando en qué situación usar cada una.
 - Distinguir entre muestreo con y sin reemplazo, y elegir el modelo probabilístico adecuado (Binomial vs Hipergeométrica) según el contexto.
 - Calcular probabilidades de eventos complejos usando las distribuciones discretas vistas, tanto manualmente como con R.
+
 :::
 
 En este capítulo estudiaremos las variables aleatorias discretas: qué son, cómo se describen mediante su función de probabilidad y su función de probabilidad acumulada, y cómo resumir su comportamiento mediante la esperanza y la varianza. Después revisaremos las distribuciones discretas más utilizadas en la práctica (Uniforme, Bernoulli, Binomial, Hipergeométrica y Poisson), discutiremos las diferencias entre el muestreo con y sin reemplazo, y cerraremos con material complementario sobre las distribuciones Geométrica, Binomial Negativa y las distribuciones discretas conjuntas. A lo largo del capítulo se incluyen ejemplos resueltos y ejercicios propuestos para practicar los conceptos.
@@ -19,11 +20,12 @@ En este capítulo estudiaremos las variables aleatorias discretas: qué son, có
 Se denominan ___variables___ a las características particulares de cualquier elemento de alguna población o muestra que se tenga, dicha variable puede tomar distintos valores y, en general, hay dos tipos de variables (Cualitativa [Edad] y Cuantitativa [Género]). Se dice que son ___aleatorias___ porque el valor observado no se conoce hasta la realización del experimento, aunque sí se sabe cuáles son los posibles resultados
 
 
-__Nota__:
+**Nota.**
 Una variable aleatoria (v.a) es aquella cuyos valores son números reales asignados a los resultados de un experimento aleatorio.
 
 :::: {.content-visible when-format="html"}
 [📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
+
 ::::
 
 ### Definición formal
@@ -36,6 +38,7 @@ que asigna un número real a cada resultado del experimento aleatorio. Se clasif
 
 - **Discreta**: si toma un conjunto discreto (finito o infinito numerable) de valores.
 - **Continua**: si toma valores en un intervalo de la recta real.
+
 :::
 
 **¿Por qué se llama "aleatoria"?** Porque su valor depende del resultado aleatorio del experimento; no se conoce hasta que éste se realiza.
@@ -52,33 +55,33 @@ De igual forma, las desigualdades también describen eventos: $\{X \leq a\}$ es 
 
 :::: {.callout-note icon=false}
 ## Ejemplo 1
-Una moneda ordinaria cuenta con dos posibles resultados a: águila y c: sol. El experimento consiste en lanzar al mismo tiempo tres monedas y observar las caras que aparecen, el procedimiento se realiza 8 veces, entonces el espacio 
-muestral (S) es el siguiente:
-          S={(a,a,a),(a,c,a),(a,a,c),(c,a,a),(c,c,a),(c,a,c),(a,c,c),(c,c,c)}
-Donde:
-1. (a,c,a) es el resultado donde la primer cara es águila, la segunda sol y la tercera águila
-2. (a,a,c) es el resultado donde la primer y la segunda cara resultó ser águila y la tercera sol
+Se lanza una moneda tres veces. Denotamos cada resultado como **á** (águila) o **s** (sol). El espacio muestral es:
+$$S = \{(á,á,á),\,(á,s,á),\,(á,á,s),\,(s,á,á),\,(s,s,á),\,(s,á,s),\,(á,s,s),\,(s,s,s)\}$$
 
-Ahora definamos la variable aleatoria X como el número de águilas que aparecen tras lanzar tres monedas, en consecuencia, a esta variable le podemos asociar los valores de 0, 1, 2 y 3. Tendremos lo siguiente:
-X= 0, no aparece ninguna águila (c,c,c)
-X= 1, sólo aparece un águila (a,c,c), (c,a,c), (c,c,a)
-X=2, aparecen dos águilas (a,a,c), (a,c,a), (c,a,a)
-X=3, aparecer puras águilas (a,a,a)
+Se define la variable aleatoria $X$ como el **número de águilas** observadas en el lanzamiento de las tres monedas. Los posibles valores de $X$ son $\{0, 1, 2, 3\}$ y los eventos correspondientes son:
+
+| $X$ | Resultados | Descripción |
+|-----|-----------|-------------|
+| $0$ | $(s,s,s)$ | Ninguna águila |
+| $1$ | $(á,s,s),\,(s,á,s),\,(s,s,á)$ | Exactamente una águila |
+| $2$ | $(á,á,s),\,(á,s,á),\,(s,á,á)$ | Exactamente dos águilas |
+| $3$ | $(á,á,á)$ | Tres águilas |
+
+
 ::::
-Es importante mencionar que en el ejemplo 2.1.1 se supone que es posible distinguir cuál es la moneda 1, la moneda 2 y la moneda 3.
+Es importante mencionar que en este ejemplo se supone que es posible distinguir cuál es la moneda 1, la moneda 2 y la moneda 3.
 
-La importancia de definir una variable aleatoria radica en que los eventos que nos interesa estudiar (que se encuentran en el espacio muestral) van a ser trasladados a los números reales y, en este espacio ya nos va a ser posible realizar operaciones matemáticas e incluso a cada valor de la variable aleatoria asignarle una función de densidad de probabilidad con la cual cada valor de la variable aleatoria tendrá asociado una probabilidad de ocurrencia.
+La variable aleatoria traslada los eventos del espacio muestral al conjunto de los números reales, lo que permite aplicar herramientas matemáticas —cálculo, álgebra— y asignar a cada valor una probabilidad bien definida.
 
 
 ## Variable aleatoria discreta
 El común de los fenómenos aleatorios discretos tiende a comportarse bajo determinadas características generales, por lo que se han desarrollado algunas distribuciones discretas de probabilidad.
 
-__Nota__: 
-En el ejemplo anterior la v.a. proviene de un experimento con espacio muestral discreto, es decir, tiene _espacio muestral finito_ o _infinito numerable_
+**Nota.** En el ejemplo anterior la v.a. proviene de un experimento con espacio muestral discreto, es decir, tiene _espacio muestral finito_ o _infinito numerable_
 
 A continuación explicamos a lo que se refieren los anteriores conceptos.
 
-__Experimentos aleatorios con espacio muestral finito:__
+**Experimentos aleatorios con espacio muestral finito:**
 
 Algunos ejemplos de este tipo son: lanzamiento de un dado y ver la cara que aparece resultante, el resultado de un partido de futbol, el género de un individuo, números de pacientes curados al aplicar un medicamente en n pacientes seleccionados, etcétera.
 
@@ -94,6 +97,7 @@ variable aleatoria el número de terremotos la variable aleatoria puede consider
 valores 
 
 X=1, 2, 3, 4, …
+
 ::::
 
 ### Función de probabilidad y función de probabilidad acumulada
@@ -220,6 +224,7 @@ Sea $p(a) = P(X = a)$ la pmf de una v.a. discreta $X$. Entonces:
 1. $0 \leq p(a) \leq 1$ para todo $a$.
 2. Si $a$ es un valor que $X$ nunca toma, entonces $p(a) = 0$.
 3. $\displaystyle\sum_{\text{todos los } a} p(a) = 1$.
+
 :::
 
 ::: {.callout-tip icon=false}
@@ -229,9 +234,11 @@ La **cdf** de una v.a. discreta $X$ se define como $F(a) = P(X \leq a)$. Satisfa
 1. $F$ es **no decreciente**: si $a \leq b$ entonces $F(a) \leq F(b)$.
 2. $0 \leq F(a) \leq 1$ para todo $a$.
 3. $\displaystyle\lim_{a \to \infty} F(a) = 1$ y $\displaystyle\lim_{a \to -\infty} F(a) = 0$.
+
 :::
 
 > **Nota:** La cdf incluye el "igual a", por lo que $F(a) = P(X \leq a)$. Esto importa al calcular probabilidades del tipo $P(X > a) = 1 - F(a)$ o $P(a < X \leq b) = F(b) - F(a)$.
+
 ::: {.callout-caution icon=false}
 ## Errores comunes: pmf y cdf
 
@@ -240,6 +247,7 @@ La pmf da $P(X = k)$; la cdf da $P(X \leq k)$. Para preguntas como "¿cuál es l
 
 **Error 2 — Creer que la pmf puede tomar cualquier valor entre 0 y 1.**  
 Cada valor individual de la pmf sí está en $[0,1]$, pero la condición que realmente la define es que la *suma* sobre todos los valores sea 1: $\sum_k P(X=k) = 1$. Una pmf con tres valores iguales a 0.4, por ejemplo, sería inválida.
+
 :::
 
 
@@ -335,6 +343,7 @@ Lo invitamos a calcular $E[X]$, así como las correspondientes varianzas de cada
 1. Una variable aleatoria $X$ tiene la siguiente función de probabilidad: $P(X=0)=0.1$, $P(X=1)=0.3$, $P(X=2)=0.4$, $P(X=3)=0.2$. Verifique que es una función de probabilidad válida y calcule $E[X]$ y $\text{Var}(X)$.
 2. El número de llamadas que recibe una central telefónica en un minuto tiene la distribución $P(X=0)=0.2$, $P(X=1)=0.3$, $P(X=2)=0.3$, $P(X=3)=0.2$. Calcule $P(X \ge 2)$ y la desviación estándar de $X$.
 3. Explique, con sus propias palabras, la diferencia entre la función de probabilidad $P(X=x)$ y la función de probabilidad acumulada $F(x)$, y dé un ejemplo donde se use cada una.
+
 :::
 
 ## Familia de distribuciones de probabilidad discretas
@@ -369,7 +378,7 @@ Donde $n$ indica el número de eventos que se pueden considerar.
 
 ¿Cuál es la probabilidad de que aparezcan caras menores o igual a la cara 3?
 
-$F(X≤3)$=$P(X=1)+P(X=2)+P(X=3)$=$\dfrac{1}{6} + \dfrac{1}{6} + \dfrac{1}{6}$ 
+$F(3) = P(X \leq 3) = P(X=1)+P(X=2)+P(X=3) = \dfrac{1}{6} + \dfrac{1}{6} + \dfrac{1}{6}$ 
 
 Donde $F(X≤3)$ en este caso calcula la probabilidad acumulada a partir de la cara 1 hasta la cara 3. La función de distribución acumulada de la variable discreta X es:
 
@@ -524,6 +533,7 @@ $\text{Var}(X) = p(1-p)$
 
 :::: {.content-visible when-format="html"}
 [📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
+
 ::::
 
 ::: {.callout-tip icon=false}
@@ -536,6 +546,7 @@ $$p(X=1) = p, \qquad p(X=0) = 1-p$$
 donde $p \in (0,1)$ es la probabilidad de éxito. Se escribe $X \sim \text{Ber}(p)$, y se lee *"X sigue una distribución Bernoulli con parámetro p"*.
 
 **Ejemplo:** los votantes a favor o en contra de una propuesta. Si $p$ es la proporción de la población votante a favor, entonces el voto de un individuo elegido al azar se puede modelar con $\text{Ber}(p)$.
+
 :::
 
 
@@ -764,6 +775,7 @@ $$
 ::: {.callout-note icon=false}
 ## Observación
 El muestreo con reemplazo genera **ensayos independientes**, lo que permite aplicar directamente el **Principio Básico de Conteo** y multiplicar probabilidades iguales en cada repetición.
+
 :::
 
 
@@ -803,11 +815,13 @@ Obsérvese que, al no haber reemplazo, la probabilidad de éxito **disminuye en 
 - Cuando las extracciones se realizan **con reemplazo en poblaciones finitas**, o **sin reemplazo en poblaciones infinitas** (como se verá más adelante), los ensayos son independientes y el experimento se modela mediante una **variable aleatoria binomial**, al tratarse de repeticiones de un ensayo tipo Bernoulli.
 
 - En cambio, cuando las extracciones se realizan **sin reemplazo en poblaciones finitas**, las probabilidades cambian en cada repetición, por lo que el experimento se modela mediante una **variable aleatoria hipergeométrica**.
+
 ::: {.callout-caution icon=false}
 ## Errores comunes: Binomial vs Hipergeométrica
 
 **Error — Usar Binomial cuando el muestreo es sin reemplazo en población finita.**  
 La Binomial supone ensayos *independientes* con probabilidad de éxito constante. Cuando se extrae sin reemplazo de una población pequeña, la probabilidad cambia en cada extracción y el modelo correcto es la **Hipergeométrica**. La Binomial solo es una buena aproximación cuando $n < 5\%$ del total $N$.
+
 :::
 
 
@@ -818,12 +832,14 @@ La Binomial supone ensayos *independientes* con probabilidad de éxito constante
 1. Una urna contiene 8 bolas rojas y 12 bolas azules. Se extraen 2 bolas sin reemplazo. Calcule la probabilidad de que ambas sean rojas.
 2. Repita el ejercicio anterior suponiendo que el muestreo se realiza con reemplazo. Compare ambos resultados y explique a qué se debe la diferencia.
 3. ¿Bajo qué condición el muestreo sin reemplazo puede aproximarse razonablemente por un muestreo con reemplazo? Justifique su respuesta usando los conceptos de esta sección.
+
 :::
 
 ## Distribución Binomial
 
 :::: {.content-visible when-format="html"}
 [📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
+
 ::::
 
 ::: {.callout-tip icon=false}
@@ -838,6 +854,7 @@ $$P(X = k) = \binom{n}{k} p^{k}(1-p)^{n-k}, \quad k = 0, 1, 2, \ldots, n$$
 | $p(k)$ | $(1-p)^n$ | $\binom{n}{1}p(1-p)^{n-1}$ | $\binom{n}{2}p^2(1-p)^{n-2}$ | $\cdots$ | $\binom{n}{n-1}p^{n-1}(1-p)$ | $p^n$ |
 
 **Relación con Bernoulli:** $\text{Bin}(1,p) = \text{Ber}(p)$.
+
 :::
 
 Un **experimento de tipo Bernoulli** surge cuando se selecciona al azar una unidad experimental y, con base en una característica de interés, dicha unidad se clasifica en **una de dos categorías mutuamente excluyentes**, comúnmente denominadas **éxito** o **fracaso**.
@@ -1215,6 +1232,7 @@ barplot(prob, names.arg = x,
 ```
 
 Los resultados muestran que la probabilidad de exactamente 6 ventas es baja dado que $p < 0.3$, mientras que obtener cero ventas, aunque posible, también es poco probable con $n=10$ llamadas.
+
 :::
 
 ## Distribución Hipergeométrica
@@ -1262,6 +1280,7 @@ $$
 ::: {.callout-note icon=false}
 ## Observación
 Las probabilidades prácticamente no varían en cada extracción. En este caso es razonable adoptar un modelo de muestreo con reemplazo, es decir, una **variable aleatoria binomial**.
+
 :::
 
 
@@ -1285,6 +1304,7 @@ Las probabilidades condicionadas son:
 ::: {.callout-note icon=false}
 ## Observación
 La probabilidad de éxito cambia significativamente en cada extracción. Por tanto, **no es adecuado utilizar un modelo binomial** y se debe emplear la **distribución hipergeométrica**.
+
 :::
 
 
@@ -1474,6 +1494,7 @@ $$
 $$
 
 **Interpretación:** En promedio esperamos 2 defectuosos en la muestra, con una desviación estándar de $\sqrt{0.947} \approx 0.97$.
+
 :::
 
 ```{r}
@@ -1544,6 +1565,7 @@ barplot(pmf_f, names.arg = x_f,
 ```
 
 Se espera encontrar menos de 1 foco defectuoso en promedio ($E[X] \approx 0.71$), lo que refleja la baja tasa de defectos del proceso (15/380 ≈ 3.9%).
+
 :::
 
 ::: {.callout-tip icon=false}
@@ -1593,6 +1615,7 @@ barplot(probs, names.arg = x_vals,
 ```
 
 Con $K/N = 0.75$ (75% apoyan A), la probabilidad de que ninguno de los 4 seleccionados apoye a A es prácticamente cero.
+
 :::
 
 ## Distribución Poisson
@@ -1649,6 +1672,7 @@ En la distribución Poisson, el parámetro $\lambda$ representa simultáneamente
 
 - la **esperanza matemática**,
 - la **varianza** de la variable aleatoria.
+
 :::
 
 $$
@@ -1832,6 +1856,7 @@ barplot(prob, names.arg = x,
         main = expression(paste("Poisson(", lambda, " = 5) — Infracciones por hora")),
         xlab = "Número de infracciones", ylab = "Probabilidad")
 ```
+
 :::
 
 ::: {.callout-tip icon=false}
@@ -1866,6 +1891,7 @@ cat("P(Y <= 30) en 5 min =", round(ppois(30, lambda_5min), 6), "\n")
 ```
 
 Los valores confirman que con $\lambda = 10$, obtener 0 partículas es un evento extremadamente improbable ($\approx 4.5 \times 10^{-5}$), mientras que más de 5 partículas ocurre con probabilidad 0.933.
+
 :::
 
 ::: {.callout-note icon=false}
@@ -1875,6 +1901,7 @@ Los valores confirman que con $\lambda = 10$, obtener 0 partículas es un evento
 2. De un lote de 25 artículos, 5 son defectuosos. Si se seleccionan 4 artículos sin reemplazo, calcule la probabilidad de obtener al menos un defectuoso usando la distribución Hipergeométrica.
 3. El número de accidentes en una intersección sigue una distribución Poisson con una media de 1.5 accidentes por semana. Calcule la probabilidad de que ocurran más de 2 accidentes en una semana dada.
 4. Una ruleta de casino tiene números del 0 al 36. Se considera éxito que caiga el número elegido. Si se juega 15 veces: (a) determine $p$; (b) calcule $P(X < 3)$; (c) obtenga $E[X]$ y $\text{Var}(X)$.
+
 :::
 
 ## Material complementario: distribuciones adicionales
@@ -1887,6 +1914,7 @@ La **distribución geométrica** modela el número de fracasos que ocurren *ante
 
 :::: {.content-visible when-format="html"}
 [📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
+
 ::::
 
 ::: {.callout-tip icon=false}
@@ -1901,6 +1929,7 @@ Su pmf en forma tabular:
 | $p(k)$ | $p$ | $(1-p)\,p$ | $(1-p)^2 p$ | $\cdots$ | $(1-p)^k p$ |
 
 **Nota sobre nomenclatura:** hablar de "éxito" y "fracaso" puede resultar ambiguo — a veces interesa el número de éxitos antes del primer fracaso y a veces lo contrario. Para evitar confusión, se recomienda reformular en términos concretos: por ejemplo, *"número de cruces antes de la primera cara"*.
+
 :::
 
 **Función masa de probabilidad y momentos:**
@@ -1942,6 +1971,7 @@ cat("\nE[X] =", (1-p_f)/p_f, "niños varones en promedio antes de la primera ni�
 ```
 
 Aunque cada familia puede tener muchos niños, la razón niños/niñas en la isla sigue siendo 1:1 en promedio.
+
 :::
 
 ### Distribución Binomial Negativa
@@ -1959,6 +1989,7 @@ $$E[X] = \frac{r(1-p)}{p}, \qquad \text{Var}(X) = \frac{r(1-p)}{p^2}$$
 ::: {.callout-note icon=false}
 ## Observación
 La distribución geométrica es el caso $r = 1$: $\text{Geo}(p) = \text{NegBin}(1, p)$.
+
 :::
 
 ```{r negbin-plot, fig.align='center', fig.width=7, fig.height=4}
@@ -1991,6 +2022,7 @@ barplot(dnbinom(x_vals, size = r, prob = p),
         main = "NegBin(r=3, p=0.2) — Rechazos antes de 3 ventas",
         xlab = "Rechazos (X)", ylab = "Probabilidad")
 ```
+
 :::
 
 ::: {.callout-tip icon=false}
@@ -2006,6 +2038,7 @@ $$P(X = 8) = \binom{12}{4}(0.7)^8(0.3)^5 \approx 0.0692$$
 cat("P(X = 8) =", round(dnbinom(8, size = 5, prob = 0.3), 5), "\n")
 cat("E[X] =", 5*(1-0.3)/0.3, "\n")
 ```
+
 :::
 
 ::: {.callout-tip icon=false}
@@ -2024,6 +2057,7 @@ cat("P(X = 5) =", round(dnbinom(5, size = 3, prob = 0.4), 5), "\n")
 cat("E[X] = r(1-p)/p =", 3*0.6/0.4, "\n")
 cat("Var[X] =", 3*0.6/0.16, "\n")
 ```
+
 :::
 
 ::: {.callout-tip icon=false}
@@ -2042,6 +2076,7 @@ cat("P(X = 10) =", round(dnbinom(10, size = 4, prob = 0.15), 5), "\n")
 cat("E[X] = r(1-p)/p =", 4*0.85/0.15, "\n")
 cat("Var[X] =", 4*0.85/0.0225, "\n")
 ```
+
 :::
 
 ### Distribuciones discretas conjuntas
@@ -2067,6 +2102,7 @@ cat("P(S = 7) =", 6/36, "\n")
 
 :::: {.content-visible when-format="html"}
 [📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
+
 ::::
 
 ::: {.callout-note icon=false}
@@ -2099,6 +2135,7 @@ cat("P(S = 7) =", 6/36, "\n")
 
    a. ¿Cuál es la probabilidad de reprobar?
    b. ¿Cuál es la puntuación mediana?
+
 :::
 
 
@@ -2123,6 +2160,7 @@ cat("P(S = 7) =", 6/36, "\n")
 - Eventos raros o conteos en intervalo/espacio: **Poisson**.
 - Ensayos hasta el primer éxito: **Geométrica**.
 - Ensayos hasta el $r$-ésimo éxito: **Binomial Negativa**.
+
 :::
 
 ## Conexión con el siguiente capítulo

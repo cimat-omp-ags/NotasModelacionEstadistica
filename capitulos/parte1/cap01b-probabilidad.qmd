@@ -13,6 +13,7 @@ Al finalizar este capítulo, el estudiante será capaz de:
 - Calcular probabilidades usando las tres definiciones (clásica, frecuentista y axiomática) y verificar que se cumplen los axiomas de Kolmogorov.
 - Calcular probabilidades condicionales e identificar cuándo dos eventos son independientes.
 - Aplicar el Teorema de Probabilidad Total y el Teorema de Bayes en problemas de diagnóstico y toma de decisiones.
+
 :::
 
 ::: {.callout-note icon=false}
@@ -21,6 +22,7 @@ Al finalizar este capítulo, el estudiante será capaz de:
 Una forma de intuir la diferencia: imagine una caja con 15 fichas (5 azules, 5 negras y 5 rojas). Desde la **probabilidad** respondemos *¿cuál es la probabilidad de sacar una ficha roja?* — conocemos la composición y calculamos chances. Desde la **estadística**, tomamos una muestra y con ella *inferimos* la composición desconocida de la caja.
 
 Este capítulo desarrolla la teoría de probabilidad que sustenta todo el curso: combinatoria, experimentos aleatorios, axiomas, probabilidad condicional, independencia, probabilidad total y el Teorema de Bayes.
+
 :::
 
 ## Combinatoria
@@ -30,7 +32,7 @@ Este capítulo desarrolla la teoría de probabilidad que sustenta todo el curso:
 
 
 Antes de estudiar las nociones básicas de probabilidad se inicia con las reglas o principios de conteo;
-las cuales, son indispensables para el cálculo de probabilidades. Las reglas de conteo proporcionan una 
+las cuales son indispensables para el cálculo de probabilidades. Las reglas de conteo proporcionan una 
 herramienta que nos ayuda a contar el número de configuraciones posibles al ordenar o agrupar un determinado 
 número de elementos.
 
@@ -98,6 +100,7 @@ la etapa $B$ puede realizarse de $m$ maneras distintas, entonces el
 número total de formas en que puede llevarse a cabo el proceso completo
 $A$ seguido de $B$ es:
 $$n \times m$$
+
 :::
 
 Reconsidere el caso del comité sindical del @exm-comite, el cual debe estar compuesto por 4 personas, dos hombres y dos mujeres. 
@@ -327,6 +330,7 @@ Notar que:
 - $1! = 1$
 
 - $0! = 1$
+
 ::::
 
 
@@ -476,6 +480,7 @@ Por lo tanto, se pueden formar **9 comités distintos** de 2 hombres y 2 mujeres
 - El **orden no importa**: el grupo (Antonio, Juan) es el mismo que (Juan, Antonio).
 - **No se permiten repeticiones**: no es válido un grupo como (Héctor, Héctor).
 - Los grupos formados corresponden a **combinaciones**, no a permutaciones.
+
 :::
 
 
@@ -523,6 +528,7 @@ resultado
 3. Un comité de 5 personas debe elegirse de un grupo de 8 hombres y 6
    mujeres, sin restricción de género. ¿Cuántos comités distintos son
    posibles? ¿Cuántos de ellos tienen exactamente 3 hombres y 2 mujeres?
+
 :::
 
 ## Experimentos aleatorios
@@ -905,6 +911,7 @@ grid.draw(venn.plot)
 2. Dados los eventos $A = \{1,2,3\}$, $B=\{2,3,4\}$ y $C=\{4,5,6\}$ sobre
    $S=\{1,2,3,4,5,6\}$, calcule $A \cup B$, $A \cap C$, $(A \cup C)^c$ y
    determine si $A$ y $C$ son mutuamente excluyentes.
+
 :::
 
 ### Definiciones de probabilidad
@@ -956,6 +963,7 @@ $$
 ::: {.callout-note icon=false}
 ## Observación
 Cada una de las caras del dado tiene la misma probabilidad de ser seleccionada, lo que justifica el uso del enfoque clásico.
+
 :::
 
 
@@ -1066,6 +1074,7 @@ Diremos que $P(A)$ es la probabilidad del evento $A$ en el experimento $E$.
 ::: {.callout-note icon=false}
 ## Observación
 La frecuencia relativa $\frac{n(A)}{n}$ tiende a **estabilizarse** cuando el número de repeticiones $n$ es suficientemente grande.
+
 :::
 
 
@@ -1131,6 +1140,7 @@ La probabilidad de cualquier evento es un número real entre 0 y 1.
 
 - $P(A) = 0$ indica que el evento es imposible.  
 - $P(A) = 1$ indica que el evento es seguro.
+
 :::
 
 $$
@@ -1140,6 +1150,7 @@ $$
 ::: {.callout-note icon=false}
 ## Observación
 La probabilidad del espacio muestral es siempre igual a uno, ya que representa la certeza de que ocurra *algún* resultado del experimento.
+
 :::
 
 $$
@@ -1149,6 +1160,7 @@ $$
 ::: {.callout-note icon=false}
 ## Observación
 Si dos eventos no pueden ocurrir simultáneamente (son mutuamente excluyentes), la probabilidad de que ocurra uno u otro es la suma de sus probabilidades.
+
 :::
 
 
@@ -1259,6 +1271,7 @@ A partir de los axiomas básicos de la probabilidad, se pueden deducir varias re
   - P(A \cap B) - P(A \cap C) - P(B \cap C)
   + P(A \cap B \cap C)
   $$
+
 :::
 
 
@@ -1342,6 +1355,7 @@ text(
 3. Sean $A$ y $B$ dos eventos con $P(A) = 0.4$, $P(B) = 0.5$ y
    $P(A \cap B) = 0.2$. Verifique que $P(A)$ y $P(B)$ satisfacen el primer
    axioma de Kolmogorov y calcule $P(A \cup B)$ y $P(A^c)$.
+
 :::
 
 ## Probabilidad condicional e independencia de eventos
@@ -1361,6 +1375,7 @@ Se lanzan **dos dados de seis caras**, uno después del otro (de manera consecut
 ::: {.callout-note icon=false}
 ## Observación
 Se sabe que **en el primer dado apareció la cara 3**.
+
 :::
 
 La pregunta que se desea responder es:
@@ -1624,6 +1639,7 @@ Dos eventos $A$ y $B$ serán independientes **si y solo si** se cumple la iguald
 
 **Nota.**  
 Si los eventos $A$ y $B$ no satisfacen la relación (7), se dice que son **eventos dependientes**.
+
 ::: {.callout-caution icon=false}
 ## Errores comunes: independencia
 
@@ -1633,6 +1649,7 @@ eq P(A)P(B)$: son *dependientes*, no independientes. Solo el evento imposible pu
 
 **Error 2 — Confundir $P(A \mid B)$ con $P(B \mid A)$.**  
 Estas dos probabilidades son distintas en general. Intercambiarlas es la fuente del clásico error en diagnóstico médico: la probabilidad de tener una enfermedad dado un resultado positivo ($P(	ext{enf} \mid +)$) es muy diferente de la probabilidad de obtener un positivo dado que se tiene la enfermedad ($P(+ \mid 	ext{enf})$, la sensibilidad).
+
 :::
 
 
@@ -1701,6 +1718,7 @@ Por lo tanto, los eventos $E$ y $F$ son **independientes**.
 3. Se lanzan tres monedas equilibradas. Defina los eventos $A$: "la primera
    moneda cae águila" y $B$: "se obtienen exactamente dos águilas en
    total". ¿Son $A$ y $B$ independientes?
+
 :::
 
 ## Probabilidad de un evento de interés en términos de probabilidades condicionales
@@ -1850,12 +1868,14 @@ cat("Probabilidad Total de Positivo P(B):", (0.96 * 0.001) + (0.05 * 0.999))
    con probabilidad 0.8. Se elige una moneda al azar y se lanza dos veces,
    obteniéndose águila en ambas ocasiones. ¿Cuál es la probabilidad de que
    la moneda elegida sea la cargada?
+
 :::
 
 ## Material complementario: métodos y aplicaciones
 
 :::: {.content-visible when-format="html"}
 [📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
+
 ::::
 
 Esta sección complementa la teoría anterior con material adicional tomado de las
@@ -2025,8 +2045,10 @@ aproximadamente $2/3$ si se cambia, ya que al abrir una puerta con una cabra
 el presentador aporta información adicional sobre la ubicación del premio.
 
 ## Ejemplos adicionales de probabilidad {#sec-ejemplos-probabilidad}
+
 ::: {.content-visible when-format="html"}
 [📖 Sergio Nava Muñoz]{.fuente-badge .fuente-sergio}
+
 :::
 
 
@@ -2036,6 +2058,7 @@ el presentador aporta información adicional sobre la ubicación del premio.
 Los ejemplos de esta sección provienen de las presentaciones de clase
 del Dr. Sergio Nava Muñoz. Su enfoque combina intuición geométrica y
 razonamiento combinatorio para fijar los conceptos de probabilidad.
+
 :::
 
 ### El juego del Melate
@@ -2105,6 +2128,7 @@ Con solo 23 personas la probabilidad de coincidencia ya supera el 50%.
 Este resultado sorpresivo se debe a que el número de *pares posibles*
 crece cuadráticamente: con $r$ personas hay $\binom{r}{2}$
 pares. Con 23 personas ya existen $\binom{23}{2} = 253$ pares.
+
 :::
 
 ### El juego de los dados: ¿conviene jugar?
@@ -2142,6 +2166,7 @@ a largo plazo *sí conviene jugar*. Este resultado es un ejemplo de cómo
 el cálculo probabilístico contradice la intuición: muchos creen que con
 3 dados hay mayor riesgo de no sacar el número, pero el juego está a
 favor del participante.
+
 :::
 
 ### Ejemplo: Probabilidad condicional — Osteoporosis
