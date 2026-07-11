@@ -55,8 +55,8 @@ jobs:
       - name: Instalar paquete modelEstCIMAT
         run: R -e "install.packages('libreria', repos=NULL, type='source')"
 
-      - name: Renderizar libro (HTML)
-        run: quarto render --to html
+      - name: Renderizar libro (HTML + PDF + DOCX)
+        run: quarto render
 
       - name: Ver que hay en la carpeta _book (Diagnostico)
         run: ls -la _book
