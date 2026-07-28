@@ -621,10 +621,15 @@ barplot(
 
 #### Espacio muestral y eventos
 
-El **espacio muestral** se define como el conjunto de **todos los resultados posibles** de un experimento aleatorio.  
-Se suele denotar por la letra $S$.
+::: {#def-cap01b-espacio-muestral}
+## Espacio muestral y evento
 
-Un **evento** es cualquier subconjunto del espacio muestral; es decir, un evento está formado por uno o más resultados posibles del experimento.
+El **espacio muestral** $S$ es el conjunto de todos los resultados posibles de un experimento aleatorio.
+
+Un **evento** es cualquier subconjunto $A \subseteq S$; está formado por uno o más resultados posibles. Un **evento simple** contiene un único resultado: $\{s\}$ con $s \in S$.
+
+Dos eventos son **mutuamente excluyentes** (o disjuntos) si $A \cap B = \varnothing$, es decir, no pueden ocurrir simultáneamente.
+:::
 
 
 
@@ -927,21 +932,15 @@ En este apartado se presentan **los enfoques clásicos de la probabilidad**, com
 
 #### Probabilidad clásica
 
-El enfoque clásico establece que la probabilidad de que ocurra un evento se calcula como la **razón entre el número de casos favorables al evento y el número total de resultados igualmente posibles** del experimento.
+::: {#def-cap01b-probabilidad-clasica}
+## Probabilidad clásica (Laplace)
 
-Si:
-- $A$ es un evento de interés,
-- $n$ es el número total de resultados posibles del experimento (espacio muestral),
-- $m$ es el número de resultados favorables al evento $A$,
+Si todos los resultados del espacio muestral son **igualmente posibles**, la probabilidad de un evento $A$ es:
 
-entonces la probabilidad del evento $A$ se define como:
+$$P(A) = \frac{\text{número de resultados favorables a } A}{\text{número total de resultados}} = \frac{m}{n}$$
 
-$$
-P(A) = \frac{m}{n}
-$$
-
-**Anotación:**  
-Este enfoque es válido únicamente cuando **todos los resultados posibles tienen la misma probabilidad de ocurrir**.
+Este enfoque requiere explícitamente que cada resultado del espacio muestral tenga la misma probabilidad de ocurrir.
+:::
 
 
 **Ejemplo 1: Lanzamiento de un dado**
@@ -1126,41 +1125,24 @@ En su lugar, se establecen **reglas fundamentales** que cualquier asignación de
 
 Estas reglas, conocidas como **axiomas de la probabilidad**, fueron formuladas por el matemático ruso **A. N. Kolmogorov** y constituyen la base teórica de toda la probabilidad moderna.
 
-##### Axiomas de Kolmogorov
+::: {#def-cap01b-axiomas-kolmogorov}
+## Axiomas de Kolmogorov
 
-Sea $A$ un evento cualquiera del espacio muestral $S$:
+Sea $S$ el espacio muestral y $P$ una función sobre los eventos de $S$. Decimos que $P$ es una **función de probabilidad** si cumple los tres axiomas:
 
-$$
-0 \leq P(A) \leq 1
-$$
+**Axioma 1 (no negatividad):**
+$$0 \leq P(A) \leq 1 \quad \text{para todo evento } A \subseteq S$$
 
-::: {.callout-note icon=false}
-## Observación
-La probabilidad de cualquier evento es un número real entre 0 y 1.  
+**Axioma 2 (normalización):**
+$$P(S) = 1$$
 
-- $P(A) = 0$ indica que el evento es imposible.  
-- $P(A) = 1$ indica que el evento es seguro.
+**Axioma 3 (aditividad):**
+$$P(A \cup B) = P(A) + P(B) \quad \text{cuando } A \cap B = \varnothing$$
 
-:::
+Más en general, si $A_1, A_2, \ldots$ son eventos mutuamente excluyentes:
+$$P\!\left(\bigcup_{i=1}^\infty A_i\right) = \sum_{i=1}^\infty P(A_i)$$
 
-$$
-P(S) = 1
-$$
-
-::: {.callout-note icon=false}
-## Observación
-La probabilidad del espacio muestral es siempre igual a uno, ya que representa la certeza de que ocurra *algún* resultado del experimento.
-
-:::
-
-$$
-P(A \cup B) = P(A) + P(B) \quad \text{cuando } A \cap B = \varnothing
-$$
-
-::: {.callout-note icon=false}
-## Observación
-Si dos eventos no pueden ocurrir simultáneamente (son mutuamente excluyentes), la probabilidad de que ocurra uno u otro es la suma de sus probabilidades.
-
+De estos axiomas se derivan todas las demás propiedades de la probabilidad.
 :::
 
 
@@ -1423,12 +1405,15 @@ Esto resume la idea central de la probabilidad condicional: **la probabilidad se
 
 #### Definición formal de probabilidad condicional
 
-Sean $A$ y $B$ dos eventos tales que $P(B) > 0$.  
-La probabilidad condicional del evento $A$ dado que ha ocurrido $B$, denotada por $P(A \mid B)$, se define como:
+::: {#def-cap01b-probabilidad-condicional}
+## Probabilidad condicional
 
-$$
-P(A \mid B) = \frac{P(A \cap B)}{P(B)} \tag{4}
-$$
+Sean $A$ y $B$ dos eventos con $P(B) > 0$. La **probabilidad condicional** de $A$ dado $B$ es:
+
+$$P(A \mid B) = \frac{P(A \cap B)}{P(B)}$$
+
+Intuitivamente: $P(A \mid B)$ mide la probabilidad de $A$ **dentro del espacio muestral reducido** al evento $B$.
+:::
 
 
 
@@ -1613,14 +1598,19 @@ Lucila tiene una probabilidad de **0.02 (2%)** de ganar la rifa.
 
 En el apartado anterior se analizó que la probabilidad de ocurrencia de un evento $A$ puede verse afectada por el conocimiento previo de otro evento, digamos $B$. En ese caso, se trabaja con la probabilidad condicional $P(A \mid B)$.
 
-Sin embargo, existen situaciones en las que la ocurrencia de un evento $B$ **no modifica** la probabilidad de ocurrencia de otro evento $A$. Es decir, la probabilidad de que ocurra $A$ dado que ocurrió $B$ coincide con la probabilidad original de $A$:
+Sin embargo, existen situaciones en las que la ocurrencia de un evento $B$ **no modifica** la probabilidad de ocurrencia de otro evento $A$.
 
-$$
-P(A \mid B) = P(A)
-\tag{6}
-$$
+::: {#def-cap01b-independencia}
+## Eventos independientes
 
-Cuando esto sucede, se dice que los eventos $A$ y $B$ son **eventos independientes**.
+Dos eventos $A$ y $B$ son **independientes** si y solo si:
+
+$$P(A \cap B) = P(A)\,P(B)$$
+
+Equivalentemente (cuando $P(B)>0$): $P(A \mid B) = P(A)$, es decir, saber que ocurrió $B$ no modifica la probabilidad de $A$.
+
+Si los eventos no satisfacen esta condición, se dice que son **dependientes**.
+:::
 
 A partir de la definición de probabilidad condicional,
 
@@ -1628,17 +1618,7 @@ $$
 P(A \mid B) = \frac{P(A \cap B)}{P(B)},
 $$
 
-si $P(A \mid B) = P(A)$, entonces se obtiene la relación:
-
-$$
-P(A \cap B) = P(A)P(B)
-\tag{7}
-$$
-
-Dos eventos $A$ y $B$ serán independientes **si y solo si** se cumple la igualdad (7).
-
-**Nota.**  
-Si los eventos $A$ y $B$ no satisfacen la relación (7), se dice que son **eventos dependientes**.
+si $P(A \mid B) = P(A)$, entonces se obtiene inmediatamente que $P(A \cap B) = P(A)P(B)$.
 
 ::: {.callout-caution icon=false}
 ## Errores comunes: independencia
@@ -1723,17 +1703,16 @@ Por lo tanto, los eventos $E$ y $F$ son **independientes**.
 
 ## Probabilidad de un evento de interés en términos de probabilidades condicionales
 ### Probabilidad total
-La regla de la probabilidad total es un resultado fundamental que permite calcular la probabilidad de un evento de interés $B$, descomponiéndolo a través de una **partición** del espacio muestral $S$.
 
+La regla de la probabilidad total permite calcular la probabilidad de un evento de interés descomponiéndolo a través de una **partición** del espacio muestral.
 
-Para aplicar este teorema, primero debemos definir una partición del espacio muestral. Se dice que los eventos $A_1, A_2, \dots, A_k$ forman una partición de $S$ si:
-1. Son **mutuamente excluyentes** ($A_i \cap A_j = \varnothing$ para $i \neq j$).
-2. Su unión conforma todo el espacio muestral ($\cup_{i=1}^k A_i = S$).
+::: {#thm-cap01b-probabilidad-total}
+## Teorema de Probabilidad Total
 
+Si los eventos $A_1, A_2, \ldots, A_k$ forman una **partición** de $S$ (son mutuamente excluyentes, $A_i \cap A_j = \varnothing$, y su unión es $S$) y $P(A_i) > 0$ para todo $i$, entonces para cualquier evento $B$:
 
-
-Si estos eventos tienen probabilidades no nulas, la probabilidad de cualquier evento $B$ en $S$ se calcula como la suma de las probabilidades de las intersecciones de $B$ con cada elemento de la partición:
-$$P(B) = \sum_{i=1}^{k} P(B \cap A_i) = \sum_{i=1}^{k} P(B \mid A_i)P(A_i)$$
+$$P(B) = \sum_{i=1}^{k} P(B \mid A_i)\,P(A_i)$$
+:::
 
 
 **Ejemplo 1: Consultorio médico SOLCA**
@@ -1789,11 +1768,17 @@ Al seleccionar una caja y elegir una bola, la probabilidad de que esta sea de co
 
 ### Teorema de Bayes
 
-El Teorema de Bayes es una extensión de la probabilidad condicional que permite "invertir" las probabilidades. Es decir, nos permite calcular la probabilidad de que haya ocurrido una causa específica $A_i$, dado que ya hemos observado un efecto o evento $B$. 
+El Teorema de Bayes permite "invertir" las probabilidades: calcula la probabilidad de que haya ocurrido una **causa** específica $A_j$, dado que ya se observó el **efecto** $B$.
 
-Si los eventos $A_1, A_2, \dots, A_n$ forman una partición del espacio muestral $S$ (son mutuamente excluyentes y su unión es $S$), entonces para cualquier evento $B$ tal que $P(B) > 0$:
+::: {#thm-cap01b-bayes}
+## Teorema de Bayes
 
-$$P(A_j \mid B) = \frac{P(B \mid A_j) P(A_j)}{\sum_{i=1}^{n} P(B \mid A_i) P(A_i)}$$
+Si $A_1, \ldots, A_n$ forman una partición de $S$ con $P(A_i) > 0$ y $P(B) > 0$, entonces:
+
+$$P(A_j \mid B) = \frac{P(B \mid A_j)\,P(A_j)}{\displaystyle\sum_{i=1}^{n} P(B \mid A_i)\,P(A_i)}$$
+
+Las probabilidades $P(A_i)$ se llaman **probabilidades a priori**; las $P(A_j \mid B)$ son las **probabilidades a posteriori** (actualizadas tras observar $B$).
+:::
 
 **Ejemplo 1: Obesidad por Género**
 Aplicando el teorema de Bayes al caso de estudio anterior (donde se busca la probabilidad de ser mujer dado que se padece obesidad):

@@ -969,8 +969,8 @@ Las estadísticas de orden **no son independientes**: si $Y_k \geq y$ entonces n
 
 :::
 
-::: {.callout-tip icon=false}
-## Resultado: CDF de la k-ésima estadística de orden
+::: {#thm-cap04-cdf-orden}
+## CDF de la $k$-ésima estadística de orden
 
 La función de distribución acumulada marginal de $Y_k$ ($k = 1, \ldots, n$) es:
 
@@ -984,8 +984,8 @@ El paso clave es la equivalencia $\{Y_k \leq y\} \Leftrightarrow \{\text{al meno
 
 :::
 
-::: {.callout-note icon=false}
-## Corolarios: mínimo y máximo
+::: {#cor-cap04-min-max}
+## Distribución del mínimo y del máximo
 
 **Máximo** ($k = n$):
 $$F_{Y_n}(y) = [F(y)]^n$$
@@ -1056,7 +1056,7 @@ Un **estimador** es un estadístico $T(\mathbf{X})$ que, dada una
 realización $x_1,\ldots,x_n$ de la muestra, produce una estimación
 $\hat{\theta} = T(\mathbf{x})$ del parámetro desconocido $\theta$.
 
-::: {.callout-note icon=false}
+::: {#def-cap04-estimacion-puntual}
 ## Estimación puntual
 
 La **estimación puntual** consiste en derivar un estadístico
@@ -1103,7 +1103,7 @@ Propuesto por Ronald Fisher (1912–1922). Es el método de estimación más
 importante: los estimadores resultantes tienen propiedades óptimas
 asintóticas.
 
-::: {.callout-note icon=false}
+::: {#def-cap04-verosimilitud}
 ## Función de verosimilitud
 
 Dada una muestra $x_1,\ldots,x_n$ con $X_i \sim f(x;\theta)$, la
@@ -1114,7 +1114,7 @@ La **log-verosimilitud** es $\ell(\theta) = \log L(\theta)$.
 
 :::
 
-::: {.callout-note icon=false}
+::: {#def-cap04-emv}
 ## Estimador de Máxima Verosimilitud (EMV)
 
 El **EMV** $\hat{\theta}_{MV}$ es el valor de $\theta$ que maximiza
@@ -1284,8 +1284,8 @@ Es decir, $\hat{\theta}_n \xrightarrow{p} \theta$.
 
 :::
 
-::: {.callout-note icon=false}
-## Teorema: Criterio de consistencia
+::: {#thm-cap04-criterio-consistencia}
+## Criterio de consistencia
 
 Sea $\hat{\theta}_n$ estimador puntual para $\theta$. Si
 
@@ -1323,8 +1323,8 @@ estimador insesgado entre los dos.
 
 ### Cota de Cramér-Rao e información de Fisher
 
-::: {.callout-note icon=false}
-## Teorema: Cota inferior de Cramér-Rao (CICR)
+::: {#thm-cap04-cicr}
+## Cota inferior de Cramér-Rao (CICR)
 
 Sea $X_1,\ldots,X_n$ muestra aleatoria de $f(x;\theta)$ y
 $g(T(X_1,\ldots,X_n))$ estimador insesgado para $g(\theta)$. Bajo
@@ -1414,7 +1414,7 @@ que no depende de $\theta$. Por tanto $T$ es suficiente.
 
 :::
 
-::: {.callout-note icon=false}
+::: {#thm-cap04-factorizacion-neyman}
 ## Teorema de Factorización de Neyman
 
 $T(X_1,\ldots,X_n)$ es suficiente para $\theta$ si y solo si la función
@@ -1434,7 +1434,7 @@ $T=\sum X_i$ es suficiente.
 
 ### Teorema de Rao-Blackwell
 
-::: {.callout-note icon=false}
+::: {#thm-cap04-rao-blackwell}
 ## Teorema de Rao-Blackwell
 
 Sea $\hat{\theta}$ cualquier estimador insesgado para $\theta$ y $T$ una
@@ -1633,6 +1633,7 @@ legend("bottomright", c("F_n(x) empírica", "F_0(x) = Exp(λ̂)"),
 :::
 
 
+::: {#exr-cap04-propuestos-extra}
 ## Ejercicios propuestos
 
 1. Sea $X_1,\ldots,X_{25}$ muestra aleatoria de $\text{Ber}(p)$.
@@ -1645,6 +1646,8 @@ legend("bottomright", c("F_n(x) empírica", "F_0(x) = Exp(λ̂)"),
    $T=\sum X_i$ es suficiente para $\lambda$ usando el teorema de
    factorización de Neyman.
 
+:::
+
 ## Intervalos de confianza {#sec-intervalos-confianza}
 
 ::: {.content-visible when-format="html"}
@@ -1656,7 +1659,7 @@ legend("bottomright", c("F_n(x) empírica", "F_0(x) = Exp(λ̂)"),
 La **estimación por intervalo** va más allá de un valor único: produce
 un rango de valores plausibles para $\theta$.
 
-::: {.callout-note icon=false}
+::: {#def-cap04-intervalo-confianza}
 ## Intervalo de confianza
 
 Sea $\alpha \in (0,1)$. Un **intervalo de confianza (IC)** de nivel
@@ -1816,8 +1819,8 @@ $\mathcal{C}$.
 
 :::
 
-::: {.callout-note icon=false}
-## Teorema: Lema de Neyman-Pearson
+::: {#thm-cap04-lema-neyman-pearson}
+## Lema de Neyman-Pearson
 
 Para probar $H_0:\theta=\theta_0$ vs. $H_1:\theta=\theta_1$, sea $R$ la
 región de rechazo tal que:
