@@ -35,6 +35,9 @@ jobs:
           r-version: "4.4"
           use-public-rspm: true
 
+      - name: Instalar dependencias de sistema
+        run: sudo apt-get install -y libglpk40 libxml2-dev libicu-dev
+
       - name: Instalar paquetes R
         run: |
           install.packages(c(
