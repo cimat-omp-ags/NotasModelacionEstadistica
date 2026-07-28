@@ -46,3 +46,6 @@ DataSets/**/*.html
 DataSets/**/*.Rproj
 
 Insumos/
+
+# ── Archivos temporales de Microsoft Office ───────────────────────────────────
+~$*
