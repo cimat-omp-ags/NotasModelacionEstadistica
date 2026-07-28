@@ -2139,6 +2139,159 @@ cat("P(S = 7) =", 6/36, "\n")
 
 
 
+## Distribuciones discretas conjuntas {#sec-conjuntas-discretas}
+
+::: {.content-visible when-format="html"}
+[📖 Sergio Nava Muñoz]{.fuente-badge .fuente-sergio}
+:::
+
+::: {.callout-tip icon=false}
+## Fuente: Notas del curso (Prof. Sergio Nava Muñoz)
+Esta sección proviene de las presentaciones de clase del Dr. Sergio Nava Muñoz sobre variables aleatorias discretas conjuntas.
+:::
+
+Hasta ahora hemos estudiado una sola variable aleatoria a la vez. En muchas situaciones prácticas, sin embargo, dos o más variables aleatorias se observan simultáneamente y nos interesa entender su relación. Esta sección extiende los conceptos de pmf y cdf al caso de dos variables discretas.
+
+### Función de probabilidad conjunta
+
+::: {#def-cap02-pmf-conjunta}
+## Función de probabilidad conjunta
+
+Sean $X$ y $Y$ dos variables aleatorias discretas definidas en el espacio muestral $S$ de un experimento. La **función de probabilidad conjunta** $p(x,y)$ se define para cada par de números $(x,y)$ como
+$$p(x,y) = P(X = x,\; Y = y).$$
+Debe cumplirse que $p(x,y) \ge 0$ y $\displaystyle\sum_{x}\sum_{y} p(x,y) = 1$.
+
+Para cualquier conjunto $A$ compuesto por pares de valores $(x,y)$,
+$$P\bigl[(X,Y)\in A\bigr] = \sum_{(x,y)\in A} p(x,y).$$
+:::
+
+La distribución conjunta suele representarse en una tabla de doble entrada donde las filas corresponden a los valores de $X$, las columnas a los valores de $Y$, y cada celda contiene $p(x_i, y_j)$.
+
+::: {#exm-cap02-agencia-seguros}
+## Pólizas de auto y casa — función de probabilidad conjunta
+
+Una agencia de seguros atiende clientes que tienen póliza de **automóvil** ($X$) y de **casa** ($Y$). Los deducibles posibles son:
+
+- Póliza de auto: $X \in \{100, 250\}$ (en dólares).
+- Póliza de casa: $Y \in \{0, 100, 200\}$ (en dólares).
+
+Se selecciona un cliente al azar y la función de probabilidad conjunta observada históricamente es:
+
+|  | $Y=0$ | $Y=100$ | $Y=200$ |
+|---:|:---:|:---:|:---:|
+| $X=100$ | 0.20 | 0.10 | 0.20 |
+| $X=250$ | 0.05 | 0.15 | 0.30 |
+
+Por ejemplo, $p(100,100) = P(X=100,\, Y=100) = 0.10$, es decir, el 10% de los clientes tiene deducible de \$100 en ambas pólizas.
+
+La probabilidad de que el deducible de casa sea al menos \$100 es:
+$$P(Y \ge 100) = p(100,100)+p(250,100)+p(100,200)+p(250,200) = 0.10+0.15+0.20+0.30 = 0.75.$$
+:::
+
+### Función de probabilidad marginal
+
+A partir de la distribución conjunta se obtiene la distribución de cada variable por separado sumando sobre todos los valores de la otra.
+
+::: {#def-cap02-marginal-discreta}
+## Distribuciones marginales (caso discreto)
+
+$$p_X(x) = P(X=x) = \sum_{y} p(x,y), \qquad p_Y(y) = P(Y=y) = \sum_{x} p(x,y).$$
+:::
+
+::: {#exm-cap02-marginales-seguros}
+## Marginales en el ejemplo de seguros
+
+Sumando filas y columnas de la tabla anterior:
+
+|  | $Y=0$ | $Y=100$ | $Y=200$ | $p_X(x)$ |
+|---:|:---:|:---:|:---:|:---:|
+| $X=100$ | 0.20 | 0.10 | 0.20 | **0.50** |
+| $X=250$ | 0.05 | 0.15 | 0.30 | **0.50** |
+| $p_Y(y)$ | **0.25** | **0.25** | **0.50** | 1.00 |
+
+Así, $P(Y \ge 100) = p_Y(100)+p_Y(200) = 0.25+0.50 = 0.75$, confirmando el resultado anterior de forma más directa.
+:::
+
+### Independencia
+
+::: {#def-cap02-independencia-discreta}
+## Independencia de variables aleatorias discretas
+
+$X$ y $Y$ son **independientes** si para todo par $(x,y)$:
+$$p(x,y) = p_X(x)\cdot p_Y(y).$$
+Es decir, la tabla conjunta es el producto externo de las marginales.
+:::
+
+En el ejemplo de seguros, $p(100,100) = 0.10 \neq 0.50 \times 0.25 = 0.125$, por lo que $X$ y $Y$ **no son independientes**: conocer el deducible de auto cambia la distribución del deducible de casa.
+
+### Probabilidad condicional
+
+::: {#def-cap02-condicional-discreta}
+## Función de probabilidad condicional (discreto)
+
+La **función de probabilidad condicional de $Y$ dado $X=x$** es
+$$p_{Y\mid X}(y\mid x) = \frac{p(x,y)}{p_X(x)}, \quad \text{para } p_X(x)>0.$$
+Análogamente, $p_{X\mid Y}(x\mid y) = p(x,y)\,/\,p_Y(y)$.
+:::
+
+Conocida la distribución condicional, se puede recuperar la conjunta:
+$$p(x,y) = p_{Y\mid X}(y\mid x)\cdot p_X(x) = p_{X\mid Y}(x\mid y)\cdot p_Y(y).$$
+
+::: {#exm-cap02-condicional-seguros}
+## Distribución condicional en el ejemplo de seguros
+
+La tabla $p_{X\mid Y}(x\mid y)$ — probabilidad de $X$ dado el valor de $Y$ — es:
+
+| | $Y=0$ | $Y=100$ | $Y=200$ |
+|---:|:---:|:---:|:---:|
+| $X=100$ | 0.80 | 0.40 | 0.40 |
+| $X=250$ | 0.20 | 0.60 | 0.60 |
+| Total | 1.00 | 1.00 | 1.00 |
+
+Por ejemplo, $P(X=100 \mid Y=0) = 0.80$: si el deducible de casa es \$0, hay un 80% de probabilidad de que el deducible de auto sea \$100.
+
+Como las probabilidades condicionales difieren de las marginales ($p_X(100)=0.50 \neq 0.80$), confirmamos que $X$ y $Y$ son dependientes.
+:::
+
+### Ejercicios propuestos {#sec-cap02-conjuntas-ejercicios}
+
+::: {#exr-cap02-planta-automotriz}
+## Robots en planta automotriz
+
+En una planta automotriz, dos tareas están a cargo de robots:
+
+- La primera: soldar dos bisagras. $X =$ número de soldaduras defectuosas.
+- La segunda: apretar tres tornillos. $Y =$ número de tornillos apretados incorrectamente.
+
+La distribución de probabilidad conjunta histórica es:
+
+| $X \backslash Y$ | 0 | 1 | 2 | 3 |
+|:---:|:---:|:---:|:---:|:---:|
+| 0 | 0.840 | 0.030 | 0.020 | 0.010 |
+| 1 | 0.060 | 0.010 | 0.008 | 0.002 |
+| 2 | 0.010 | 0.005 | 0.004 | 0.001 |
+
+Responde:
+
+a. Verifica que la tabla sea una distribución de probabilidad válida.
+b. Encuentra la distribución marginal de $X$ y de $Y$.
+c. Calcula $E(X)$ y $E(Y)$.
+d. ¿Cuál es la probabilidad de encontrar a lo más un error en total (sin importar de qué tipo)?
+e. Encuentra la distribución condicional de $Y$ dado $X=0$.
+f. Calcula $P(X > Y)$.
+g. ¿Son independientes $X$ y $Y$? Justifica.
+:::
+
+::: {#exr-cap02-independencia-ejemplos}
+## Dependencia e independencia — análisis conceptual
+
+Para cada par de variables, decide si son **independientes** o **dependientes** y justifica tu respuesta:
+
+a. Se elige un adulto y se mide $X =$ peso, $Y =$ estatura.
+b. Se mide la concentración de un contaminante con dos métodos: $X =$ concentración con método 1, $Y =$ concentración con método 2.
+c. Se elige un alumno de posgrado: $X =$ calificación del examen de probabilidad, $Y =$ horas de estudio por semana.
+:::
+
 ## Resumen del capítulo
 
 | Distribución | Parámetros | $E[X]$ | $\text{Var}(X)$ | Uso típico |

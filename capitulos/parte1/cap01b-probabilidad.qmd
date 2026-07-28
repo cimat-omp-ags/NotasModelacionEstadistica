@@ -2197,6 +2197,88 @@ el teorema de Bayes actualiza la probabilidad inicial de 24% a
 condicionar en el evento "es fumador".
 
 
+## Ejercicios propuestos {#sec-ejercicios-prob-sergio}
+
+::: {.content-visible when-format="html"}
+[📖 Sergio Nava Muñoz]{.fuente-badge .fuente-sergio}
+:::
+
+Los siguientes ejercicios fueron propuestos por el Dr. Sergio Nava Muñoz. Practican probabilidad condicional, independencia, Probabilidad Total y el Teorema de Bayes.
+
+::: {#exr-cap01b-tabla-eventos}
+## Relaciones entre eventos
+
+Usa las relaciones entre eventos ($P(A\cup B)$, $P(A\cap B)$, $P(A\mid B)$) para completar la tabla:
+
+| $P(A)$ | $P(B)$ | Condición | $P(A\cap B)$ | $P(A\cup B)$ | $P(A\mid B)$ |
+|:---:|:---:|:---|:---:|:---:|:---:|
+| 0.2 | 0.5 | Mutuamente excluyentes | | | |
+| 0.2 | 0.5 | Independientes | | | |
+| 0.3 | 0.3 | — | | 0.6 | |
+| 0.2 | 0.3 | — | 0.1 | | |
+:::
+
+::: {#exr-cap01b-sergio-perez-f1}
+## Sergio Pérez en F1
+
+La probabilidad de que Sergio Pérez gane una carrera de F1 en día **lluvioso** es 0.10, y en día **seco** es 0.25. La probabilidad de que el día de la carrera sea lluvioso es 0.35.
+
+¿Cuál es la probabilidad de que Sergio Pérez gane la carrera?
+:::
+
+::: {#exr-cap01b-bomberos}
+## Camiones de bomberos
+
+La ciudad de Aguascalientes tiene dos camiones de bomberos que operan de forma **independiente**. La probabilidad de que cada uno esté disponible cuando se le necesita es 0.95.
+
+¿Cuál es la probabilidad de que:
+
+a. **Ninguno** esté disponible cuando se necesite?
+b. **Al menos uno** esté disponible cuando se necesite?
+:::
+
+::: {#exr-cap01b-libreria-estantes}
+## Librería con tres estanterías
+
+Una librería tiene tres estanterías:
+
+- **Superior:** 3 novelas y 9 cuentos.
+- **Central:** 8 novelas y 6 cuentos.
+- **Inferior:** 5 novelas y 9 cuentos.
+
+Se escoge un estante al azar y se saca un libro. Si el libro es una novela, ¿cuál es la probabilidad de que provenga del estante **central**?
+:::
+
+::: {#exr-cap01b-turistas-slp}
+## Turistas en San Luis Potosí
+
+El 65% de los turistas que visitan SLP se alojan en la **capital** y el resto en **zonas rurales**. Además:
+
+- El 70% de los que se hospedan en la capital y el 15% de los de zonas rurales se alojan en **hoteles**.
+- El resto se aloja en **apartamentos turísticos**.
+
+Se elige al azar un turista.
+
+a. ¿Cuál es la probabilidad de que se haya hospedado en un **hotel**?
+b. Si el turista se hospedó en un **apartamento**, ¿cuál es la probabilidad de que el apartamento esté en **zonas rurales**?
+:::
+
+::: {#exr-cap01b-cooperativa-jugos}
+## Cooperativa de jugos
+
+Una cooperativa envasa jugos de naranja (60%), piña (30%) y manzana (10%) en botellas de 1 L y 2 L. Se sabe que:
+
+- Del jugo de **naranja**: 80% en botellas de 2 L.
+- Del jugo de **piña**: 70% en botellas de 2 L.
+- Del jugo de **manzana**: 60% en botellas de 1 L.
+
+Se elige al azar una botella.
+
+a. ¿Cuál es la probabilidad de que sea de **2 litros**?
+b. Si la botella es de **2 litros**, ¿cuál es la probabilidad de que el jugo sea de **naranja**?
+c. Si la botella es de **1 litro**, ¿cuál es la probabilidad de que el jugo sea de **manzana**?
+:::
+
 ## Resumen del capítulo
 
 - **Conteo:** principio básico del conteo ($n_1 \times n_2 \times \cdots \times n_k$),
