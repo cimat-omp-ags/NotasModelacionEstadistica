@@ -28,24 +28,6 @@ Este capítulo desarrolla la teoría de probabilidad que sustenta todo el curso:
 
 ## Espacio muestral y eventos {#sec-espacio-muestral}
 
-### ¿Qué es un experimento?
-
-Un **experimento** es un proceso mediante el cual se genera una **observación** o una **medición**. No todos los experimentos son del mismo tipo.
-
-### Experimentos deterministas y aleatorios
-
-#### Experimentos deterministas
-
-Son aquellos cuyo resultado **puede conocerse con anticipación** bajo las mismas condiciones. Por ejemplo: calentar agua a 100 °C (hervirá) o soltar un vaso (caerá al suelo).
-
-#### Experimentos aleatorios
-
-Son aquellos cuyo resultado **no puede conocerse con anticipación**, aun bajo las mismas condiciones. Por ejemplo: el número que sale al lanzar un dado, o la profesión de una persona seleccionada al azar.
-
-A partir de este punto, *experimento* siempre se referirá a **experimentos aleatorios**. Son términos sinónimos: fenómeno, proceso, intervención o maniobra.
-
-La teoría de la probabilidad formaliza estos fenómenos describiendo el conjunto de resultados posibles y los sucesos de interés sobre los que después se define una medida.
-
 ::: {#def-cap01b-experimento-aleatorio}
 ## Experimento aleatorio
 
@@ -53,23 +35,6 @@ Un **experimento aleatorio** es un procedimiento o fenómeno cuyo resultado exac
 
 Ejemplos: lanzar una moneda, lanzar un dado, seleccionar un objeto al azar de una urna, medir el tiempo de falla de un componente electrónico.
 :::
-
-La siguiente simulación ilustra esta naturaleza aleatoria: aunque no podemos predecir cada lanzamiento individual, la distribución de frecuencias se estabiliza al aumentar $n$.
-
-```{r simulacion_dado, fig.align='center'}
-set.seed(123)
-n <- 100
-lanzamientos <- sample(1:6, size = n, replace = TRUE)
-frecuencias <- table(lanzamientos)
-barplot(
-  frecuencias,
-  col = "lightblue",
-  border = "gray30",
-  main = paste("Frecuencia de resultados al lanzar un dado (n =", n, ")"),
-  xlab = "Cara del dado",
-  ylab = "Frecuencia"
-)
-```
 
 ::: {#def-cap01b-espacio-muestral}
 ## Espacio muestral
