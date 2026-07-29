@@ -25,7 +25,683 @@ Este capítulo desarrolla la teoría de probabilidad que sustenta todo el curso:
 
 :::
 
-## Combinatoria
+
+## Espacio muestral y eventos {#sec-espacio-muestral}
+
+
+
+
+### ¿Qué es un experimento?
+
+Un **experimento** es un proceso mediante el cual se genera una **observación** o una **medición**.  
+Cada vez que realizamos un experimento, obtenemos un resultado.
+
+Sin embargo, no todos los experimentos son del mismo tipo.
+
+
+### Experimentos deterministas y aleatorios
+
+Podemos clasificar los experimentos en dos grandes categorías:
+
+#### Experimentos deterministas (Tipo A)
+
+Son aquellos experimentos cuyo resultado **puede conocerse con anticipación**, siempre que las condiciones sean las mismas.
+
+**Ejemplos**
+
+- ¿Qué ocurrirá si calentamos agua en un recipiente hasta alcanzar los 100 °C?  
+- ¿Qué ocurrirá si soltamos un vaso que tenemos en la mano?
+
+En ambos casos, el resultado es completamente previsible:
+- El agua hervirá.
+- El vaso caerá al suelo.
+
+Por esta razón, estos experimentos se denominan **deterministas**.
+
+
+#### Experimentos aleatorios (Tipo B)
+
+Son aquellos experimentos cuyo resultado **no puede conocerse con anticipación**, aun cuando el experimento se realice bajo las mismas condiciones.
+
+**Ejemplos**
+
+- Si lanzamos un dado, ¿qué número aparecerá en la cara superior?
+- Si seleccionamos al azar una ficha del archivo de participantes de un curso, ¿cuál será la profesión de la persona seleccionada?
+- Si lanzamos una moneda, ¿cuántos lanzamientos serán necesarios hasta que aparezca cara?
+
+En estos casos, no es posible anticipar con certeza el resultado antes de realizar el experimento.
+
+
+### Definición de experimento aleatorio
+
+Un **experimento aleatorio** es aquel experimento en el que **no podemos conocer con anticipación** el resultado de su realización.
+
+A partir de este punto, siempre que utilicemos la palabra *experimento*, nos estaremos refiriendo a **experimentos aleatorios**.
+
+También es común utilizar como sinónimos los términos:
+**fenómeno, evento, proceso, intervención o maniobra**.
+
+
+**Ejemplo 1: Lanzamiento de un dado**
+
+Consideremos el experimento aleatorio de **lanzar un dado**.  
+Aunque sabemos que los resultados posibles son los números del 1 al 6, **no sabemos cuál ocurrirá en un lanzamiento específico**.
+
+A continuación, simulamos este experimento varias veces y visualizamos los resultados.
+
+```{r}
+# Fijar semilla para reproducibilidad
+set.seed(123)
+
+# Simular lanzamientos de un dado
+n <- 100
+lanzamientos <- sample(1:6, size = n, replace = TRUE)
+
+# Tabla de frecuencias
+frecuencias <- table(lanzamientos)
+
+frecuencias
+
+barplot(
+  frecuencias,
+  col = "lightblue",
+  border = "gray30",
+  main = "Frecuencia de resultados al lanzar un dado",
+  xlab = "Cara del dado",
+  ylab = "Frecuencia"
+)
+
+```
+
+
+
+La teoría de la probabilidad formaliza fenómenos cuyo resultado no puede predecirse con certeza, pero sí describirse mediante un conjunto de resultados posibles. El primer paso en cualquier modelo probabilístico es identificar el conjunto de resultados observables y los sucesos de interés. La probabilidad no comienza con números, sino con una **estructura de eventos** sobre la que después se define una medida.
+
+::: {#def-cap01b-experimento-aleatorio}
+## Experimento aleatorio
+
+Un **experimento aleatorio** es un procedimiento o fenómeno cuyo resultado exacto no puede determinarse de antemano, aunque sí puede describirse el conjunto de resultados posibles.
+
+Ejemplos: lanzar una moneda, lanzar un dado, seleccionar un objeto al azar de una urna, medir el tiempo de falla de un componente electrónico.
+:::
+
+::: {#def-cap01b-espacio-muestral}
+## Espacio muestral
+
+El **espacio muestral** $\Omega$ (también denotado $S$) es el conjunto de todos los resultados posibles de un experimento aleatorio. Cada elemento $\omega \in \Omega$ se llama **punto muestral** o resultado elemental.
+
+| Experimento | Espacio muestral |
+|:---|:---|
+| Una moneda | $\Omega = \{C, S\}$ |
+| Un dado | $\Omega = \{1,2,3,4,5,6\}$ |
+| Dos lanzamientos de moneda | $\Omega = \{HH, HT, TH, TT\}$ |
+| Tiempo de vida de una lámpara | $\Omega = (0, \infty)$ |
+
+El espacio muestral puede ser **finito**, **infinito numerable** o **continuo** (no numerable).
+:::
+
+::: {#def-cap01b-evento}
+## Evento
+
+Un **evento** es un subconjunto $A \subseteq \Omega$. Decimos que **ocurre el evento $A$** cuando el resultado observado satisface $\omega \in A$.
+
+Un **evento simple** contiene un único punto muestral: $\{\omega\}$. El **evento seguro** es $\Omega$ y el **evento imposible** es $\varnothing$.
+
+En el marco riguroso de la teoría de la medida, los eventos forman una **$\sigma$-álgebra** $\mathcal{F} \subseteq \mathcal{P}(\Omega)$, lo que permite extender la probabilidad a espacios continuos.
+:::
+
+::: {#def-cap01b-operaciones-eventos}
+## Operaciones con eventos
+
+Sean $A$ y $B$ eventos sobre $\Omega$:
+
+| Operación | Notación | Ocurre cuando… |
+|:---|:---:|:---|
+| **Unión** | $A \cup B$ | ocurre $A$, o $B$, o ambos |
+| **Intersección** | $A \cap B$ | ocurren simultáneamente $A$ y $B$ |
+| **Complemento** | $A^c = \Omega \setminus A$ | $A$ no ocurre |
+| **Diferencia** | $A \setminus B$ | ocurre $A$ pero no $B$ |
+| **Mutuamente excluyentes** | $A \cap B = \varnothing$ | no pueden ocurrir al mismo tiempo |
+
+**Ejemplo en un dado:** Si $\Omega = \{1,2,3,4,5,6\}$, $A = \{2,4,6\}$, $B = \{4,5,6\}$:
+$$A \cap B = \{4,6\}, \quad A \cup B = \{2,4,5,6\}, \quad A^c = \{1,3,5\}, \quad A \setminus B = \{2\}$$
+:::
+
+::: {.callout-note icon=false}
+### Modelo probabilístico formal
+
+Un modelo probabilístico completo se expresa como una **terna** $(\Omega, \mathcal{F}, P)$, donde $\Omega$ es el espacio muestral, $\mathcal{F}$ es una $\sigma$-álgebra de eventos y $P$ es la medida de probabilidad (definida en la siguiente sección). Este marco permite tratar de manera uniforme espacios finitos, infinitos numerables y continuos.
+:::
+
+::: {#exm-cap01b-operaciones-dado}
+## Operaciones con eventos — lanzamiento de un dado
+
+Al lanzar un dado equilibrado, $\Omega = \{1,2,3,4,5,6\}$. Definamos:
+
+- $A = \{2,4,6\}$ ("cara par")
+- $B = \{4,5,6\}$ ("cara mayor que 3")
+
+Entonces:
+
+$$A \cup B = \{2,4,5,6\}, \quad A \cap B = \{4,6\}, \quad A^c = \{1,3,5\}, \quad A \setminus B = \{2\}$$
+
+Los eventos $\{2\}$ y $\{3\}$ son **mutuamente excluyentes** porque $\{2\} \cap \{3\} = \varnothing$.
+:::
+
+::: {#exm-cap01b-monedas-ops}
+## Operaciones con eventos — lanzamiento de dos monedas
+
+El experimento consiste en lanzar **dos monedas** simultáneamente (a = águila, c = sol):
+
+$$\Omega = \{(a,a),\,(a,c),\,(c,a),\,(c,c)\}$$
+
+Definamos los eventos elementales y algunas operaciones:
+
+```{r grafica_union, fig.align='center', fig.width=9, fig.height=3.5, message=FALSE, warning=FALSE}
+library(ggplot2)
+library(gridExtra)
+
+df_venn <- data.frame(
+  x = c(-0.5, 0.5, -0.5, 0.5),
+  y = c( 0.5, 0.5, -0.5, -0.5),
+  label = c("(a,a)", "(a,c)", "(c,a)", "(c,c)")
+)
+
+# Figura 1: Unión — "primera moneda es águila"
+p1 <- ggplot(df_venn, aes(x, y)) +
+  geom_rect(aes(xmin=-1.2, xmax=1.2, ymin=-1, ymax=1), fill=NA, color="black") +
+  geom_rect(aes(xmin=-1, xmax=1, ymin=0.15, ymax=0.85),
+            fill="#1A5276", alpha=0.2, color="#1A5276", linetype="dashed") +
+  geom_text(aes(label=label), size=5, fontface="bold") +
+  annotate("text", x=0, y=0.92, label="A ∪ B = {(a,a),(a,c)}", color="#1A5276", size=3.5) +
+  annotate("text", x=1.1, y=0.9, label="Ω", size=5) +
+  theme_void() + labs(title = "Unión: primera moneda = águila")
+
+# Figura 2: Complemento de {(a,a)}
+p2 <- ggplot(df_venn, aes(x, y)) +
+  geom_rect(aes(xmin=-1.2, xmax=1.2, ymin=-1, ymax=1),
+            fill="#C8962E", alpha=0.12, color="black") +
+  annotate("point", x=-0.5, y=0.5, size=22, color="white") +
+  geom_text(aes(label=label, color=(label=="(a,a)")), size=5, fontface="bold", show.legend=FALSE) +
+  scale_color_manual(values=c("#B03A2E","black")) +
+  annotate("text", x=0.3, y=-0.85, label="{(a,a)}ᶜ = {(a,c),(c,a),(c,c)}", size=3.5, fontface="italic") +
+  theme_void() + labs(title = "Complemento de {(a,a)}")
+
+# Figura 3: Diagrama de Venn con 3 eventos (3 monedas)
+library(VennDiagram); library(grid)
+A3 <- c("aaa","aac","aca","acc")
+B3 <- c("aaa","aac","caa","cac")
+C3 <- c("aaa","aca","caa","cca")
+vp <- venn.diagram(list(A=A3,B=B3,C=C3), filename=NULL,
+  fill=c("#1A5276","#1E8449","#B03A2E"), alpha=0.45,
+  cex=0.9, cat.cex=1.1, cat.fontface="bold", margin=0.08)
+
+grid.newpage()
+gridExtra::grid.arrange(p1, p2, ncol=2)
+```
+
+```{r venn_tres_monedas, fig.align='center', fig.width=5, fig.height=5, message=FALSE, warning=FALSE}
+library(VennDiagram); library(grid)
+A3 <- c("(a,a,a)","(a,a,c)","(a,c,a)","(a,c,c)")
+B3 <- c("(a,a,a)","(a,a,c)","(c,a,a)","(c,a,c)")
+C3 <- c("(a,a,a)","(a,c,a)","(c,a,a)","(c,c,a)")
+vp <- venn.diagram(list(A=A3,B=B3,C=C3), filename=NULL,
+  fill=c("lightblue","lightgreen","lightpink"), alpha=0.6,
+  cex=1, cat.cex=1.1, cat.fontface="bold", margin=0.1)
+grid.newpage(); grid.draw(vp)
+```
+
+Para tres monedas, $A$ = "primera es águila", $B$ = "segunda es águila", $C$ = "tercera es águila". El diagrama muestra todas las intersecciones posibles entre estos tres eventos.
+:::
+
+::: {#exr-cap01b-propuestos-2}
+## Ejercicios propuestos — Espacio muestral y eventos
+
+**Básicos:**
+
+1. Para el lanzamiento de un dado, describe el espacio muestral y los eventos: "obtener un número mayor que 4", "obtener un número impar" y "obtener un número primo". ¿Cuáles de estos eventos son mutuamente excluyentes?
+
+2. Considera lanzar una moneda tres veces. Escribe el espacio muestral, define el evento "al menos dos caras" y el complementario de "exactamente una cara".
+
+3. Si se extrae una carta de una baraja estándar de 52 cartas, define el evento "obtener una figura" y el evento "obtener un corazón o un as". Calcula cuántos elementos tiene cada evento.
+
+4. Se lanza un dado y luego una moneda. Describa el espacio muestral del experimento combinado y liste los elementos del evento "número par en el dado y águila en la moneda".
+
+5. Dados $A = \{1,2,3\}$, $B=\{2,3,4\}$ y $C=\{4,5,6\}$ sobre $\Omega=\{1,2,3,4,5,6\}$, calcule $A \cup B$, $A \cap C$, $(A \cup C)^c$ y determine si $A$ y $C$ son mutuamente excluyentes.
+
+**De mayor nivel:**
+
+6. Sea $\Omega = \{1,2,\ldots,n\}$. Define la familia $\mathcal{F} = \mathcal{P}(\Omega)$ (todas las partes de $\Omega$) y verifica que es una $\sigma$-álgebra.
+
+7. En el espacio continuo $\Omega = (0,\infty)$, los eventos naturales son intervalos de la forma $(a,b]$. Describe en palabras los eventos $(0,1]^c$, $(0,1] \cup (2,3]$ y $(0,1] \cap (0.5, 2]$.
+
+8. Demuestra que si $A \subseteq B$, entonces $B^c \subseteq A^c$.
+:::
+
+
+## Axiomas de probabilidad {#sec-axiomas-prob}
+
+**Probabilidad**
+
+De manera intuitiva, la **probabilidad** representa una medida numérica que cuantifica la **frecuencia con la que ocurre un evento** dentro de un experimento aleatorio.  
+La probabilidad de un evento $A$ se denota por $P(A)$.
+
+En este apartado se presentan **los enfoques clásicos de la probabilidad**, comenzando con el enfoque clásico.
+
+
+
+### Probabilidad clásica
+
+::: {#def-cap01b-probabilidad-clasica}
+## Probabilidad clásica (Laplace)
+
+Si todos los resultados del espacio muestral son **igualmente posibles**, la probabilidad de un evento $A$ es:
+
+$$P(A) = \frac{\text{número de resultados favorables a } A}{\text{número total de resultados}} = \frac{m}{n}$$
+
+Este enfoque requiere explícitamente que cada resultado del espacio muestral tenga la misma probabilidad de ocurrir.
+:::
+
+
+**Ejemplo 1: Lanzamiento de un dado**
+
+**Pregunta:**  
+¿Cuál es la probabilidad de obtener la cara con el número seis al lanzar un dado equilibrado?
+
+Sea:
+- $A$: el evento de obtener un seis,
+- $n = 6$: número total de caras del dado,
+- $m = 1$: número de caras que muestran el seis.
+
+Entonces:
+
+$$
+P(A) = \frac{1}{6}
+$$
+
+::: {.callout-note icon=false}
+## Observación
+Cada una de las caras del dado tiene la misma probabilidad de ser seleccionada, lo que justifica el uso del enfoque clásico.
+
+:::
+
+
+**Ejemplo 2: Formación de un comité sindical**
+
+Supóngase que en una empresa trabajan:
+- 30 hombres,
+- 25 mujeres.
+
+Los nombres de todos los empleados se escriben en papelitos y se colocan en una urna.  
+Se seleccionan **10 personas al azar** para formar un comité sindical.
+
+**Pregunta:**  
+¿Cuál es la probabilidad de que el comité esté compuesto por **5 hombres y 5 mujeres**?
+
+
+**Solución**
+
+Sea:
+- $A$: el evento de que el comité esté formado por 5 hombres y 5 mujeres.
+
+El número total de empleados es $55$, por lo que el número total de formas de elegir 10 personas es:
+
+$$
+n = \binom{55}{10}
+$$
+
+El número de formas favorables al evento $A$ es:
+- elegir 5 hombres de 30,
+- y elegir 5 mujeres de 25,
+
+es decir:
+
+$$
+m = \binom{30}{5} \binom{25}{5}
+$$
+
+Por lo tanto, la probabilidad es:
+
+$$
+P(A) = \frac{\binom{30}{5} \binom{25}{5}}{\binom{55}{10}} \approx 0.2588
+$$
+
+
+**Anotaciones:**
+
+- $\binom{55}{10}$ expresa **todas las configuraciones posibles** para formar un comité de 10 personas a partir de los 55 empleados.
+- $\binom{30}{5} \binom{25}{5}$ expresa **todas las configuraciones posibles** que cumplen la condición de 5 hombres y 5 mujeres.
+- En este experimento, **todas las configuraciones del comité tienen la misma probabilidad de ocurrir**, lo que valida el uso de la probabilidad clásica.
+
+
+
+```{r}
+# Valores combinatorios
+total <- choose(55, 10)
+favorables <- choose(30, 5) * choose(25, 5)
+
+# Crear data frame
+datos <- data.frame(
+  Tipo = c("Favorables", "Otras"),
+  Cantidad = c(favorables, total - favorables)
+)
+
+# Visualización
+barplot(
+  datos$Cantidad,
+  names.arg = datos$Tipo,
+  col = c("steelblue", "gray80"),
+  main = "Probabilidad de formar un comité con 5 hombres y 5 mujeres",
+  ylab = "Número de configuraciones",
+  las = 2
+)
+```
+
+### Probabilidad frecuentista
+
+En muchas situaciones prácticas no es posible aplicar la noción clásica de probabilidad basada en un número finito de **casos igualmente probables**.  
+Por ejemplo, al lanzar una **moneda no perfecta**, la probabilidad de obtener *cara* puede no ser igual a $\frac{1}{2}$, ya que los dos resultados posibles no tienen la misma probabilidad de ocurrencia.
+
+En este tipo de situaciones resulta más adecuado utilizar la **teoría frecuentista de la probabilidad**, propuesta por **Von Mises**.
+
+
+
+La idea central es la siguiente:
+
+> Si un experimento aleatorio se repite un número grande de veces, aunque los resultados individuales sean irregulares, el **comportamiento global** muestra una **regularidad estadística**.
+
+Por ejemplo, si se lanza una moneda $n$ veces (por ejemplo, $n = 100$), al finalizar el experimento se puede estimar la probabilidad de obtener *cara* como:
+
+- el **número de veces** que apareció *cara*, dividido entre
+- el **número total de lanzamientos**.
+
+
+#### Definición de probabilidad frecuentista
+
+Supóngase que se realiza $n$ veces un experimento aleatorio $E$ y sea $A$ un evento cualquiera.  
+Denotemos por $n(A)$ el número de veces que ocurre el evento $A$ en las $n$ repeticiones del experimento.
+
+La **probabilidad frecuentista** del evento $A$ se define como:
+
+$$
+P(A) = \frac{n(A)}{n}
+\tag{1}
+$$
+
+Diremos que $P(A)$ es la probabilidad del evento $A$ en el experimento $E$.
+
+::: {.callout-note icon=false}
+## Observación
+La frecuencia relativa $\frac{n(A)}{n}$ tiende a **estabilizarse** cuando el número de repeticiones $n$ es suficientemente grande.
+
+:::
+
+
+**Ejemplo 3: Lanzamiento de un dado**
+
+Consideremos el experimento aleatorio $E$ de lanzar un dado y definamos el evento:
+
+$$
+A = \{\text{ocurre un número par}\} = \{2,4,6\}
+$$
+
+Se lanza el dado **20 veces** y se registra, después de cada lanzamiento, si ocurrió el evento $A$.
+
+
+```{r}
+set.seed(123)
+
+# Número de lanzamientos
+n <- 20
+
+# Simulación de lanzamientos del dado
+lanzamientos <- sample(1:6, n, replace = TRUE)
+
+# Evento A: número par
+evento_A <- lanzamientos %% 2 == 0
+
+# Frecuencia acumulada
+n_A <- cumsum(evento_A)
+frecuencia_relativa <- n_A / seq_len(n)
+
+# Gráfica
+plot(
+  frecuencia_relativa,
+  type = "o",
+  pch = 19,
+  ylim = c(0, 1),
+  xlab = "Número de lanzamientos",
+  ylab = "Frecuencia relativa de A",
+  main = "Estabilización de la frecuencia relativa\nEvento A = número par"
+)
+
+abline(h = 0.5, col = "red", lty = 2)
+```
+
+### Probabilidad axiomática
+
+En el enfoque **axiomático de la probabilidad** no se especifica una fórmula directa para calcular probabilidades.  
+En su lugar, se establecen **reglas fundamentales** que cualquier asignación de probabilidad debe cumplir.
+
+Estas reglas, conocidas como **axiomas de la probabilidad**, fueron formuladas por el matemático ruso **A. N. Kolmogorov** y constituyen la base teórica de toda la probabilidad moderna.
+
+::: {#def-cap01b-axiomas-kolmogorov}
+## Axiomas de Kolmogorov
+
+Sea $S$ el espacio muestral y $P$ una función sobre los eventos de $S$. Decimos que $P$ es una **función de probabilidad** si cumple los tres axiomas:
+
+**Axioma 1 (no negatividad):**
+$$0 \leq P(A) \leq 1 \quad \text{para todo evento } A \subseteq S$$
+
+**Axioma 2 (normalización):**
+$$P(S) = 1$$
+
+**Axioma 3 (aditividad):**
+$$P(A \cup B) = P(A) + P(B) \quad \text{cuando } A \cap B = \varnothing$$
+
+Más en general, si $A_1, A_2, \ldots$ son eventos mutuamente excluyentes:
+$$P\!\left(\bigcup_{i=1}^\infty A_i\right) = \sum_{i=1}^\infty P(A_i)$$
+
+De estos axiomas se derivan todas las demás propiedades de la probabilidad.
+:::
+
+
+**Ejemplo 4: Lanzamiento de una moneda**
+
+Consideremos el experimento aleatorio de **lanzar una moneda al aire**.
+
+El espacio muestral es:
+
+$$
+S = \{\text{águila}, \text{sol}\}
+$$
+
+Definimos la variable aleatoria $X$ como el resultado del lanzamiento de la moneda.  
+Los posibles eventos asociados a este experimento son:
+
+$$
+X = \{\text{águila}\}, \quad X = \{\text{sol}\}, \quad X = \{\text{águila}, \text{sol}\}
+$$
+
+Desde el punto de vista de la **probabilidad clásica**, se asignan probabilidades iguales a cada resultado:
+
+$$
+P(X=\text{águila}) = P(X=\text{sol}) = \frac{1}{2} \tag{2}
+$$
+
+**Anotación:**  
+En la ecuación (2) se verifica el **axioma 1**, ya que las probabilidades asignadas pertenecen al intervalo $[0,1]$.
+
+Además,
+
+$$
+P(X=\text{águila} \cup X=\text{sol}) = \frac{1}{2} + \frac{1}{2} = 1 = P(S) \tag{3}
+$$
+
+**Anotación:**  
+La ecuación (3) confirma el **axioma 2**, pues la probabilidad del espacio muestral es igual a uno.
+
+```{r grafica_moneda_basica, fig.align='center', fig.width=6, fig.height=4}
+library(ggplot2)
+
+# 1. Definir los datos del espacio muestral y sus probabilidades
+df_moneda <- data.frame(
+  Resultado = c("Águila", "Sol"),
+  Probabilidad = c(0.5, 0.5)
+)
+
+# 2. Crear el gráfico de barras
+ggplot(df_moneda, aes(x = Resultado, y = Probabilidad, fill = Resultado)) +
+  geom_bar(stat = "identity", color = "black", width = 0.6, alpha = 0.8) +
+  # Añadir etiquetas de texto con la probabilidad
+  geom_text(aes(label = Probabilidad), vjust = -0.5, fontface = "bold", size = 5) +
+  # Configuración de colores
+  scale_fill_manual(values = c("Águila" = "gold3", "Sol" = "gray70")) +
+  # Estética y títulos
+  theme_minimal() +
+  labs(
+    title = "Distribución de Probabilidad: Lanzamiento de Moneda",
+    subtitle = "Cumplimiento de Axiomas: P(S) = 0.5 + 0.5 = 1",
+    x = "Resultado (Variable Aleatoria X)",
+    y = "Probabilidad P(X = x)"
+  ) +
+  # Ajustar límites del eje Y para ver bien las etiquetas
+  scale_y_continuous(limits = c(0, 0.6), breaks = seq(0, 1, 0.1)) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5),
+    legend.position = "none"
+  )
+```
+
+
+### Reglas de probabilidad derivadas de los axiomas
+
+A partir de los axiomas básicos de la probabilidad, se pueden deducir varias reglas que facilitan el cálculo de probabilidades en situaciones más complejas. A continuación se presentan algunas de las más importantes.
+
+::: {.callout-note icon=false}
+## Observaciones
+
+- **Regla del complemento**  
+  Si $A$ es un evento, la probabilidad de que **no ocurra** se define como:
+  
+  $$
+  P(A^c) = 1 - P(A)
+  $$
+
+- **Evento imposible**  
+  La probabilidad del conjunto vacío es:
+  
+  $$
+  P(\varnothing) = 0
+  $$
+
+- **Regla de la unión de dos eventos**  
+  Para dos eventos $A$ y $B$:
+  
+  $$
+  P(A \cup B) = P(A) + P(B) - P(A \cap B),
+  \quad \text{cuando } A \cap B \neq \varnothing
+  $$
+
+- **Regla de la unión de tres eventos**  
+  Para tres eventos $A$, $B$ y $C$:
+  
+  $$
+  P(A \cup B \cup C) =
+  P(A) + P(B) + P(C)
+  - P(A \cap B) - P(A \cap C) - P(B \cap C)
+  + P(A \cap B \cap C)
+  $$
+
+:::
+
+
+Retomemos el ejemplo de una empresa que cuenta con un archivo que registra **todos los reclamos de garantía realizados por los clientes durante un año**.
+
+Se desea calcular:
+
+> **¿Cuál es la probabilidad de que se presenten reclamos por fallas de tipo mayor o serio?**
+
+
+**Anotaciones**
+
+Definimos los siguientes eventos:
+
+- $A$: Evento que denota reclamos por **fallas de tipo serio**  
+- $B$: Evento que denota reclamos por **fallas de tipo mayor**
+
+De acuerdo con la información proporcionada en la **Tabla 8**, columna de **frecuencia relativa**, se tiene que:
+
+$$
+P(A) = 0.11, \quad P(B) = 0.06
+$$
+
+Además, se asume que los eventos **no se traslapan**, es decir:
+
+$$
+P(A \cap B) = 0
+$$
+
+
+**Cálculo de la probabilidad**
+
+Aplicando la regla de la unión de dos eventos:
+
+$$
+P(A \cup B) = P(A) + P(B)
+$$
+
+$$
+P(A \cup B) = 0.11 + 0.06 = 0.17
+$$
+
+**Interpretación:**  
+La probabilidad de que un reclamo corresponda a una falla de tipo **mayor o serio** es de **0.17**, es decir, **17%**.
+
+
+```{r}
+# Crear tabla de probabilidades
+probabilidades <- data.frame(
+  Tipo = c("Falla seria", "Falla mayor"),
+  Probabilidad = c(0.11, 0.06)
+)
+
+# Visualización con gráfico de barras
+barplot(
+  probabilidades$Probabilidad,
+  names.arg = probabilidades$Tipo,
+  ylim = c(0, 0.15),
+  col = c("steelblue", "tomato"),
+  main = "Probabilidad de reclamos por tipo de falla",
+  ylab = "Probabilidad"
+)
+
+# Agregar etiquetas numéricas
+text(
+  x = c(0.7, 1.9),
+  y = probabilidades$Probabilidad,
+  labels = probabilidades$Probabilidad,
+  pos = 3
+)
+```
+
+::: {#exr-cap01b-propuestos-3}
+## Ejercicios propuestos
+
+1. Una urna contiene 8 bolas rojas y 12 azules. Se extrae una bola al azar.
+   Calcule, usando la probabilidad clásica, la probabilidad de obtener una
+   bola roja.
+2. En 500 lanzamientos de una moneda se observaron 268 águilas. Estime, con
+   el enfoque frecuentista, la probabilidad de obtener águila en esa moneda.
+3. Sean $A$ y $B$ dos eventos con $P(A) = 0.4$, $P(B) = 0.5$ y
+   $P(A \cap B) = 0.2$. Verifique que $P(A)$ y $P(B)$ satisfacen el primer
+   axioma de Kolmogorov y calcule $P(A \cup B)$ y $P(A^c)$.
+
+:::
+
+
+## Análisis combinatorio {#sec-combinatoria}
 
 
 ### Principío básico de conteo
@@ -92,7 +768,7 @@ En total hay **9 configuraciones posibles**, lo que responde la pregunta 1.
 :::
 
 ::: {#def-principio-multiplicativo .definicion}
-## Principio multiplicativo del conteo
+### Principio multiplicativo del conteo
 
 Sean $A$ y $B$ dos etapas secuenciales de un proceso. Si la etapa $A$
 puede realizarse de $n$ maneras distintas y, para cada una de ellas,
@@ -528,678 +1204,6 @@ resultado
 3. Un comité de 5 personas debe elegirse de un grupo de 8 hombres y 6
    mujeres, sin restricción de género. ¿Cuántos comités distintos son
    posibles? ¿Cuántos de ellos tienen exactamente 3 hombres y 2 mujeres?
-
-:::
-
-## Experimentos aleatorios
-
-
-
-#### ¿Qué es un experimento?
-
-Un **experimento** es un proceso mediante el cual se genera una **observación** o una **medición**.  
-Cada vez que realizamos un experimento, obtenemos un resultado.
-
-Sin embargo, no todos los experimentos son del mismo tipo.
-
-
-#### Experimentos deterministas y aleatorios
-
-Podemos clasificar los experimentos en dos grandes categorías:
-
-##### Experimentos deterministas (Tipo A)
-
-Son aquellos experimentos cuyo resultado **puede conocerse con anticipación**, siempre que las condiciones sean las mismas.
-
-**Ejemplos**
-
-- ¿Qué ocurrirá si calentamos agua en un recipiente hasta alcanzar los 100 °C?  
-- ¿Qué ocurrirá si soltamos un vaso que tenemos en la mano?
-
-En ambos casos, el resultado es completamente previsible:
-- El agua hervirá.
-- El vaso caerá al suelo.
-
-Por esta razón, estos experimentos se denominan **deterministas**.
-
-
-##### Experimentos aleatorios (Tipo B)
-
-Son aquellos experimentos cuyo resultado **no puede conocerse con anticipación**, aun cuando el experimento se realice bajo las mismas condiciones.
-
-**Ejemplos**
-
-- Si lanzamos un dado, ¿qué número aparecerá en la cara superior?
-- Si seleccionamos al azar una ficha del archivo de participantes de un curso, ¿cuál será la profesión de la persona seleccionada?
-- Si lanzamos una moneda, ¿cuántos lanzamientos serán necesarios hasta que aparezca cara?
-
-En estos casos, no es posible anticipar con certeza el resultado antes de realizar el experimento.
-
-
-#### Definición de experimento aleatorio
-
-Un **experimento aleatorio** es aquel experimento en el que **no podemos conocer con anticipación** el resultado de su realización.
-
-A partir de este punto, siempre que utilicemos la palabra *experimento*, nos estaremos refiriendo a **experimentos aleatorios**.
-
-También es común utilizar como sinónimos los términos:
-**fenómeno, evento, proceso, intervención o maniobra**.
-
-
-**Ejemplo 1: Lanzamiento de un dado**
-
-Consideremos el experimento aleatorio de **lanzar un dado**.  
-Aunque sabemos que los resultados posibles son los números del 1 al 6, **no sabemos cuál ocurrirá en un lanzamiento específico**.
-
-A continuación, simulamos este experimento varias veces y visualizamos los resultados.
-
-```{r}
-# Fijar semilla para reproducibilidad
-set.seed(123)
-
-# Simular lanzamientos de un dado
-n <- 100
-lanzamientos <- sample(1:6, size = n, replace = TRUE)
-
-# Tabla de frecuencias
-frecuencias <- table(lanzamientos)
-
-frecuencias
-
-barplot(
-  frecuencias,
-  col = "lightblue",
-  border = "gray30",
-  main = "Frecuencia de resultados al lanzar un dado",
-  xlab = "Cara del dado",
-  ylab = "Frecuencia"
-)
-
-```
-
-### Espacio muestral y eventos
-
-La teoría de la probabilidad formaliza fenómenos cuyo resultado no puede predecirse con certeza, pero sí describirse mediante un conjunto de resultados posibles. El primer paso en cualquier modelo probabilístico es identificar el conjunto de resultados observables y los sucesos de interés. La probabilidad no comienza con números, sino con una **estructura de eventos** sobre la que después se define una medida.
-
-::: {#def-cap01b-experimento-aleatorio}
-## Experimento aleatorio
-
-Un **experimento aleatorio** es un procedimiento o fenómeno cuyo resultado exacto no puede determinarse de antemano, aunque sí puede describirse el conjunto de resultados posibles.
-
-Ejemplos: lanzar una moneda, lanzar un dado, seleccionar un objeto al azar de una urna, medir el tiempo de falla de un componente electrónico.
-:::
-
-::: {#def-cap01b-espacio-muestral}
-## Espacio muestral
-
-El **espacio muestral** $\Omega$ (también denotado $S$) es el conjunto de todos los resultados posibles de un experimento aleatorio. Cada elemento $\omega \in \Omega$ se llama **punto muestral** o resultado elemental.
-
-| Experimento | Espacio muestral |
-|:---|:---|
-| Una moneda | $\Omega = \{C, S\}$ |
-| Un dado | $\Omega = \{1,2,3,4,5,6\}$ |
-| Dos lanzamientos de moneda | $\Omega = \{HH, HT, TH, TT\}$ |
-| Tiempo de vida de una lámpara | $\Omega = (0, \infty)$ |
-
-El espacio muestral puede ser **finito**, **infinito numerable** o **continuo** (no numerable).
-:::
-
-::: {#def-cap01b-evento}
-## Evento
-
-Un **evento** es un subconjunto $A \subseteq \Omega$. Decimos que **ocurre el evento $A$** cuando el resultado observado satisface $\omega \in A$.
-
-Un **evento simple** contiene un único punto muestral: $\{\omega\}$. El **evento seguro** es $\Omega$ y el **evento imposible** es $\varnothing$.
-
-En el marco riguroso de la teoría de la medida, los eventos forman una **$\sigma$-álgebra** $\mathcal{F} \subseteq \mathcal{P}(\Omega)$, lo que permite extender la probabilidad a espacios continuos.
-:::
-
-::: {#def-cap01b-operaciones-eventos}
-## Operaciones con eventos
-
-Sean $A$ y $B$ eventos sobre $\Omega$:
-
-| Operación | Notación | Ocurre cuando… |
-|:---|:---:|:---|
-| **Unión** | $A \cup B$ | ocurre $A$, o $B$, o ambos |
-| **Intersección** | $A \cap B$ | ocurren simultáneamente $A$ y $B$ |
-| **Complemento** | $A^c = \Omega \setminus A$ | $A$ no ocurre |
-| **Diferencia** | $A \setminus B$ | ocurre $A$ pero no $B$ |
-| **Mutuamente excluyentes** | $A \cap B = \varnothing$ | no pueden ocurrir al mismo tiempo |
-
-**Ejemplo en un dado:** Si $\Omega = \{1,2,3,4,5,6\}$, $A = \{2,4,6\}$, $B = \{4,5,6\}$:
-$$A \cap B = \{4,6\}, \quad A \cup B = \{2,4,5,6\}, \quad A^c = \{1,3,5\}, \quad A \setminus B = \{2\}$$
-:::
-
-::: {.callout-note icon=false}
-### Modelo probabilístico formal
-
-Un modelo probabilístico completo se expresa como una **terna** $(\Omega, \mathcal{F}, P)$, donde $\Omega$ es el espacio muestral, $\mathcal{F}$ es una $\sigma$-álgebra de eventos y $P$ es la medida de probabilidad (definida en la siguiente sección). Este marco permite tratar de manera uniforme espacios finitos, infinitos numerables y continuos.
-:::
-
-::: {#exm-cap01b-operaciones-dado}
-## Operaciones con eventos — lanzamiento de un dado
-
-Al lanzar un dado equilibrado, $\Omega = \{1,2,3,4,5,6\}$. Definamos:
-
-- $A = \{2,4,6\}$ ("cara par")
-- $B = \{4,5,6\}$ ("cara mayor que 3")
-
-Entonces:
-
-$$A \cup B = \{2,4,5,6\}, \quad A \cap B = \{4,6\}, \quad A^c = \{1,3,5\}, \quad A \setminus B = \{2\}$$
-
-Los eventos $\{2\}$ y $\{3\}$ son **mutuamente excluyentes** porque $\{2\} \cap \{3\} = \varnothing$.
-:::
-
-::: {#exm-cap01b-monedas-ops}
-## Operaciones con eventos — lanzamiento de dos monedas
-
-El experimento consiste en lanzar **dos monedas** simultáneamente (a = águila, c = sol):
-
-$$\Omega = \{(a,a),\,(a,c),\,(c,a),\,(c,c)\}$$
-
-Definamos los eventos elementales y algunas operaciones:
-
-```{r grafica_union, fig.align='center', fig.width=9, fig.height=3.5, message=FALSE, warning=FALSE}
-library(ggplot2)
-library(gridExtra)
-
-df_venn <- data.frame(
-  x = c(-0.5, 0.5, -0.5, 0.5),
-  y = c( 0.5, 0.5, -0.5, -0.5),
-  label = c("(a,a)", "(a,c)", "(c,a)", "(c,c)")
-)
-
-# Figura 1: Unión — "primera moneda es águila"
-p1 <- ggplot(df_venn, aes(x, y)) +
-  geom_rect(aes(xmin=-1.2, xmax=1.2, ymin=-1, ymax=1), fill=NA, color="black") +
-  geom_rect(aes(xmin=-1, xmax=1, ymin=0.15, ymax=0.85),
-            fill="#1A5276", alpha=0.2, color="#1A5276", linetype="dashed") +
-  geom_text(aes(label=label), size=5, fontface="bold") +
-  annotate("text", x=0, y=0.92, label="A ∪ B = {(a,a),(a,c)}", color="#1A5276", size=3.5) +
-  annotate("text", x=1.1, y=0.9, label="Ω", size=5) +
-  theme_void() + labs(title = "Unión: primera moneda = águila")
-
-# Figura 2: Complemento de {(a,a)}
-p2 <- ggplot(df_venn, aes(x, y)) +
-  geom_rect(aes(xmin=-1.2, xmax=1.2, ymin=-1, ymax=1),
-            fill="#C8962E", alpha=0.12, color="black") +
-  annotate("point", x=-0.5, y=0.5, size=22, color="white") +
-  geom_text(aes(label=label, color=(label=="(a,a)")), size=5, fontface="bold", show.legend=FALSE) +
-  scale_color_manual(values=c("#B03A2E","black")) +
-  annotate("text", x=0.3, y=-0.85, label="{(a,a)}ᶜ = {(a,c),(c,a),(c,c)}", size=3.5, fontface="italic") +
-  theme_void() + labs(title = "Complemento de {(a,a)}")
-
-# Figura 3: Diagrama de Venn con 3 eventos (3 monedas)
-library(VennDiagram); library(grid)
-A3 <- c("aaa","aac","aca","acc")
-B3 <- c("aaa","aac","caa","cac")
-C3 <- c("aaa","aca","caa","cca")
-vp <- venn.diagram(list(A=A3,B=B3,C=C3), filename=NULL,
-  fill=c("#1A5276","#1E8449","#B03A2E"), alpha=0.45,
-  cex=0.9, cat.cex=1.1, cat.fontface="bold", margin=0.08)
-
-grid.newpage()
-gridExtra::grid.arrange(p1, p2, ncol=2)
-```
-
-```{r venn_tres_monedas, fig.align='center', fig.width=5, fig.height=5, message=FALSE, warning=FALSE}
-library(VennDiagram); library(grid)
-A3 <- c("(a,a,a)","(a,a,c)","(a,c,a)","(a,c,c)")
-B3 <- c("(a,a,a)","(a,a,c)","(c,a,a)","(c,a,c)")
-C3 <- c("(a,a,a)","(a,c,a)","(c,a,a)","(c,c,a)")
-vp <- venn.diagram(list(A=A3,B=B3,C=C3), filename=NULL,
-  fill=c("lightblue","lightgreen","lightpink"), alpha=0.6,
-  cex=1, cat.cex=1.1, cat.fontface="bold", margin=0.1)
-grid.newpage(); grid.draw(vp)
-```
-
-Para tres monedas, $A$ = "primera es águila", $B$ = "segunda es águila", $C$ = "tercera es águila". El diagrama muestra todas las intersecciones posibles entre estos tres eventos.
-:::
-
-::: {#exr-cap01b-propuestos-2}
-## Ejercicios propuestos — Espacio muestral y eventos
-
-**Básicos:**
-
-1. Para el lanzamiento de un dado, describe el espacio muestral y los eventos: "obtener un número mayor que 4", "obtener un número impar" y "obtener un número primo". ¿Cuáles de estos eventos son mutuamente excluyentes?
-
-2. Considera lanzar una moneda tres veces. Escribe el espacio muestral, define el evento "al menos dos caras" y el complementario de "exactamente una cara".
-
-3. Si se extrae una carta de una baraja estándar de 52 cartas, define el evento "obtener una figura" y el evento "obtener un corazón o un as". Calcula cuántos elementos tiene cada evento.
-
-4. Se lanza un dado y luego una moneda. Describa el espacio muestral del experimento combinado y liste los elementos del evento "número par en el dado y águila en la moneda".
-
-5. Dados $A = \{1,2,3\}$, $B=\{2,3,4\}$ y $C=\{4,5,6\}$ sobre $\Omega=\{1,2,3,4,5,6\}$, calcule $A \cup B$, $A \cap C$, $(A \cup C)^c$ y determine si $A$ y $C$ son mutuamente excluyentes.
-
-**De mayor nivel:**
-
-6. Sea $\Omega = \{1,2,\ldots,n\}$. Define la familia $\mathcal{F} = \mathcal{P}(\Omega)$ (todas las partes de $\Omega$) y verifica que es una $\sigma$-álgebra.
-
-7. En el espacio continuo $\Omega = (0,\infty)$, los eventos naturales son intervalos de la forma $(a,b]$. Describe en palabras los eventos $(0,1]^c$, $(0,1] \cup (2,3]$ y $(0,1] \cap (0.5, 2]$.
-
-8. Demuestra que si $A \subseteq B$, entonces $B^c \subseteq A^c$.
-:::
-
-### Definiciones de probabilidad
-
-**Probabilidad**
-
-De manera intuitiva, la **probabilidad** representa una medida numérica que cuantifica la **frecuencia con la que ocurre un evento** dentro de un experimento aleatorio.  
-La probabilidad de un evento $A$ se denota por $P(A)$.
-
-En este apartado se presentan **los enfoques clásicos de la probabilidad**, comenzando con el enfoque clásico.
-
-
-
-#### Probabilidad clásica
-
-::: {#def-cap01b-probabilidad-clasica}
-## Probabilidad clásica (Laplace)
-
-Si todos los resultados del espacio muestral son **igualmente posibles**, la probabilidad de un evento $A$ es:
-
-$$P(A) = \frac{\text{número de resultados favorables a } A}{\text{número total de resultados}} = \frac{m}{n}$$
-
-Este enfoque requiere explícitamente que cada resultado del espacio muestral tenga la misma probabilidad de ocurrir.
-:::
-
-
-**Ejemplo 1: Lanzamiento de un dado**
-
-**Pregunta:**  
-¿Cuál es la probabilidad de obtener la cara con el número seis al lanzar un dado equilibrado?
-
-Sea:
-- $A$: el evento de obtener un seis,
-- $n = 6$: número total de caras del dado,
-- $m = 1$: número de caras que muestran el seis.
-
-Entonces:
-
-$$
-P(A) = \frac{1}{6}
-$$
-
-::: {.callout-note icon=false}
-## Observación
-Cada una de las caras del dado tiene la misma probabilidad de ser seleccionada, lo que justifica el uso del enfoque clásico.
-
-:::
-
-
-**Ejemplo 2: Formación de un comité sindical**
-
-Supóngase que en una empresa trabajan:
-- 30 hombres,
-- 25 mujeres.
-
-Los nombres de todos los empleados se escriben en papelitos y se colocan en una urna.  
-Se seleccionan **10 personas al azar** para formar un comité sindical.
-
-**Pregunta:**  
-¿Cuál es la probabilidad de que el comité esté compuesto por **5 hombres y 5 mujeres**?
-
-
-**Solución**
-
-Sea:
-- $A$: el evento de que el comité esté formado por 5 hombres y 5 mujeres.
-
-El número total de empleados es $55$, por lo que el número total de formas de elegir 10 personas es:
-
-$$
-n = \binom{55}{10}
-$$
-
-El número de formas favorables al evento $A$ es:
-- elegir 5 hombres de 30,
-- y elegir 5 mujeres de 25,
-
-es decir:
-
-$$
-m = \binom{30}{5} \binom{25}{5}
-$$
-
-Por lo tanto, la probabilidad es:
-
-$$
-P(A) = \frac{\binom{30}{5} \binom{25}{5}}{\binom{55}{10}} \approx 0.2588
-$$
-
-
-**Anotaciones:**
-
-- $\binom{55}{10}$ expresa **todas las configuraciones posibles** para formar un comité de 10 personas a partir de los 55 empleados.
-- $\binom{30}{5} \binom{25}{5}$ expresa **todas las configuraciones posibles** que cumplen la condición de 5 hombres y 5 mujeres.
-- En este experimento, **todas las configuraciones del comité tienen la misma probabilidad de ocurrir**, lo que valida el uso de la probabilidad clásica.
-
-
-
-```{r}
-# Valores combinatorios
-total <- choose(55, 10)
-favorables <- choose(30, 5) * choose(25, 5)
-
-# Crear data frame
-datos <- data.frame(
-  Tipo = c("Favorables", "Otras"),
-  Cantidad = c(favorables, total - favorables)
-)
-
-# Visualización
-barplot(
-  datos$Cantidad,
-  names.arg = datos$Tipo,
-  col = c("steelblue", "gray80"),
-  main = "Probabilidad de formar un comité con 5 hombres y 5 mujeres",
-  ylab = "Número de configuraciones",
-  las = 2
-)
-```
-
-#### Probabilidad frecuentista
-
-En muchas situaciones prácticas no es posible aplicar la noción clásica de probabilidad basada en un número finito de **casos igualmente probables**.  
-Por ejemplo, al lanzar una **moneda no perfecta**, la probabilidad de obtener *cara* puede no ser igual a $\frac{1}{2}$, ya que los dos resultados posibles no tienen la misma probabilidad de ocurrencia.
-
-En este tipo de situaciones resulta más adecuado utilizar la **teoría frecuentista de la probabilidad**, propuesta por **Von Mises**.
-
-
-
-La idea central es la siguiente:
-
-> Si un experimento aleatorio se repite un número grande de veces, aunque los resultados individuales sean irregulares, el **comportamiento global** muestra una **regularidad estadística**.
-
-Por ejemplo, si se lanza una moneda $n$ veces (por ejemplo, $n = 100$), al finalizar el experimento se puede estimar la probabilidad de obtener *cara* como:
-
-- el **número de veces** que apareció *cara*, dividido entre
-- el **número total de lanzamientos**.
-
-
-##### Definición de probabilidad frecuentista
-
-Supóngase que se realiza $n$ veces un experimento aleatorio $E$ y sea $A$ un evento cualquiera.  
-Denotemos por $n(A)$ el número de veces que ocurre el evento $A$ en las $n$ repeticiones del experimento.
-
-La **probabilidad frecuentista** del evento $A$ se define como:
-
-$$
-P(A) = \frac{n(A)}{n}
-\tag{1}
-$$
-
-Diremos que $P(A)$ es la probabilidad del evento $A$ en el experimento $E$.
-
-::: {.callout-note icon=false}
-## Observación
-La frecuencia relativa $\frac{n(A)}{n}$ tiende a **estabilizarse** cuando el número de repeticiones $n$ es suficientemente grande.
-
-:::
-
-
-**Ejemplo 3: Lanzamiento de un dado**
-
-Consideremos el experimento aleatorio $E$ de lanzar un dado y definamos el evento:
-
-$$
-A = \{\text{ocurre un número par}\} = \{2,4,6\}
-$$
-
-Se lanza el dado **20 veces** y se registra, después de cada lanzamiento, si ocurrió el evento $A$.
-
-
-```{r}
-set.seed(123)
-
-# Número de lanzamientos
-n <- 20
-
-# Simulación de lanzamientos del dado
-lanzamientos <- sample(1:6, n, replace = TRUE)
-
-# Evento A: número par
-evento_A <- lanzamientos %% 2 == 0
-
-# Frecuencia acumulada
-n_A <- cumsum(evento_A)
-frecuencia_relativa <- n_A / seq_len(n)
-
-# Gráfica
-plot(
-  frecuencia_relativa,
-  type = "o",
-  pch = 19,
-  ylim = c(0, 1),
-  xlab = "Número de lanzamientos",
-  ylab = "Frecuencia relativa de A",
-  main = "Estabilización de la frecuencia relativa\nEvento A = número par"
-)
-
-abline(h = 0.5, col = "red", lty = 2)
-```
-
-#### Probabilidad axiomática
-
-En el enfoque **axiomático de la probabilidad** no se especifica una fórmula directa para calcular probabilidades.  
-En su lugar, se establecen **reglas fundamentales** que cualquier asignación de probabilidad debe cumplir.
-
-Estas reglas, conocidas como **axiomas de la probabilidad**, fueron formuladas por el matemático ruso **A. N. Kolmogorov** y constituyen la base teórica de toda la probabilidad moderna.
-
-::: {#def-cap01b-axiomas-kolmogorov}
-## Axiomas de Kolmogorov
-
-Sea $S$ el espacio muestral y $P$ una función sobre los eventos de $S$. Decimos que $P$ es una **función de probabilidad** si cumple los tres axiomas:
-
-**Axioma 1 (no negatividad):**
-$$0 \leq P(A) \leq 1 \quad \text{para todo evento } A \subseteq S$$
-
-**Axioma 2 (normalización):**
-$$P(S) = 1$$
-
-**Axioma 3 (aditividad):**
-$$P(A \cup B) = P(A) + P(B) \quad \text{cuando } A \cap B = \varnothing$$
-
-Más en general, si $A_1, A_2, \ldots$ son eventos mutuamente excluyentes:
-$$P\!\left(\bigcup_{i=1}^\infty A_i\right) = \sum_{i=1}^\infty P(A_i)$$
-
-De estos axiomas se derivan todas las demás propiedades de la probabilidad.
-:::
-
-
-**Ejemplo 4: Lanzamiento de una moneda**
-
-Consideremos el experimento aleatorio de **lanzar una moneda al aire**.
-
-El espacio muestral es:
-
-$$
-S = \{\text{águila}, \text{sol}\}
-$$
-
-Definimos la variable aleatoria $X$ como el resultado del lanzamiento de la moneda.  
-Los posibles eventos asociados a este experimento son:
-
-$$
-X = \{\text{águila}\}, \quad X = \{\text{sol}\}, \quad X = \{\text{águila}, \text{sol}\}
-$$
-
-Desde el punto de vista de la **probabilidad clásica**, se asignan probabilidades iguales a cada resultado:
-
-$$
-P(X=\text{águila}) = P(X=\text{sol}) = \frac{1}{2} \tag{2}
-$$
-
-**Anotación:**  
-En la ecuación (2) se verifica el **axioma 1**, ya que las probabilidades asignadas pertenecen al intervalo $[0,1]$.
-
-Además,
-
-$$
-P(X=\text{águila} \cup X=\text{sol}) = \frac{1}{2} + \frac{1}{2} = 1 = P(S) \tag{3}
-$$
-
-**Anotación:**  
-La ecuación (3) confirma el **axioma 2**, pues la probabilidad del espacio muestral es igual a uno.
-
-```{r grafica_moneda_basica, fig.align='center', fig.width=6, fig.height=4}
-library(ggplot2)
-
-# 1. Definir los datos del espacio muestral y sus probabilidades
-df_moneda <- data.frame(
-  Resultado = c("Águila", "Sol"),
-  Probabilidad = c(0.5, 0.5)
-)
-
-# 2. Crear el gráfico de barras
-ggplot(df_moneda, aes(x = Resultado, y = Probabilidad, fill = Resultado)) +
-  geom_bar(stat = "identity", color = "black", width = 0.6, alpha = 0.8) +
-  # Añadir etiquetas de texto con la probabilidad
-  geom_text(aes(label = Probabilidad), vjust = -0.5, fontface = "bold", size = 5) +
-  # Configuración de colores
-  scale_fill_manual(values = c("Águila" = "gold3", "Sol" = "gray70")) +
-  # Estética y títulos
-  theme_minimal() +
-  labs(
-    title = "Distribución de Probabilidad: Lanzamiento de Moneda",
-    subtitle = "Cumplimiento de Axiomas: P(S) = 0.5 + 0.5 = 1",
-    x = "Resultado (Variable Aleatoria X)",
-    y = "Probabilidad P(X = x)"
-  ) +
-  # Ajustar límites del eje Y para ver bien las etiquetas
-  scale_y_continuous(limits = c(0, 0.6), breaks = seq(0, 1, 0.1)) +
-  theme(
-    plot.title = element_text(face = "bold", hjust = 0.5),
-    plot.subtitle = element_text(hjust = 0.5),
-    legend.position = "none"
-  )
-```
-
-
-#### Reglas de probabilidad derivadas de los axiomas
-
-A partir de los axiomas básicos de la probabilidad, se pueden deducir varias reglas que facilitan el cálculo de probabilidades en situaciones más complejas. A continuación se presentan algunas de las más importantes.
-
-::: {.callout-note icon=false}
-## Observaciones
-
-- **Regla del complemento**  
-  Si $A$ es un evento, la probabilidad de que **no ocurra** se define como:
-  
-  $$
-  P(A^c) = 1 - P(A)
-  $$
-
-- **Evento imposible**  
-  La probabilidad del conjunto vacío es:
-  
-  $$
-  P(\varnothing) = 0
-  $$
-
-- **Regla de la unión de dos eventos**  
-  Para dos eventos $A$ y $B$:
-  
-  $$
-  P(A \cup B) = P(A) + P(B) - P(A \cap B),
-  \quad \text{cuando } A \cap B \neq \varnothing
-  $$
-
-- **Regla de la unión de tres eventos**  
-  Para tres eventos $A$, $B$ y $C$:
-  
-  $$
-  P(A \cup B \cup C) =
-  P(A) + P(B) + P(C)
-  - P(A \cap B) - P(A \cap C) - P(B \cap C)
-  + P(A \cap B \cap C)
-  $$
-
-:::
-
-
-Retomemos el ejemplo de una empresa que cuenta con un archivo que registra **todos los reclamos de garantía realizados por los clientes durante un año**.
-
-Se desea calcular:
-
-> **¿Cuál es la probabilidad de que se presenten reclamos por fallas de tipo mayor o serio?**
-
-
-**Anotaciones**
-
-Definimos los siguientes eventos:
-
-- $A$: Evento que denota reclamos por **fallas de tipo serio**  
-- $B$: Evento que denota reclamos por **fallas de tipo mayor**
-
-De acuerdo con la información proporcionada en la **Tabla 8**, columna de **frecuencia relativa**, se tiene que:
-
-$$
-P(A) = 0.11, \quad P(B) = 0.06
-$$
-
-Además, se asume que los eventos **no se traslapan**, es decir:
-
-$$
-P(A \cap B) = 0
-$$
-
-
-**Cálculo de la probabilidad**
-
-Aplicando la regla de la unión de dos eventos:
-
-$$
-P(A \cup B) = P(A) + P(B)
-$$
-
-$$
-P(A \cup B) = 0.11 + 0.06 = 0.17
-$$
-
-**Interpretación:**  
-La probabilidad de que un reclamo corresponda a una falla de tipo **mayor o serio** es de **0.17**, es decir, **17%**.
-
-
-```{r}
-# Crear tabla de probabilidades
-probabilidades <- data.frame(
-  Tipo = c("Falla seria", "Falla mayor"),
-  Probabilidad = c(0.11, 0.06)
-)
-
-# Visualización con gráfico de barras
-barplot(
-  probabilidades$Probabilidad,
-  names.arg = probabilidades$Tipo,
-  ylim = c(0, 0.15),
-  col = c("steelblue", "tomato"),
-  main = "Probabilidad de reclamos por tipo de falla",
-  ylab = "Probabilidad"
-)
-
-# Agregar etiquetas numéricas
-text(
-  x = c(0.7, 1.9),
-  y = probabilidades$Probabilidad,
-  labels = probabilidades$Probabilidad,
-  pos = 3
-)
-```
-
-::: {#exr-cap01b-propuestos-3}
-## Ejercicios propuestos
-
-1. Una urna contiene 8 bolas rojas y 12 azules. Se extrae una bola al azar.
-   Calcule, usando la probabilidad clásica, la probabilidad de obtener una
-   bola roja.
-2. En 500 lanzamientos de una moneda se observaron 268 águilas. Estime, con
-   el enfoque frecuentista, la probabilidad de obtener águila en esa moneda.
-3. Sean $A$ y $B$ dos eventos con $P(A) = 0.4$, $P(B) = 0.5$ y
-   $P(A \cap B) = 0.2$. Verifique que $P(A)$ y $P(B)$ satisfacen el primer
-   axioma de Kolmogorov y calcule $P(A \cup B)$ y $P(A^c)$.
 
 :::
 
