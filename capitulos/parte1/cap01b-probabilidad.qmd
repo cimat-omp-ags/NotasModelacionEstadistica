@@ -677,361 +677,90 @@ $$V(5,5) = 5! = 120.$$
 
 ### Probabilidad condicional
 
-La **probabilidad condicional** estudia la probabilidad de que ocurra un evento dentro de un experimento aleatorio **cuando ya se cuenta con información parcial** sobre dicho experimento.  
-Esta información previa reduce el conjunto de resultados posibles y, en consecuencia, modifica las probabilidades.
-
-A continuación se presenta un ejemplo clásico que ilustra la idea fundamental de la probabilidad condicional.
-
-
-**Ejemplo 1: Lanzamiento de dos dados**
-
-Se lanzan **dos dados de seis caras**, uno después del otro (de manera consecutiva).
-
-::: {.callout-note icon=false}
-## Observación
-Se sabe que **en el primer dado apareció la cara 3**.
-
-:::
-
-La pregunta que se desea responder es:
-
-> **¿Cuál es la probabilidad de que la suma de las caras sea igual a 8, dado que en el primer dado se obtuvo un 3?**
-
-
-Como ya se conoce el resultado del primer dado, solo son posibles los siguientes resultados del experimento:
-
-$$
-S = \{(3,1), (3,2), (3,3), (3,4), (3,5), (3,6)\}
-$$
-
-Cada par ordenado $(3,x)$ representa el evento en el que:
-- el **primer dado** muestra la cara 3,
-- el **segundo dado** muestra la cara $x$.
-
-Todos estos resultados tienen **la misma probabilidad de ocurrir**, ya que el segundo dado sigue siendo aleatorio.
-
-Como el espacio muestral original tenía 36 resultados posibles, cada uno de los resultados del espacio reducido tiene probabilidad:
-
-$$
-P = \frac{1}{6}
-$$
-
-
-*Evento de interés*
-
-La suma de las caras sea igual a 8.
-
-Dentro del espacio muestral reducido, el único resultado que cumple esta condición es:
-
-$$
-(3,5)
-$$
-
-Por lo tanto,
-
-$$
-P(\text{suma = 8} \mid \text{primer dado = 3}) = \frac{1}{6}
-$$
-
-Esto resume la idea central de la probabilidad condicional: **la probabilidad se calcula con base en un espacio muestral reducido**.
-
-
-#### Definición formal de probabilidad condicional
-
 ::: {#def-cap01b-probabilidad-condicional}
 ## Probabilidad condicional
 
 Sean $A$ y $B$ dos eventos con $P(B) > 0$. La **probabilidad condicional** de $A$ dado $B$ es:
+$$P(A \mid B) = \frac{P(A \cap B)}{P(B)}.$$
 
-$$P(A \mid B) = \frac{P(A \cap B)}{P(B)}$$
-
-Intuitivamente: $P(A \mid B)$ mide la probabilidad de $A$ **dentro del espacio muestral reducido** al evento $B$.
+Intuitivamente, $P(A \mid B)$ mide la probabilidad de $A$ dentro del espacio muestral reducido al evento $B$.
 :::
 
+::: {#exm-cap01b-prob-condicional-dados}
+## Probabilidad condicional — lanzamiento de dos dados
 
+Se lanzan dos dados. Sea $A$ = "la suma de las caras es 8" y $B$ = "el primer dado muestra 3".
 
-**Definición de eventos en el ejemplo**
-
-- **A**: La suma de las caras de los dos dados es igual a 8.  
-- **B**: En el primer dado aparece la cara 3.
+$$B = \{(3,1),(3,2),(3,3),(3,4),(3,5),(3,6)\}, \quad A \cap B = \{(3,5)\}.$$
 
 Entonces:
-
-- $A \cap B$: La suma es 8 **y** el primer dado es 3.
-
-
-**Espacio muestral completo**
-
-El experimento de lanzar dos dados de forma consecutiva tiene 36 resultados posibles:
-
-$$
-\{(1,1), (1,2), \dots, (6,6)\}
-$$
-
-Los resultados favorables para cada evento son:
-
-$$
-A = \{(2,6), (3,5), (4,4), (5,3), (6,2)\}
-$$
-
-$$
-B = \{(3,1), (3,2), (3,3), (3,4), (3,5), (3,6)\}
-$$
-
-La intersección es:
-
-$$
-A \cap B = \{(3,5)\}
-$$
-
-
-**Cálculo de las probabilidades**
-
-$$
-P(B) = \frac{6}{36}
-$$
-
-El numerador es 6 porque existen seis resultados donde el primer dado es 3.
-
-$$
-P(A \cap B) = \frac{1}{36}
-$$
-
-El numerador es 1 porque solo en un resultado se cumple que el primer dado es 3 y la suma es 8.
-
-Sustituyendo en la ecuación (4):
-
-$$
-P(A \mid B) = \frac{1/36}{6/36} = \frac{1}{6}
-$$
-
+$$P(A \mid B) = \frac{P(A \cap B)}{P(B)} = \frac{1/36}{6/36} = \frac{1}{6}.$$
+:::
 
 ### Regla de la multiplicación
 
-En esta sección se estudia una regla fundamental de la probabilidad que permite calcular la probabilidad de un evento cuya expresión tiene la forma:
+::: {#thm-cap01b-regla-multiplicacion}
+## Regla de la multiplicación
 
-$$
-A_1 \cap A_2 \cap A_3 \cap \cdots \cap A_n
-$$
+Sean $A_1, A_2, \ldots, A_n$ eventos. Entonces:
+$$P(A_1 \cap A_2 \cap \cdots \cap A_n) = P(A_1)\,P(A_2 \mid A_1)\,P(A_3 \mid A_1 \cap A_2)\cdots P(A_n \mid A_1 \cap \cdots \cap A_{n-1}).$$
 
-Es decir, el evento en el que **ocurren todos los eventos $A_1, A_2, \ldots, A_n$**.
+En particular, para dos eventos: $P(A \cap B) = P(A)\,P(B \mid A)$.
+:::
 
-Cuando los eventos son **dependientes**, la probabilidad de esta intersección puede expresarse en términos de **probabilidades condicionales**.  
-La ecuación resultante recibe el nombre de **regla de la multiplicación de probabilidades**.
+::: {#exm-cap01b-multiplicacion-rifa}
+## Regla de la multiplicación — rifa sin reemplazo
 
+Una urna contiene 50 boletos numerados. Se extraen 3 sin reemplazo. Sea $L_i$ = "el boleto 20 no sale en la extracción $i$". La probabilidad de que el boleto 20 salga exactamente en la tercera extracción es:
 
-**Regla general**
+$$P(L_1 \cap L_2 \cap L_3^c) = P(L_1)\,P(L_2 \mid L_1)\,P(L_3^c \mid L_1 \cap L_2) = \frac{49}{50}\cdot\frac{48}{49}\cdot\frac{1}{48} = \frac{1}{50}.$$
+:::
 
-Sean $A_1, A_2, A_3, \ldots, A_n$ eventos dependientes. Entonces, la probabilidad de que todos ocurran es:
-
-$$
-P(A_1 \cap A_2 \cap \cdots \cap A_n)
-=
-P(A_1)\,P(A_2 \mid A_1)\,P(A_3 \mid A_1 \cap A_2)\cdots
-P(A_n \mid A_1 \cap A_2 \cap \cdots \cap A_{n-1})
-$$
-
-
-**Ejemplo 1: rifa con extracción sin reemplazo**
-
-Suponga que en el trabajo se realiza una rifa.  
-Una persona extrae boletos **sin reemplazo** de una urna que contiene **50 boletos numerados**.
-
-Lucila participa en la rifa y posee el boleto con **denominación 20**.  
-El boleto ganador es aquel que se obtiene en la **tercera extracción**.
-
-**Pregunta:**  
-> ¿Cuál es la probabilidad de que Lucila gane la rifa?
-
-
-*Definición de eventos*
-
-Se definen los siguientes eventos:
-
-- $L_i$: evento en el que el boleto obtenido en la *i*-ésima extracción **no tiene** denominación 20.
-- $L_i^c$: evento en el que el boleto obtenido en la *i*-ésima extracción **sí tiene** denominación 20.
-
-
-*Evento de interés*
-
-El evento que representa que Lucila gane la rifa es:
-
-$$
-P(L_1 \cap L_2 \cap L_3^c)
-$$
-
-Esto significa:
-- En la **primera extracción** no sale el boleto 20.
-- En la **segunda extracción** no sale el boleto 20.
-- En la **tercera extracción** sí sale el boleto 20.
-
-
-*Aplicación de la regla de la multiplicación*
-
-Usando la regla de la multiplicación de probabilidades:
-
-$$
-P(L_1 \cap L_2 \cap L_3^c)
-=
-P(L_1)\,P(L_2 \mid L_1)\,P(L_3^c \mid L_1 \cap L_2)
-\tag{5}
-$$
-
-
-**Primera extracción**
-
-Hay 49 boletos distintos de 20 de un total de 50, por lo que:
-
-$$
-P(L_1) = \frac{49}{50}
-$$
-
-**Segunda extracción**
-
-Dado que ya se extrajo un boleto distinto de 20, quedan:
-- 48 boletos distintos de 20
-- 49 boletos en total
-
-Por lo tanto:
-
-$$
-P(L_2 \mid L_1) = \frac{48}{49}
-$$
-
-
-**Tercera extracción**
-
-Interesa que salga el boleto con denominación 20.  
-Queda un solo boleto con ese número entre 48 boletos restantes:
-
-$$
-P(L_3^c \mid L_1 \cap L_2) = \frac{1}{48}
-$$
-
-
-
-
-Sustituyendo en (5):
-
-$$
-P(L_1 \cap L_2 \cap L_3^c)
-=
-\frac{49}{50}\cdot\frac{48}{49}\cdot\frac{1}{48}
-=
-\frac{1}{50}
-=
-0.02
-$$
-
-**Conclusión:**  
-Lucila tiene una probabilidad de **0.02 (2%)** de ganar la rifa.
-
-
-### Eventos independientes
-
-En el apartado anterior se analizó que la probabilidad de ocurrencia de un evento $A$ puede verse afectada por el conocimiento previo de otro evento, digamos $B$. En ese caso, se trabaja con la probabilidad condicional $P(A \mid B)$.
-
-Sin embargo, existen situaciones en las que la ocurrencia de un evento $B$ **no modifica** la probabilidad de ocurrencia de otro evento $A$.
+### Independencia de eventos
 
 ::: {#def-cap01b-independencia}
 ## Eventos independientes
 
 Dos eventos $A$ y $B$ son **independientes** si y solo si:
+$$P(A \cap B) = P(A)\,P(B).$$
 
-$$P(A \cap B) = P(A)\,P(B)$$
-
-Equivalentemente (cuando $P(B)>0$): $P(A \mid B) = P(A)$, es decir, saber que ocurrió $B$ no modifica la probabilidad de $A$.
-
-Si los eventos no satisfacen esta condición, se dice que son **dependientes**.
+Equivalentemente (cuando $P(B) > 0$): $P(A \mid B) = P(A)$, es decir, conocer que ocurrió $B$ no modifica la probabilidad de $A$.
 :::
-
-A partir de la definición de probabilidad condicional,
-
-$$
-P(A \mid B) = \frac{P(A \cap B)}{P(B)},
-$$
-
-si $P(A \mid B) = P(A)$, entonces se obtiene inmediatamente que $P(A \cap B) = P(A)P(B)$.
 
 ::: {.callout-caution icon=false}
 ## Errores comunes: independencia
 
-**Error 1 — Confundir independencia con mutua exclusión.**  
-Si $A \cap B = \emptyset$ (mutuamente excluyentes con $P(A), P(B) > 0$), entonces $P(A \cap B) = 0 
-eq P(A)P(B)$: son *dependientes*, no independientes. Solo el evento imposible puede ser independiente de sí mismo.
+**Error 1 — Confundir independencia con mutua exclusión.**
+Si $A \cap B = \varnothing$ con $P(A), P(B) > 0$, entonces $P(A \cap B) = 0 \neq P(A)P(B)$: son *dependientes*, no independientes.
 
-**Error 2 — Confundir $P(A \mid B)$ con $P(B \mid A)$.**  
-Estas dos probabilidades son distintas en general. Intercambiarlas es la fuente del clásico error en diagnóstico médico: la probabilidad de tener una enfermedad dado un resultado positivo ($P(	ext{enf} \mid +)$) es muy diferente de la probabilidad de obtener un positivo dado que se tiene la enfermedad ($P(+ \mid 	ext{enf})$, la sensibilidad).
-
+**Error 2 — Confundir $P(A \mid B)$ con $P(B \mid A)$.**
+En diagnóstico médico: $P(\text{enf} \mid +)$ (probabilidad de tener la enfermedad dado un positivo) es muy diferente de $P(+ \mid \text{enf})$ (sensibilidad de la prueba).
 :::
 
+::: {#exm-cap01b-independencia-monedas}
+## Independencia — lanzamiento de dos monedas
 
+$\Omega = \{(a,a),(a,c),(c,a),(c,c)\}$. Sea $E$ = "primera moneda cae sol" y $F$ = "segunda moneda cae águila".
 
+$$P(E) = \frac{1}{2}, \quad P(F) = \frac{1}{2}, \quad P(E \cap F) = \frac{1}{4} = P(E)\,P(F).$$
 
-**Ejemplo 1: Lanzamiento de dos monedas**
-
-Dos monedas se lanzan de manera simultánea al aire.
-
-- Sea $E$ el evento en el que **la primera moneda cae sol**.
-- Sea $F$ el evento en el que **la segunda moneda cae águila**.
-
-Se desea determinar si los eventos $E$ y $F$ son independientes.
-
-*Espacio muestral*
-
-El espacio muestral del experimento es:
-
-$$
-S = \{(a,a), (a,c), (c,a), (c,c)\}
-$$
-
-donde:
-- $a$: cae águila  
-- $c$: cae sol  
-
-**Nota.**  
-Todos los resultados posibles tienen la misma probabilidad de ocurrencia, es decir, cada uno ocurre con probabilidad $1/4$.
-
-*Probabilidades de los eventos*
-
-El evento intersección $E \cap F$ corresponde al resultado $(c,a)$, que es la única forma en que la primera moneda cae sol y la segunda cae águila. Por lo tanto:
-
-$$
-P(E \cap F) = \frac{1}{4}
-$$
-
-El evento $E = \{(c,a), (c,c)\}$, por lo que:
-
-$$
-P(E) = \frac{2}{4} = \frac{1}{2}
-$$
-
-De manera similar, el evento $F = \{(c,a), (a,a)\}$, y su probabilidad es:
-
-$$
-P(F) = \frac{2}{4} = \frac{1}{2}
-$$
-
-Finalmente, se verifica que:
-
-$$
-P(E \cap F) = \frac{1}{4} = \frac{1}{2} \cdot \frac{1}{2} = P(E)P(F)
-$$
-
-Por lo tanto, los eventos $E$ y $F$ son **independientes**.
+Por lo tanto, $E$ y $F$ son **independientes**.
+:::
 
 ::: {#exr-cap01b-propuestos-4}
-## Ejercicios propuestos
+## Ejercicios propuestos — Probabilidad condicional e independencia
 
-1. En una baraja de 52 cartas se extraen dos cartas sin reemplazo. Calcule
-   la probabilidad de que ambas sean ases. Calcule también la probabilidad
-   de que la segunda carta sea un as, dado que la primera lo fue.
-2. Sean $A$ y $B$ eventos con $P(A) = 0.3$, $P(B) = 0.4$ y
-   $P(A \cup B) = 0.58$. Determine si $A$ y $B$ son independientes.
-3. Se lanzan tres monedas equilibradas. Defina los eventos $A$: "la primera
-   moneda cae águila" y $B$: "se obtienen exactamente dos águilas en
-   total". ¿Son $A$ y $B$ independientes?
+**Básicos:**
 
+1. En una baraja de 52 cartas se extraen dos sin reemplazo. Calcule $P(\text{ambas son ases})$ y $P(\text{segunda es as} \mid \text{primera fue as})$.
+2. Sean $A$ y $B$ eventos con $P(A) = 0.3$, $P(B) = 0.4$ y $P(A \cup B) = 0.58$. Determine si $A$ y $B$ son independientes.
+3. Se lanzan tres monedas. Sea $A$ = "primera cae águila" y $B$ = "exactamente dos águilas en total". ¿Son $A$ y $B$ independientes?
+
+**De mayor nivel:**
+
+4. Demuestra que si $A$ y $B$ son independientes, entonces $A$ y $B^c$ también lo son.
+5. Sean $A$, $B$ y $C$ eventos mutuamente independientes. Demuestra que $A$ y $B \cup C$ son independientes.
+6. Sea $\{B_1, B_2, B_3\}$ una partición de $\Omega$ con $P(B_i) > 0$. Verifica que $P(A) = \sum_{i=1}^{3} P(A \mid B_i)\,P(B_i)$ aplicando la regla de la multiplicación.
 :::
 
 ## Probabilidad de un evento de interés en términos de probabilidades condicionales
