@@ -746,8 +746,6 @@ $S_n^2 \xrightarrow{p} \sigma^2$.
 
 #### Teorema Central del Límite
 
-::: {.callout-note icon=false}
-
 ## Ley fuerte de los grandes números {#sec-49-lgn-fuerte}
 
 La Ley fuerte de Kolmogórov garantiza convergencia **casi segura** (con probabilidad 1), más fuerte que la convergencia en probabilidad de la ley débil.
@@ -808,8 +806,6 @@ legend("topright", c(paste0("Trayectorias (k=",n_traj,")"),"μ = 0.4"),
 
 3. Sea $X_i \sim N(\mu, \sigma^2)$ i.i.d. ¿Qué garantiza la ley fuerte sobre $\bar{X}_n$ y $S_n^2 = \frac{1}{n}\sum(X_i-\bar{X})^2$?
 4. La ley fuerte implica la ley débil. Pruebe esta afirmación usando las definiciones.
-:::
-
 :::
 
 ### Resumen del capítulo
