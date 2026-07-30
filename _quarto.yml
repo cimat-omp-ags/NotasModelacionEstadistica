@@ -40,6 +40,7 @@ book:
         - capitulos/parte1/cap01b-probabilidad.qmd
         - capitulos/parte1/cap03-distribuciones.qmd
         - capitulos/parte1/cap04-conjunta.qmd
+        - capitulos/parte1/cap05-inferencia.qmd
     - part: "Parte II - Aplicaciones con Datos Reales"
       chapters:
         - capitulos/parte2/cap05-casas.qmd

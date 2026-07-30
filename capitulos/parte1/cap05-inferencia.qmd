@@ -1,0 +1,673 @@
+# Introducción a la Inferencia Estadística {#cap-inferencia}
+
+[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
+
+La inferencia estadística es el proceso de usar datos para inferir la distribución que genera los datos. Una observación $x$ obtenida de un experimento aleatorio se considera un valor de una variable aleatoria $X$ cuya distribución es al menos parcialmente desconocida; los métodos de inferencia utilizan esa observación para obtener información sobre dicha distribución.
+
+## Objetivos de aprendizaje
+
+Al finalizar este capítulo el estudiante será capaz de:
+
+- Definir y distinguir población, muestra aleatoria, parámetro y estadístico.
+- Derivar la distribución muestral de la media y la varianza bajo normalidad.
+- Enunciar y aplicar el Teorema del Límite Central.
+- Obtener estimadores por el método de momentos y de máxima verosimilitud.
+- Construir y evaluar la función de distribución empírica.
+- Calcular probabilidades para la diferencia de medias de dos muestras independientes.
+
+---
+
+## Muestras aleatorias {#sec-muestras-aleatorias}
+
+[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
+
+A menudo la recolección de datos en un experimento consiste en varias observaciones de la variable de interés. El **modelo de muestreo aleatorio** asigna una distribución de probabilidad $f(x)$ a la variable de interés. Si se realizan $n>1$ observaciones repetidas de la variable, la primera es $X_1$, la segunda $X_2$, y así sucesivamente. Como resultado del muestreo aleatorio, cada $X_i$ tiene la misma distribución marginal $f(x)$ y el valor de una observación no afecta a ninguna otra; es decir, $X_1,\ldots,X_n$ son mutuamente independientes.
+
+::: {#def-muestra-aleatoria .definition}
+### Muestra aleatoria
+
+Las variables aleatorias $X_1,\ldots,X_n$ se llaman **muestra aleatoria de tamaño $n$ de la población $f(x)$** si son mutuamente independientes e idénticamente distribuidas (iid): la fdp o fmp marginal de cada $X_i$ es la misma función $f(x)$.
+:::
+
+De la definición anterior, la fdp o fmp conjunta de $X_1,\ldots,X_n$ es:
+
+$$f(x_1,\ldots,x_n)=\prod_{i=1}^n f(x_i)$$
+
+Si la población pertenece a una familia paramétrica con fdp $f(x|\theta)$, la fdp conjunta es:
+
+$$f(x_1,\ldots,x_n|\theta)=\prod_{i=1}^n f(x_i|\theta)$$
+
+donde el mismo valor del parámetro $\theta$ aparece en cada factor del producto.
+
+::: {#exm-muestra-exponencial .example}
+### Muestra aleatoria exponencial
+
+Sea $X_1,\ldots,X_n$ una muestra aleatoria de una distribución exponencial con parámetro $\beta$ (tiempos hasta el fallo de $n$ placas de circuito). La densidad conjunta de la muestra es:
+
+$$f(x_1,\ldots,x_n)=\prod_{i=1}^n \frac{1}{\beta}e^{-x_i/\beta}=\frac{1}{\beta^n}\,e^{-(x_1+\cdots+x_n)/\beta}$$
+
+Esta densidad puede utilizarse para responder preguntas como: ¿cuál es la probabilidad de que todas las placas duren más de dos años? Aprovechando la independencia:
+
+$$P(X_1>2,\ldots,X_n>2)=[P(X_1>2)]^n=\left(e^{-2/\beta}\right)^n=e^{-2n/\beta}$$
+:::
+
+---
+
+## Estadísticos y distribuciones muestrales {#sec-estadisticos}
+
+[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
+
+Un investigador usa la información contenida en $X_1,\ldots,X_n$ para obtener conclusiones sobre la población. Con frecuencia se resumen los datos calculando **estadísticos**: funciones de la muestra.
+
+::: {#def-estadistico .definition}
+### Estadístico
+
+Sea $X_1,\ldots,X_n$ una muestra aleatoria de tamaño $n$ y sea $T(x_1,\ldots,x_n)$ una función real o vectorial con dominio en el espacio muestral de $(X_1,\ldots,X_n)$. Entonces $Y=T(X_1,\ldots,X_n)$ recibe el nombre de **estadístico**. La distribución de probabilidad de $Y$ se llama **distribución muestral de $Y$**.
+:::
+
+Las tres estadísticas más comunes son:
+
+**Media muestral:**
+$$\bar{X}=\frac{X_1+\cdots+X_n}{n}=\frac{1}{n}\sum_{i=1}^n X_i$$
+
+**Varianza muestral:**
+$$S^2=\frac{1}{n-1}\sum_{i=1}^n(X_i-\bar{X})^2$$
+
+**Desviación estándar muestral:** $S=\sqrt{S^2}$.
+
+### Propiedades de $\bar{X}$ y $S^2$
+
+::: {#thm-propiedades-xbar .theorem}
+### Esperanza y varianza de $\bar{X}$ y $S^2$
+
+Sea $X_1,\ldots,X_n$ una muestra aleatoria de una población con media $\mu$ y varianza $\sigma^2<\infty$. Entonces:
+
+a. $E[\bar{X}]=\mu$
+b. $\operatorname{Var}(\bar{X})=\dfrac{\sigma^2}{n}$
+c. $E[S^2]=\sigma^2$
+:::
+
+::: {.proof}
+**Parte (a).** $E[\bar{X}]=E\!\left[\tfrac{1}{n}\sum X_i\right]=\tfrac{1}{n}\cdot n\,\mu=\mu$.
+
+**Parte (b).** Por independencia, $\operatorname{Var}(\bar{X})=\tfrac{1}{n^2}\cdot n\,\sigma^2=\tfrac{\sigma^2}{n}$.
+
+**Parte (c).** Usando la descomposición $\sum(X_i-\bar{X})^2=\sum X_i^2 - n\bar{X}^2$:
+$$E[S^2]=\frac{1}{n-1}\!\left(n(\sigma^2+\mu^2)-n\!\left(\frac{\sigma^2}{n}+\mu^2\right)\right)=\sigma^2. \qquad\square$$
+:::
+
+---
+
+## Parámetros y estimadores {#sec-parametros-estimadores}
+
+[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
+
+### Modelo estadístico
+
+Una observación $x$ se considera un valor de una variable aleatoria $X$ cuya distribución es al menos parcialmente desconocida. El punto de inicio del análisis estadístico no es una medida de probabilidad fija, sino una **clase de posibles medidas de probabilidad** $\mathcal{P}$, indexadas por un parámetro $\theta$:
+
+$$\mathcal{P}=\{P_\theta:\theta\in\Theta\}$$
+
+::: {#def-modelo-estadistico .definition}
+### Modelo estadístico
+
+Un **modelo estadístico** es una familia $\{P_\theta:\theta\in\Theta\}$ de distribuciones de probabilidad. Si $\Theta\subseteq\mathbb{R}^k$ para algún $k$ finito, el modelo es **paramétrico**; en caso contrario es **no paramétrico**.
+:::
+
+**Ejemplos:**
+
+- *Modelo normal:* $\mathcal{P}=\{N(\mu,\sigma^2):\mu\in\mathbb{R},\,\sigma^2>0\}$ — paramétrico con $\theta=(\mu,\sigma^2)$.
+- *Color de flores:* una sola Bernoulli$(p)$ con $p\in(0,1)$ — paramétrico con $\theta=p$.
+- *Crecimiento de soja:* si solo se sabe que la distribución es continua — no paramétrico.
+
+### Estimadores
+
+::: {#def-estimador .definition}
+### Estimador
+
+Sea $X_1,\ldots,X_n$ una muestra aleatoria de $P_\theta$. Un **estimador** de $\theta$ es cualquier estadístico $T(X_1,\ldots,X_n)$ que no depende del parámetro desconocido. Una **estimación puntual** es el valor observado $T(x_1,\ldots,x_n)$.
+:::
+
+### Propiedades de estimadores
+
+::: {#def-insesgado .definition}
+### Estimador insesgado
+
+$T(X_1,\ldots,X_n)$ es un estimador **insesgado** de $\theta$ si $E[T]=\theta$. El **sesgo** de $T$ se define como $\operatorname{Sesgo}(T)=E[T]-\theta$.
+:::
+
+::: {#def-cme .definition}
+### Cuadrado medio del error
+
+$$\operatorname{CME}(T,\theta)=E_\theta[(T-\theta)^2]=\operatorname{Var}(T)+[\operatorname{Sesgo}(T)]^2$$
+:::
+
+La descomposición varianza-sesgo muestra que un estimador sesgado puede tener menor CME que uno insesgado si su varianza es suficientemente pequeña.
+
+::: {#def-consistente .definition}
+### Estimador consistente
+
+$\hat\theta_n$ es **consistente** para $\theta$ si $\lim_{n\to\infty}P(|\hat\theta_n-\theta|>\varepsilon)=0$ para todo $\varepsilon>0$.
+:::
+
+::: {#thm-criterio-consistencia .theorem}
+### Criterio de consistencia
+
+Si $\lim_{n\to\infty}E[\hat\theta_n]=\theta$ y $\lim_{n\to\infty}\operatorname{Var}(\hat\theta_n)=0$, entonces $\hat\theta_n$ es consistente para $\theta$.
+:::
+
+---
+
+## Métodos de estimación {#sec-metodos-estimacion}
+
+[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
+
+### Método de momentos
+
+A finales del siglo XIX e inicios del XX, **Karl Pearson** introdujo el método de momentos (1902).
+
+::: {#def-momentos .definition}
+### Momentos poblacionales y muestrales
+
+Sea $X_i\sim f(x,\theta)$, $i=1,\ldots,n$.
+
+- **Momento poblacional de orden $k$:** $\mu_k=E[X_i^k]$ (si existe).
+- **Momento muestral de orden $k$:** $m_k=\dfrac{1}{n}\sum_{i=1}^n X_i^k$.
+:::
+
+El **método de momentos** iguala momentos muestrales con momentos poblacionales y resuelve para $\theta$:
+
+$$\frac{1}{n}\sum_{i=1}^n X_i^k = E[X_i^k]=g_k(\theta), \quad k=1,\ldots,p$$
+
+El estimador de momentos del $k$-ésimo parámetro es $\hat\theta_k=g_k^{-1}(m_1,\ldots,m_k)$.
+
+::: {#exm-momentos-bernoulli .example}
+### Estimador de momentos — Bernoulli$(p)$
+
+Para $X_1,\ldots,X_n$ iid Bernoulli$(p)$: $E[X_i]=p$. Igualando:
+$$\frac{1}{n}\sum_{i=1}^n X_i = p \implies \hat{p}_{EM}=\bar{X}$$
+:::
+
+::: {#exm-momentos-normal .example}
+### Estimador de momentos — $N(\mu,\sigma^2)$
+
+Para $X_1,\ldots,X_n$ iid $N(\mu,\sigma^2)$:
+
+$$\frac{1}{n}\sum X_i=\mu \implies \hat\mu_{EM}=\bar{X}$$
+$$\frac{1}{n}\sum X_i^2=\sigma^2+\mu^2 \implies \hat\sigma^2_{EM}=\frac{1}{n}\sum X_i^2-\bar{X}^2$$
+:::
+
+::: {#thm-em-asint .theorem}
+### Propiedades asintóticas del estimador de momentos
+
+Bajo condiciones de regularidad:
+
+1. $\hat\theta_{EM}$ existe con probabilidad que converge a 1 conforme $n\to\infty$.
+2. Es consistente: $\hat\theta_{EM}\xrightarrow{P}\theta$.
+3. Es asintóticamente normal: $\sqrt{n}(\hat\theta_{EM}-\theta)\xrightarrow{d}N(0,\Sigma)$.
+:::
+
+### Máxima verosimilitud
+
+**Ronald Fisher** propuso el método de máxima verosimilitud (MV) entre 1912 y 1922. A diferencia del método de momentos, se basa en encontrar los valores del parámetro que hacen **máxima la probabilidad de los datos observados**.
+
+::: {#def-verosimilitud .definition}
+### Función de verosimilitud
+
+Sea $x_1,\ldots,x_n$ una realización de $X_1,\ldots,X_n$ con $X_i\sim f(x_i;\theta)$. La **función de verosimilitud** es:
+
+$$L(\theta\mid x_1,\ldots,x_n)=\prod_{i=1}^n f(x_i;\theta), \quad \theta\in\Theta$$
+
+La **log-verosimilitud** es $\ell(\theta)=\log L(\theta\mid x_1,\ldots,x_n)$.
+:::
+
+::: {#def-emv .definition}
+### Estimador de máxima verosimilitud (EMV)
+
+El **EMV** $\hat\theta_{MV}$ es el valor de $\theta$ que maximiza $L(\theta)$ (equivalentemente $\ell(\theta)$):
+
+$$L(\hat\theta_{MV})=\sup_{\theta\in\Theta}L(\theta)$$
+:::
+
+::: {#exm-emv-exponencial .example}
+### EMV — distribución exponencial
+
+Para $X_1,\ldots,X_n$ iid $\operatorname{Exp}(\theta)$ con $f(x;\theta)=\theta e^{-\theta x}$:
+
+$$L(\theta)=\theta^n e^{-\theta\sum x_i}$$
+$$\ell(\theta)=n\log\theta - \theta\sum x_i$$
+$$\frac{d\ell}{d\theta}=\frac{n}{\theta}-\sum x_i=0 \implies \hat\theta_{MV}=\frac{n}{\sum x_i}=\frac{1}{\bar{X}}$$
+:::
+
+::: {#exm-emv-uniforme .example}
+### EMV — distribución Uniforme$[0,\theta]$
+
+Para $X_1,\ldots,X_n$ iid $U[0,\theta]$:
+
+$$L(\theta)=\frac{1}{\theta^n}\,I_{[\max_i x_i,\,\infty)}(\theta)$$
+
+Como $1/\theta^n$ es decreciente en $\theta$, el máximo se alcanza en el valor más pequeño posible de $\theta$, que es $\max_i x_i$. Por lo tanto:
+
+$$\hat\theta_{MV}=\max(X_1,\ldots,X_n)=X_{(n)}$$
+:::
+
+::: {#thm-invarianza-emv .theorem}
+### Propiedad de invarianza del EMV
+
+Si $\hat\theta$ es el EMV de $\theta$, entonces para cualquier función $g(\theta)$, el EMV de $g(\theta)$ es $g(\hat\theta)$.
+:::
+
+---
+
+## Distribución de probabilidad empírica {#sec-dist-empirica}
+
+Cuando no se conoce la distribución de la población, la **función de distribución empírica** (FDE) proporciona un estimador no paramétrico de la CDF a partir de los datos.
+
+::: {#def-fde .definition}
+### Función de distribución empírica
+
+Dada una muestra $x_1,\ldots,x_n$, la **función de distribución empírica** es:
+
+$$\hat{F}_n(x)=\frac{\#\{i:x_i\le x\}}{n}=\frac{1}{n}\sum_{i=1}^n I(x_i\le x)$$
+
+donde $I(\cdot)$ es la función indicadora.
+:::
+
+$\hat{F}_n(x)$ es una función escalonada que aumenta en $1/n$ en cada observación. Por la Ley de los Grandes Números, $\hat{F}_n(x)\xrightarrow{P}F(x)$ para cada $x$ fijo.
+
+::: {#thm-glivenko-cantelli .theorem}
+### Teorema de Glivenko-Cantelli
+
+$$\sup_x|\hat{F}_n(x)-F(x)|\xrightarrow{c.s.}0 \quad \text{cuando } n\to\infty$$
+
+Es decir, la FDE converge casi seguramente a la CDF verdadera de manera uniforme en $x$.
+:::
+
+### Estadístico de Kolmogórov-Smirnov
+
+El estadístico KS mide la discrepancia máxima entre la FDE y una distribución de referencia $F_0$:
+
+$$D_n=\sup_x|\hat{F}_n(x)-F_0(x)|$$
+
+Se rechaza $H_0: F=F_0$ cuando $D_n$ supera el valor crítico correspondiente al nivel de significancia.
+
+```{r empirica-ejemplo}
+set.seed(42)
+n <- 100
+x <- rnorm(n, mean = 0, sd = 1)
+
+# Función de distribución empírica
+Fn <- ecdf(x)
+
+# Prueba KS contra N(0,1)
+ks_result <- ks.test(x, "pnorm", mean = 0, sd = 1)
+print(ks_result)
+```
+
+```{r empirica-grafica, fig.align='center', fig.width=7, fig.height=4}
+library(ggplot2)
+
+x_seq <- seq(-4, 4, length.out = 400)
+df_ecdf <- data.frame(
+  x = x_seq,
+  FDE = Fn(x_seq),
+  Teorica = pnorm(x_seq)
+)
+
+ggplot(df_ecdf, aes(x = x)) +
+  geom_step(aes(y = FDE, color = "FDE empírica"), linewidth = 0.8) +
+  geom_line(aes(y = Teorica, color = "N(0,1) teórica"), linewidth = 1, linetype = "dashed") +
+  scale_color_manual(values = c("FDE empírica" = "#1A5276", "N(0,1) teórica" = "#B03A2E")) +
+  labs(title = "Función de distribución empírica vs. CDF teórica",
+       x = "x", y = "F(x)", color = "") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+---
+
+## Distribución muestral para la media {#sec-dist-muestral-media}
+
+[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
+
+### Muestreo de una población normal
+
+Cuando la población es normal, se obtienen distribuciones muestrales exactas (no solo aproximadas) para $\bar{X}$ y $S^2$.
+
+::: {#thm-xbar-normal .theorem}
+### Distribución de $\bar{X}$ bajo normalidad
+
+Si $X_1,\ldots,X_n$ es una muestra aleatoria de $N(\mu,\sigma^2)$, entonces:
+
+$$\bar{X}\sim N\!\left(\mu,\,\frac{\sigma^2}{n}\right)$$
+
+Equivalentemente, $Z=\dfrac{\bar{X}-\mu}{\sigma/\sqrt{n}}\sim N(0,1)$.
+:::
+
+### Distribución Chi-cuadrada
+
+::: {#def-chi2 .definition}
+### Distribución $\chi^2$
+
+Sea $Z_1,\ldots,Z_n$ variables iid $N(0,1)$. La variable:
+
+$$Y=\sum_{i=1}^n Z_i^2\sim\chi^2_n$$
+
+tiene distribución **chi-cuadrada** con $n$ **grados de libertad**. Sus propiedades son: $E[Y]=n$ y $\operatorname{Var}(Y)=2n$.
+:::
+
+::: {#thm-s2-chi2 .theorem}
+### Distribución de $S^2$
+
+Si $X_1,\ldots,X_n$ es una muestra aleatoria de $N(\mu,\sigma^2)$, entonces:
+
+$$\frac{(n-1)S^2}{\sigma^2}\sim\chi^2_{n-1}$$
+
+y además $\bar{X}$ y $S^2$ son independientes.
+:::
+
+### Distribución $t$ de Student
+
+La distribución $t$ surge al estimar $\mu$ cuando $\sigma$ es desconocida y debe estimarse con $S$.
+
+::: {#def-t-student .definition}
+### Distribución $t$ de Student
+
+Sean $Z\sim N(0,1)$ y $U\sim\chi^2_\nu$ independientes. La variable:
+
+$$T=\frac{Z}{\sqrt{U/\nu}}\sim t_\nu$$
+
+tiene distribución $t$ de Student con $\nu$ grados de libertad.
+:::
+
+Aplicando esto a la media muestral:
+
+$$T=\frac{\bar{X}-\mu}{S/\sqrt{n}}\sim t_{n-1}$$
+
+La distribución $t_\nu$ es simétrica alrededor de cero, con colas más pesadas que la Normal; a medida que $\nu\to\infty$, converge a $N(0,1)$.
+
+### Distribución $F$ de Fisher
+
+La distribución $F$ se usa para comparar varianzas de dos poblaciones.
+
+::: {#def-f-fisher .definition}
+### Distribución $F$
+
+Sean $U\sim\chi^2_{v_1}$ y $W\sim\chi^2_{v_2}$ independientes. La variable:
+
+$$F=\frac{U/v_1}{W/v_2}\sim F_{v_1,v_2}$$
+
+tiene distribución $F$ de Fisher con $v_1$ y $v_2$ grados de libertad.
+:::
+
+Si $X_1,\ldots,X_{n_1}$ y $Y_1,\ldots,Y_{n_2}$ son muestras independientes de $N(\mu_1,\sigma_1^2)$ y $N(\mu_2,\sigma_2^2)$, entonces:
+
+$$\frac{S_1^2/\sigma_1^2}{S_2^2/\sigma_2^2}\sim F_{n_1-1,\,n_2-1}$$
+
+### Cálculo de probabilidades con R
+
+```{r dist-muestrales-ejemplos}
+# --- Chi-cuadrada: P(5.23 <= X <= 14.8) con 12 g.l. ---
+prob_chi <- pchisq(14.8, df = 12) - pchisq(5.23, df = 12)
+cat("P(5.23 <= chi2_12 <= 14.8) =", round(prob_chi, 4), "\n")
+
+# --- t-Student: P(T_19 <= -2.80) ---
+prob_t <- pt(-2.80, df = 19)
+cat("P(T_19 <= -2.80) =", round(prob_t, 4), "\n")
+
+# --- F de Fisher: P(F_14,24 > 2) ---
+prob_f <- 1 - pf(2, df1 = 14, df2 = 24)
+cat("P(F_14,24 > 2) =", round(prob_f, 4), "\n")
+```
+
+::: {#exm-ci-media .example}
+### Distribución muestral de $\bar{X}$
+
+El CI de los alumnos de un centro escolar sigue $N(80, 100)$. Se extrae una muestra de $n=25$ alumnos. ¿Cuál es la probabilidad de que el CI promedio sea mayor a 75 puntos?
+
+Como la población es normal: $\bar{X}\sim N(80,\, 100/25)=N(80,4)$, con error estándar $\sqrt{4}=2$.
+
+```{r exm-ci}
+prob_mayor_75 <- 1 - pnorm(75, mean = 80, sd = 2)
+cat("P(Xbar > 75) =", round(prob_mayor_75, 4))
+```
+:::
+
+---
+
+## Teorema del Límite Central {#sec-tlc}
+
+[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
+
+Esta sección aborda el comportamiento de $\bar{X}_n$ cuando el tamaño de muestra $n\to\infty$, desde un enfoque teórico.
+
+### Convergencia en probabilidad
+
+::: {#def-convergencia-prob .definition}
+### Convergencia en probabilidad
+
+Una secuencia de variables aleatorias $X_1,X_2,\ldots$ **converge en probabilidad** a $X$ si para todo $\varepsilon>0$:
+
+$$\lim_{n\to\infty}P(|X_n-X|\ge\varepsilon)=0$$
+:::
+
+::: {#thm-lgn-debil .theorem}
+### Ley Débil de los Grandes Números (LDGN)
+
+Sea $X_1,X_2,\ldots$ variables iid con $E[X_i]=\mu$ y $\operatorname{Var}(X_i)=\sigma^2<\infty$. Entonces, para todo $\varepsilon>0$:
+
+$$\lim_{n\to\infty}P(|\bar{X}_n-\mu|<\varepsilon)=1$$
+
+es decir, $\bar{X}_n\xrightarrow{P}\mu$.
+:::
+
+::: {.proof}
+Por la desigualdad de Chebyshev:
+
+$$P(|\bar{X}_n-\mu|\ge\varepsilon)\le\frac{\operatorname{Var}(\bar{X}_n)}{\varepsilon^2}=\frac{\sigma^2}{n\varepsilon^2}\xrightarrow{n\to\infty}0 \qquad\square$$
+:::
+
+### Teorema Central del Límite
+
+El **TLC** es uno de los resultados más importantes de la probabilidad y la estadística: establece que la media muestral estandarizada sigue aproximadamente una distribución normal para $n$ grande, *independientemente* de la distribución de la población.
+
+::: {#thm-tlc .theorem}
+### Teorema Central del Límite (TLC)
+
+Sea $X_1,X_2,\ldots$ una sucesión de variables iid con $E[X_i]=\mu$ y $\operatorname{Var}(X_i)=\sigma^2>0$ finitas. Defina $\bar{X}_n=(1/n)\sum_{i=1}^n X_i$ y sea $G_n(x)$ la CDF de $\sqrt{n}(\bar{X}_n-\mu)/\sigma$. Entonces para todo $x\in\mathbb{R}$:
+
+$$\lim_{n\to\infty}G_n(x)=\Phi(x)=\int_{-\infty}^x\frac{1}{\sqrt{2\pi}}e^{-y^2/2}\,dy$$
+
+Es decir, $\dfrac{\sqrt{n}(\bar{X}_n-\mu)}{\sigma}\xrightarrow{d}N(0,1)$.
+:::
+
+**Interpretación práctica:** para $n$ suficientemente grande (en general $n\ge 30$):
+
+$$\bar{X}_n\approx N\!\left(\mu,\,\frac{\sigma^2}{n}\right)$$
+
+independientemente de la forma de la distribución original.
+
+```{r tlc-simulacion, fig.align='center', fig.width=8, fig.height=5}
+library(ggplot2)
+
+set.seed(123)
+mu <- 2;  sigma <- 1.5  # Parámetros de Exp(1/mu)
+n_sizes <- c(5, 15, 30, 100)
+n_rep   <- 2000
+
+par(mfrow = c(2, 2))
+
+resultados <- lapply(n_sizes, function(n) {
+  medias <- replicate(n_rep, mean(rexp(n, rate = 1/mu)))
+  data.frame(n = n, media = medias)
+})
+
+df_tlc <- do.call(rbind, resultados)
+df_tlc$n_label <- paste0("n = ", df_tlc$n)
+df_tlc$n_label <- factor(df_tlc$n_label, levels = paste0("n = ", n_sizes))
+
+ggplot(df_tlc, aes(x = media)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 40,
+                 fill = "#1A5276", alpha = 0.6, color = "white") +
+  stat_function(fun = dnorm,
+                args = list(mean = mu, sd = sigma / sqrt(df_tlc$n[1])),
+                color = "#B03A2E", linewidth = 1) +
+  facet_wrap(~ n_label, scales = "free_y") +
+  labs(title = "TLC: distribución de X̄ para muestras de Exp(1/2)",
+       subtitle = "La curva roja es la N(μ, σ²/n) aproximada",
+       x = "Media muestral", y = "Densidad") +
+  theme_minimal()
+```
+
+::: {#exm-tlc-aplicacion .example}
+### Aplicación del TLC
+
+El tiempo de atención en una ventanilla sigue una distribución con $\mu=4$ min y $\sigma=1.9$ min. En una muestra de $n=50$ clientes, ¿cuál es la probabilidad de que el tiempo promedio esté entre 3.8 y 4.2 minutos?
+
+Por el TLC: $\bar{X}\approx N(4,\,1.9^2/50)$.
+
+```{r tlc-ejemplo-ventanilla}
+mu_bar <- 4
+se <- 1.9 / sqrt(50)
+
+prob_intervalo <- pnorm(4.2, mu_bar, se) - pnorm(3.8, mu_bar, se)
+cat("P(3.8 <= Xbar <= 4.2) =", round(prob_intervalo, 4))
+```
+:::
+
+---
+
+## Distribución muestral para la diferencia de medias {#sec-diferencia-medias}
+
+En muchas aplicaciones se quiere comparar las medias de **dos poblaciones independientes**: $\mu_1$ y $\mu_2$.
+
+### Caso 1: varianzas conocidas
+
+Si $X_1,\ldots,X_{n_1}$ y $Y_1,\ldots,Y_{n_2}$ son muestras independientes con varianzas poblacionales $\sigma_1^2$ y $\sigma_2^2$ conocidas, entonces:
+
+$$\bar{X}-\bar{Y}\sim N\!\left(\mu_1-\mu_2,\,\frac{\sigma_1^2}{n_1}+\frac{\sigma_2^2}{n_2}\right)$$
+
+y el estadístico estandarizado es:
+
+$$Z=\frac{(\bar{X}-\bar{Y})-(\mu_1-\mu_2)}{\sqrt{\sigma_1^2/n_1+\sigma_2^2/n_2}}\sim N(0,1)$$
+
+### Caso 2: varianzas desconocidas iguales ($\sigma_1^2=\sigma_2^2=\sigma^2$)
+
+Se estima la varianza común con el **estimador combinado**:
+
+$$S_p^2=\frac{(n_1-1)S_1^2+(n_2-1)S_2^2}{n_1+n_2-2}$$
+
+El estadístico de prueba es:
+
+::: {#thm-t-dos-muestras .theorem}
+### Estadístico $t$ para la diferencia de medias (varianzas iguales)
+
+$$T=\frac{(\bar{X}-\bar{Y})-(\mu_1-\mu_2)}{S_p\sqrt{1/n_1+1/n_2}}\sim t_{n_1+n_2-2}$$
+:::
+
+### Caso 3: varianzas desconocidas distintas (solución de Welch)
+
+Cuando $\sigma_1^2\neq\sigma_2^2$, se usa el **estadístico de Welch**:
+
+$$T=\frac{(\bar{X}-\bar{Y})-(\mu_1-\mu_2)}{\sqrt{S_1^2/n_1+S_2^2/n_2}}\approx t_\nu$$
+
+donde los grados de libertad aproximados son:
+
+$$\nu=\frac{\left(S_1^2/n_1+S_2^2/n_2\right)^2}{\dfrac{(S_1^2/n_1)^2}{n_1-1}+\dfrac{(S_2^2/n_2)^2}{n_2-1}}$$
+
+```{r dif-medias-ejemplo}
+# Datos simulados de dos grupos
+set.seed(2024)
+grupo1 <- rnorm(20, mean = 10, sd = 2)
+grupo2 <- rnorm(25, mean = 8,  sd = 2)
+
+# t-test con varianzas iguales
+t_result <- t.test(grupo1, grupo2, var.equal = TRUE)
+cat("t =", round(t_result$statistic, 3),
+    "| g.l. =", t_result$parameter,
+    "| p-valor =", round(t_result$p.value, 4), "\n")
+
+# Intervalo de confianza al 95%
+cat("IC 95%: [", round(t_result$conf.int[1], 3), ",",
+    round(t_result$conf.int[2], 3), "]\n")
+```
+
+---
+
+## Aplicación {#sec-aplicacion-inferencia}
+
+En esta sección ilustramos los conceptos del capítulo con un ejemplo completo usando datos reales.
+
+### Ejemplo: tiempos de respuesta de servidores
+
+Suponga que se tienen registros de tiempos de respuesta (en ms) de dos servidores y se desea determinar si existe diferencia significativa en sus tiempos medios.
+
+```{r aplicacion-datos}
+set.seed(99)
+servidor_A <- round(rnorm(30, mean = 120, sd = 15), 1)
+servidor_B <- round(rnorm(35, mean = 130, sd = 18), 1)
+
+cat("Servidor A: media =", round(mean(servidor_A), 2),
+    "| sd =", round(sd(servidor_A), 2), "| n =", length(servidor_A), "\n")
+cat("Servidor B: media =", round(mean(servidor_B), 2),
+    "| sd =", round(sd(servidor_B), 2), "| n =", length(servidor_B), "\n")
+```
+
+```{r aplicacion-ks-test}
+# Verificar normalidad con prueba KS
+ks_A <- ks.test(servidor_A, "pnorm", mean(servidor_A), sd(servidor_A))
+ks_B <- ks.test(servidor_B, "pnorm", mean(servidor_B), sd(servidor_B))
+cat("KS Servidor A: D =", round(ks_A$statistic, 4), "| p-valor =", round(ks_A$p.value, 4), "\n")
+cat("KS Servidor B: D =", round(ks_B$statistic, 4), "| p-valor =", round(ks_B$p.value, 4), "\n")
+```
+
+```{r aplicacion-welch}
+# Prueba de Welch (varianzas posiblemente distintas)
+resultado <- t.test(servidor_A, servidor_B, var.equal = FALSE)
+cat("\nPrueba Welch:\n")
+cat("  t =", round(resultado$statistic, 3), "\n")
+cat("  g.l. (Welch) =", round(resultado$parameter, 1), "\n")
+cat("  p-valor =", round(resultado$p.value, 4), "\n")
+cat("  IC 95%: [", round(resultado$conf.int[1], 2),
+    ",", round(resultado$conf.int[2], 2), "]\n")
+```
+
+```{r aplicacion-grafica, fig.align='center', fig.width=7, fig.height=4}
+library(ggplot2)
+
+df_serv <- data.frame(
+  tiempo = c(servidor_A, servidor_B),
+  servidor = rep(c("Servidor A", "Servidor B"),
+                 c(length(servidor_A), length(servidor_B)))
+)
+
+ggplot(df_serv, aes(x = servidor, y = tiempo, fill = servidor)) +
+  geom_boxplot(alpha = 0.7, outlier.shape = 21, outlier.size = 2) +
+  geom_jitter(width = 0.1, alpha = 0.4, size = 1) +
+  scale_fill_manual(values = c("#1A5276", "#1E8449")) +
+  labs(title = "Comparación de tiempos de respuesta",
+       subtitle = "Prueba de Welch para la diferencia de medias",
+       x = "", y = "Tiempo (ms)") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+**Conclusión:** con un nivel de significancia del 5%, el p-valor obtenido indica si se rechaza o no la hipótesis de igualdad de medias. Un intervalo de confianza que no incluya el cero sugiere que la diferencia es estadísticamente significativa.
+
+---
+
+## Resumen del capítulo
+
+| Concepto | Definición clave |
+|---|---|
+| Muestra aleatoria | $n$ variables iid con distribución $f(x)$ |
+| Estadístico | Función $T(X_1,\ldots,X_n)$ sin parámetros desconocidos |
+| Estimador insesgado | $E[T]=\theta$ |
+| Consistencia | $\hat\theta_n\xrightarrow{P}\theta$ |
+| Método de momentos | Igualar $m_k=\mu_k$ y resolver para $\theta$ |
+| EMV | $\hat\theta=\arg\max L(\theta\mid\mathbf{x})$ |
+| FDE | $\hat{F}_n(x)=\frac{1}{n}\sum I(x_i\le x)$ |
+| TLC | $\sqrt{n}(\bar{X}-\mu)/\sigma\xrightarrow{d}N(0,1)$ |
+| $t$ dos muestras | $T=(\bar{X}-\bar{Y}-\delta_0)/(S_p\sqrt{1/n_1+1/n_2})\sim t_{n_1+n_2-2}$ |
+
+: Resumen de conceptos principales del capítulo {#tbl-resumen-cap05}
