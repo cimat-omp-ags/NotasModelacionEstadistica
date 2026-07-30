@@ -810,6 +810,8 @@ legend("topright", c(paste0("Trayectorias (k=",n_traj,")"),"μ = 0.4"),
 4. La ley fuerte implica la ley débil. Pruebe esta afirmación usando las definiciones.
 :::
 
+:::
+
 ### Resumen del capítulo
 
 | Distribución | Parámetros | $E[X]$ | $\text{Var}(X)$ | Propiedad clave |

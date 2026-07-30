@@ -158,7 +158,7 @@ Si $\lim_{n\to\infty}E[\hat\theta_n]=\theta$ y $\lim_{n\to\infty}\operatorname{V
 
 ---
 
-## Métodos de estimación {#sec-metodos-estimacion}
+## Métodos de estimación {#sec-cap05-metodos}
 
 [📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
@@ -240,7 +240,7 @@ $$\frac{d\ell}{d\theta}=\frac{n}{\theta}-\sum x_i=0 \implies \hat\theta_{MV}=\fr
 :::
 
 ::: {#exm-emv-uniforme .example}
-### EMV — distribución Uniforme$[0,\theta]$
+### EMV — Distribución Uniforme
 
 Para $X_1,\ldots,X_n$ iid $U[0,\theta]$:
 
