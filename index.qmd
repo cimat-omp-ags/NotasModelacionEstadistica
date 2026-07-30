@@ -19,14 +19,26 @@ La estadística clásica se divide en dos grandes áreas: **estadística descrip
 
 ## Contenido
 
-| Capítulo | Tema |
-|----------|------|
-| 1 | Nociones de Probabilidad |
-| 2 | Variable Aleatoria Discreta |
-| 3 | Variable Aleatoria Continua |
-| 4 | Distribuciones Muestrales |
-| 5 | Caso de estudio: Precios de Vivienda |
-| 6 | Caso de estudio: Mercado de Autos |
+**Parte I — Probabilidad, Variables Aleatorias y Distribuciones Muestrales**
+
+| Cap. | Tema | Descripción |
+|:----:|:-----|:------------|
+| 1a | Estadística | Introducción a la estadística descriptiva y análisis exploratorio de datos |
+| 1b | Probabilidad | Espacio muestral, axiomas, probabilidad condicional, independencia, Bayes |
+| 3 | Distribuciones | Variables aleatorias discretas y continuas; Bernoulli, Binomial, Poisson, Normal, Gamma, Exponencial, Weibull y más |
+| 4 | Distribuciones conjuntas | Covarianza, correlación, esperanza condicional, FGM, Ley de los Grandes Números |
+| 5 | Inferencia estadística | Muestras aleatorias, estimadores, EMM, EMV, TLC, distribuciones muestrales ($\chi^2$, $t$, $F$) |
+
+**Parte II — Aplicaciones con Datos Reales**
+
+| Cap. | Tema | Descripción |
+|:----:|:-----|:------------|
+| — | Precios de vivienda | Caso de estudio: modelación de precios de casas en Aguascalientes |
+| — | Mercado de autos | Caso de estudio: análisis de precios de vehículos |
+
+**Apéndice**
+
+Tablas de referencia rápida de distribuciones de probabilidad (parámetros, media, varianza, FGM).
 
 ## Descargas
 
@@ -41,8 +53,9 @@ La estadística clásica se divide en dos grandes áreas: **estadística descrip
 
 ## Cómo usar estas notas
 
-Cada capítulo combina teoría con código **R base** ejecutable directamente
-en la consola de R, sin necesidad de instalar paquetes adicionales.
+Las notas integran material de los tres catedráticos del curso (identificado con insignias 📖 en cada sección) junto con ejemplos resueltos, ejercicios propuestos y código **R** ejecutable. Los capítulos están diseñados para leerse en orden, aunque cada uno incluye referencias cruzadas que permiten navegar entre temas relacionados.
+
+El código R puede ejecutarse directamente en la consola o en RStudio sin instalar paquetes adicionales; los ejemplos de las secciones de aplicación utilizan datos reales incluidos en el repositorio.
 
 ```{r}
 #| label: version-r
