@@ -542,508 +542,135 @@ text(
 
 ## Análisis combinatorio {#sec-combinatoria}
 
+El análisis combinatorio proporciona las herramientas para contar configuraciones posibles sin enumerarlas explícitamente. En probabilidad, permite determinar el número de casos favorables y el total de casos en experimentos discretos con resultados equiprobables.
 
-### Principío básico de conteo
+### Principios básicos de conteo
 
+::: {#def-cap01b-principio-aditivo}
+## Principio aditivo
 
-Antes de estudiar las nociones básicas de probabilidad se inicia con las reglas o principios de conteo;
-las cuales son indispensables para el cálculo de probabilidades. Las reglas de conteo proporcionan una 
-herramienta que nos ayuda a contar el número de configuraciones posibles al ordenar o agrupar un determinado 
-número de elementos.
-
-::: {#exm-comite}
-**Formación de comité sindical**
-
-Suponga que en una empresa se quiere establecer un comité sindical
-formado por 2 mujeres y 2 hombres. En la empresa laboran 3 hombres
-(Antonio, Juan y Héctor) y 3 mujeres (Denisse, Lucila y Laura).
-Considere los siguientes puntos:
-
-1. ¿Cuántas configuraciones posibles podrían formarse para el comité?
-2. ¿Cuál es la probabilidad de que el comité tenga una configuración
-   específica?
-
----
-
-La pregunta número 1 es un caso típico de combinatoria. Para resolverla,
-primero contamos por separado cuántos grupos se pueden formar de cada sexo.
-
-**Grupos posibles de 2 hombres** (de un total de 3):
-
-- Antonio y Juan
-- Antonio y Héctor
-- Juan y Héctor
-
-Es decir, **3 combinaciones** posibles de hombres.
-
-**Grupos posibles de 2 mujeres** (de un total de 3):
-
-- Denisse y Lucila
-- Denisse y Laura
-- Lucila y Laura
-
-Del mismo modo, **3 combinaciones** posibles de mujeres.
-
-Todas las configuraciones del comité se obtienen combinando cada grupo de
-mujeres con cada grupo de hombres, como se muestra en la
-@tbl-configuraciones.
-
-| Comité | Mujeres           | Hombres          | Configuración completa              |
-|--------|-------------------|------------------|--------------------------------------|
-| 1      | Denisse, Lucila   | Antonio, Juan    | Denisse, Lucila, Antonio, Juan       |
-| 2      | Denisse, Lucila   | Antonio, Héctor  | Denisse, Lucila, Antonio, Héctor     |
-| 3      | Denisse, Lucila   | Juan, Héctor     | Denisse, Lucila, Juan, Héctor        |
-| 4      | Denisse, Laura    | Antonio, Juan    | Denisse, Laura, Antonio, Juan        |
-| 5      | Denisse, Laura    | Antonio, Héctor  | Denisse, Laura, Antonio, Héctor      |
-| 6      | Denisse, Laura    | Juan, Héctor     | Denisse, Laura, Juan, Héctor         |
-| 7      | Lucila, Laura     | Antonio, Juan    | Lucila, Laura, Antonio, Juan         |
-| 8      | Lucila, Laura     | Antonio, Héctor  | Lucila, Laura, Antonio, Héctor       |
-| 9      | Lucila, Laura     | Juan, Héctor     | Lucila, Laura, Juan, Héctor          |
-
-: Posibles configuraciones del comité {#tbl-configuraciones}
-
-En total hay **9 configuraciones posibles**, lo que responde la pregunta 1.
-
+Si una tarea puede realizarse de $m$ maneras y otra tarea, **mutuamente excluyente**, puede realizarse de $n$ maneras, entonces una de las dos puede realizarse de
+$$m + n$$
+maneras.
 :::
 
-::: {#def-principio-multiplicativo .definicion}
-### Principio multiplicativo del conteo
+::: {#def-cap01b-principio-multiplicativo}
+## Principio multiplicativo
 
-Sean $A$ y $B$ dos etapas secuenciales de un proceso. Si la etapa $A$
-puede realizarse de $n$ maneras distintas y, para cada una de ellas,
-la etapa $B$ puede realizarse de $m$ maneras distintas, entonces el
-número total de formas en que puede llevarse a cabo el proceso completo
-$A$ seguido de $B$ es:
-$$n \times m$$
-
+Si un procedimiento consta de dos etapas, donde la primera puede realizarse de $m$ maneras y, para cada una de ellas, la segunda de $n$ maneras, entonces el procedimiento completo puede realizarse de
+$$m \times n$$
+maneras. En general, si hay $k$ etapas con $n_1, n_2, \ldots, n_k$ maneras respectivamente:
+$$n_1 \times n_2 \times \cdots \times n_k.$$
 :::
-
-Reconsidere el caso del comité sindical del @exm-comite, el cual debe estar compuesto por 4 personas, dos hombres y dos mujeres. 
-
-El número de parejas de hombres son 3 posibles, y cada una de estas parejas tiene 3 posibles parejas de mujeres con las que pueden relacionarse. Si $m = 3$ parejas de hombres y $n = 3$ parejas de mujeres, entonces por el principio básico del conteo se tienen:
-
-$$
-m \times n = 3 \times 3 = 9
-$$
-
-posibles configuraciones.
-```{r diagrama_comites, fig.align='center', fig.width=9, fig.height=6}
-library(ggplot2)
-
-# 1. Generar todas las combinaciones posibles de 2 hombres (de 3)
-hombres <- c("Antonio", "Juan", "Héctor")
-comb_h <- combn(hombres, 2, simplify = FALSE)
-# Crear etiquetas legibles
-etiquetas_h <- sapply(comb_h, function(x) paste(x, collapse = " y "))
-
-# 2. Generar todas las combinaciones posibles de 2 mujeres (de 3)
-mujeres <- c("Denisse", "Lucila", "Laura")
-comb_m <- combn(mujeres, 2, simplify = FALSE)
-# Crear etiquetas legibles
-etiquetas_m <- sapply(comb_m, function(x) paste(x, collapse = " y "))
-
-# 3. Crear el espacio muestral cruzando ambos grupos (Principio Multiplicativo)
-df_comites <- expand.grid(Hombres = etiquetas_h, Mujeres = etiquetas_m)
-df_comites$ID <- paste("Comité", 1:nrow(df_comites))
-
-# 4. Graficar la matriz de combinaciones
-ggplot(df_comites, aes(x = Hombres, y = Mujeres)) +
-  # Crear los cuadros de la matriz
-  geom_tile(fill = "aliceblue", color = "steelblue", linewidth = 0.8) +
-  # Añadir el número de comité
-  geom_text(aes(label = ID), fontface = "bold", vjust = -1.5, size = 4.5, color = "darkblue") +
-  # Añadir los nombres de los integrantes en cada celda
-  geom_text(aes(label = paste(Hombres, "\n+\n", Mujeres)), size = 3.2, vjust = 1) +
-  # Estética y etiquetas
-  theme_minimal() +
-  labs(
-    title = "Diagrama de Configuraciones Posibles del Comité",
-    subtitle = "Intersección de combinaciones de Hombres (n=3, k=2) y Mujeres (n=3, k=2)",
-    x = "Parejas de Hombres Posibles",
-    y = "Parejas de Mujeres Posibles"
-  ) +
-  theme(
-    plot.title = element_text(face = "bold", size = 16, hjust = 0.5),
-    plot.subtitle = element_text(size = 11, hjust = 0.5, color = "gray30"),
-    axis.text = element_text(face = "bold", color = "black"),
-    panel.grid = element_blank()
-  )
-```
-
-Otro ejemplo donde se puede ilustrar el principio básico del conteo es cuando se formula una contraseña¿Cuántas son las posibles combinaciones formadas por sus carácteres?. Considerando que se tienen las siguientes consideraciones:
-
-| Letra  |  Dígito  |  Símbolo  |
-|------------------|-------------------------|-------------------------|
-| A     | 1    | @      | 
-| B        | 2     | *       | 
-| C        | 3     |      
-
-```{r librerias, message=FALSE, warning=FALSE}
-# Es fundamental cargar la librería igraph
-library(igraph)
-library(ggplot2)
-```
-
-```{r construccion_grafo, fig.align='center', fig.width=10, fig.height=7}
-# 1. Definir los conjuntos
-letras <- c("A", "B", "C")
-digitos <- c("1", "2", "3", "4")
-simbolos <- c("@", "#")
-
-# 2. Crear las aristas (edges) de forma jerárquica
-# Para que el diagrama no colapse los nodos, creamos combinaciones únicas
-edges1 <- expand.grid(from = letras, to = digitos)
-edges2 <- expand.grid(from = digitos, to = simbolos)
-
-# Unimos todas las conexiones
-edges <- rbind(edges1, edges2)
-
-# 3. Crear el objeto de grafo
-g <- graph_from_data_frame(edges, directed = TRUE)
-
-# 4. Configurar Estilo Visual (Atributos de Vértices y Aristas)
-V(g)$color <- ifelse(V(g)$name %in% letras, "lightblue",
-              ifelse(V(g)$name %in% digitos, "lightgreen", "lightpink"))
-
-V(g)$size <- 25
-V(g)$label.color <- "black"
-V(g)$label.font <- 2
-V(g)$label.cex <- 1.1
-
-# Estilo de las flechas
-E(g)$arrow.size <- 0.5
-E(g)$color <- "gray70"
-E(g)$curved <- 0.1
-
-# 5. Definir el Layout (Disposición por niveles)
-# Calculamos las posiciones manualmente para que se vea como un flujo de izquierda a derecha
-coords <- matrix(NA, nrow = vcount(g), ncol = 2)
-nombres <- V(g)$name
-
-# Nivel 1 (Letras)
-coords[nombres %in% letras, 1] <- 1
-coords[nombres %in% letras, 2] <- seq(1, 10, length.out = length(letras))
-
-# Nivel 2 (Dígitos)
-coords[nombres %in% digitos, 1] <- 2
-coords[nombres %in% digitos, 2] <- seq(1, 10, length.out = length(digitos))
-
-# Nivel 3 (Símbolos)
-coords[nombres %in% simbolos, 1] <- 3
-coords[nombres %in% simbolos, 2] <- seq(1, 10, length.out = length(simbolos))
-
-# 6. Dibujar el Grafo
-plot(g, 
-     layout = coords, 
-     vertex.label.dist = 0,
-     main = "Diagrama de Decisiones: Construcción de Contraseñas",
-     sub = "Total de combinaciones: 3 x 4 x 2 = 24")
-
-# Leyenda para identificar niveles
-legend("topleft", 
-       legend = c("Letras", "Dígitos", "Símbolos"), 
-       fill = c("lightblue", "lightgreen", "lightpink"), 
-       bty = "n", cex = 0.8)
-```
-
-
-### Generalización del principio básico del conteo
-
-**Ejemplo 1: Conteo de matrículas universitarias**
-
-Suponga que a **Denisse** se le encarga generar las matrículas de los alumnos de una universidad.  
-Cada matrícula está formada por **cinco caracteres**, que se leen de izquierda a derecha y cumplen las siguientes condiciones:
-
-- Los **primeros tres caracteres** son **números**.
-- Los **últimos dos caracteres** son **letras minúsculas**.
-
-Algunos ejemplos de matrículas válidas son:
-
-- `113ma`
-- `145jd`
-- `111mm`
-
-**Análisis de las opciones por posición**
-
-Para determinar cuántas matrículas distintas se pueden generar, analizamos cada posición de manera independiente:
-
-1. **Primera posición:**  
-   Puede tomar cualquiera de los dígitos del 0 al 9, por lo que tiene **10 posibles resultados**.
-
-2. **Segunda posición:**  
-   Nuevamente puede tomar cualquier dígito del 0 al 9, con **10 posibles resultados**.
-
-3. **Tercera posición:**  
-   Al igual que las anteriores, tiene **10 posibles resultados**.
-
-4. **Cuarta posición:**  
-   Puede tomar cualquier letra minúscula del alfabeto inglés (de la *a* a la *z*), por lo que tiene **26 posibles resultados**.
-
-5. **Quinta posición:**  
-   De nuevo puede tomar cualquiera de las 26 letras minúsculas.
-
-
-**Aplicación del principio básico del conteo**
-
-Dado que las elecciones en cada posición son **independientes entre sí**, el número total de matrículas distintas que se pueden generar se obtiene multiplicando el número de opciones de cada posición.
-
-$$
-(10) \times (10) \times (10) \times (26) \times (26) = 676\,000
-$$
-
-Por lo tanto, **Denisse puede generar un total de 676 000 matrículas distintas**.
-
-Este procedimiento se conoce como **conteo con repetición** o **conteo con reemplazo**, ya que en cada posición se pueden repetir los mismos dígitos o letras sin restricción alguna.
-
-> **Observación**  
-> El principio básico del conteo se utiliza para calcular el número total de resultados posibles cuando un proceso se compone de varias etapas sucesivas. En su forma más simple, este principio se presenta para dos procedimientos, estableciendo que si una primera etapa puede realizarse de $n_1$ maneras y una segunda etapa de $n_2$ maneras, entonces el proceso completo puede realizarse de $n_1 \times n_2$ formas distintas.  
->  
-> La **generalización del principio básico del conteo** amplía esta idea a cualquier número de fases. En este caso, si un procedimiento consta de $k$ etapas independientes, donde la etapa $i$-ésima puede realizarse de $n_i$ maneras, entonces el número total de resultados posibles está dado por el producto  
-> $$
-> n_1 \times n_2 \times \cdots \times n_k.
-> $$
-> Esta formulación permite analizar y resolver problemas de conteo más complejos de manera sistemática y estructurada.
-
 
 ### Permutaciones
 
-El concepto de **permutación** se refiere a las distintas formas en que se pueden **ordenar** los elementos de un conjunto cuando **el orden importa** y **no se permite repetición**. Consideremos los siguientes tres símbolos diferentes:
+::: {#def-cap01b-permutaciones}
+## Permutaciones
 
-$$
-\times \quad o \quad \square
-$$
+Una **permutación** es una ordenación de todos los elementos de un conjunto. Si hay $n$ elementos distintos, el número de permutaciones es
+$$P_n = n!$$
 
-La pregunta que nos hacemos es:
-
-> **¿De cuántas maneras distintas se pueden ordenar estos tres símbolos?**
-
-
-Al enumerar todas las posibles formas de ordenarlos, obtenemos los siguientes arreglos:
-
-1. $\times\; o\; \square$  
-2. $\times\; \square\; o$  
-3. $\square\; o\; \times$  
-4. $\square\; \times\; o$  
-5. $o\; \times\; \square$  
-6. $o\; \square\; \times$
-
-Cada uno de estos arreglos se denomina una **permutación**.  
-En total, existen **6 permutaciones distintas**.
-
-
-
-El número de permutaciones de un conjunto de $n$ elementos distintos se calcula mediante el **factorial**:
-
-$$
-n! = n \cdot (n-1) \cdot (n-2) \cdots 3 \cdot 2 \cdot 1
-$$
-
-:::: {.callout-note icon=false}
-## Nota
-Notar que:
-
-- $1! = 1$
-
-- $0! = 1$
-
-::::
-
-
-En este caso tenemos $n = 3$ símbolos, por lo tanto:
-
-$$
-3! = 3 \cdot 2 \cdot 1 = 6
-$$
-
-Esto confirma el resultado obtenido al enumerar directamente las permutaciones.
-
-Este resultado puede interpretarse también a partir del **principio básico del conteo**:
-
-- Para la **primera posición**, hay 3 opciones.
-- Para la **segunda posición**, quedan 2 opciones.
-- Para la **tercera posición**, queda 1 opción.
-
-Multiplicando las opciones disponibles en cada paso:
-
-$$
-3 \times 2 \times 1 = 6
-$$
-
-Por lo tanto, el cálculo del número de permutaciones es un **caso particular del principio básico del conteo sin repetición**, donde el orden de los elementos es relevante.
-
-```{r diagrama_permutaciones, fig.align='center', fig.width=10, fig.height=6}
-library(ggplot2)
-
-# Crear estructura de datos para el árbol de permutaciones
-# Definimos las coordenadas de los nodos
-df_tree <- data.frame(
-  x = c(0, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3),
-  y = c(0, 2, 0, -2, 2.5, 1.5, 0.5, -0.5, -1.5, -2.5, 2.5, 1.5, 0.5, -0.5, -1.5, -2.5),
-  label = c("Inicio", "x", "o", "□", "o", "□", "x", "□", "x", "o", "□", "o", "□", "x", "o", "x")
-)
-
-# Definir las conexiones (ramas)
-df_lines <- data.frame(
-  x =    c(0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2),
-  xend = c(1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3),
-  y =    c(0, 0, 0, 2, 2, 0, 0, -2, -2, 2.5, 1.5, 0.5, -0.5, -1.5, -2.5),
-  yend = c(2, 0, -2, 2.5, 1.5, 0.5, -0.5, -1.5, -2.5, 2.5, 1.5, 0.5, -0.5, -1.5, -2.5)
-)
-
-# Crear el gráfico
-ggplot() +
-  # Dibujar las ramas del árbol
-  geom_segment(data = df_lines, aes(x = x, y = y, xend = xend, yend = yend), 
-               color = "gray60", linewidth = 0.8) +
-  # Dibujar los nodos (puntos de decisión)
-  geom_point(data = df_tree, aes(x = x, y = y), color = "darkblue", size = 10) +
-  # Añadir los símbolos/etiquetas
-  geom_text(data = df_tree, aes(x = x, y = y, label = label), 
-            color = "white", fontface = "bold", size = 5) +
-  # Etiquetas de las posiciones
-  annotate("text", x = 1, y = 3.2, label = "1ª Posición\n(3 opciones)", fontface = "italic") +
-  annotate("text", x = 2, y = 3.2, label = "2ª Posición\n(2 opciones)", fontface = "italic") +
-  annotate("text", x = 3, y = 3.2, label = "3ª Posición\n(1 opción)", fontface = "italic") +
-  # Listado de permutaciones finales al final de las ramas
-  annotate("text", x = 3.6, y = 2.5, label = "x o □", fontface = "bold", hjust = 0) +
-  annotate("text", x = 3.6, y = 1.5, label = "x □ o", fontface = "bold", hjust = 0) +
-  annotate("text", x = 3.6, y = 0.5, label = "o x □", fontface = "bold", hjust = 0) +
-  annotate("text", x = 3.6, y = -0.5, label = "o □ x", fontface = "bold", hjust = 0) +
-  annotate("text", x = 3.6, y = -1.5, label = "□ x o", fontface = "bold", hjust = 0) +
-  annotate("text", x = 3.6, y = -2.5, label = "□ o x", fontface = "bold", hjust = 0) +
-  # Estética general
-  theme_void() +
-  labs(title = "Diagrama de Árbol: Permutaciones de 3 Símbolos",
-       subtitle = "Cálculo: 3 \u00d7 2 \u00d7 1 = 6 arreglos distintos") +
-  theme(plot.title = element_text(face = "bold", size = 16, hjust = 0.5),
-        plot.subtitle = element_text(size = 12, hjust = 0.5)) +
-  xlim(-0.5, 4.5)
-```
-
-
-### Grupos de tamaños $k$ de un total de $n$ elementos
-
-#### Combinaciones y formación de comités
-
-Con frecuencia es de interés determinar cuántos **grupos distintos** pueden formarse al seleccionar $k$ elementos de un conjunto de $n$ elementos, cuando **el orden no importa** y **no se permiten repeticiones**. Este tipo de selección se conoce como una **combinación**.
-
-**Ejemplo 1: Formación de un comité**
-
-Supongamos que se desea formar un comité integrado por **4 personas**, compuesto **exactamente por 2 hombres y 2 mujeres**, a partir de los siguientes conjuntos:
-
-- **Hombres:** Antonio, Juan, Héctor  
-- **Mujeres:** Denisse, Lucila, Laura  
-
-La pregunta es:
-
-> ¿Cuántos comités distintos de 2 hombres y 2 mujeres se pueden formar?
-
-
-**Combinaciones de hombres**
-
-Para formar el comité, primero debemos elegir **2 hombres de un total de 3**.  
-Los posibles grupos de hombres son:
-
-- Antonio y Juan  
-- Antonio y Héctor  
-- Juan y Héctor  
-
-El número de combinaciones de tamaño $k$ que se pueden formar a partir de un conjunto de $n$ elementos se calcula mediante la expresión:
-
-$$
-\binom{n}{k} = \frac{n!}{(n-k)! \, k!}, \quad k \leq n
-$$
-
-Aplicando esta fórmula al conjunto de hombres:
-
-$$
-\binom{3}{2} = \frac{3!}{(3-2)! \, 2!}
-= \frac{3 \cdot 2 \cdot 1}{1 \cdot (2 \cdot 1)}
-= 3
-$$
-
-Por lo tanto, existen **3 posibles grupos de hombres**.
-
-
-**Combinaciones de mujeres**
-
-De manera análoga, al elegir **2 mujeres de un total de 3**, se tiene:
-
-$$
-\binom{3}{2} = 3
-$$
-
-Es decir, existen **3 posibles grupos de mujeres**.
-
-
-
-**Número total de comités**
-
-Cada grupo de hombres puede combinarse con **cada grupo de mujeres**.  
-Por el **principio básico del conteo**, el número total de comités posibles es:
-
-$$
-3 \times 3 = 9
-$$
-
-Por lo tanto, se pueden formar **9 comités distintos** de 2 hombres y 2 mujeres.
-
-
-::: {.callout-note icon=false}
-## Observaciones importantes
-
-- El **orden no importa**: el grupo (Antonio, Juan) es el mismo que (Juan, Antonio).
-- **No se permiten repeticiones**: no es válido un grupo como (Héctor, Héctor).
-- Los grupos formados corresponden a **combinaciones**, no a permutaciones.
-
+*Ejemplo:* el número de formas de ordenar 3 libros distintos es $3! = 6$.
 :::
 
+::: {#def-cap01b-permutaciones-repeticion}
+## Permutaciones con repetición
 
+Si entre los $n$ elementos existen grupos de elementos indistinguibles de tamaños $n_1, n_2, \ldots, n_r$, con $n_1 + n_2 + \cdots + n_r = n$, entonces el número de permutaciones distintas es
+$$\frac{n!}{n_1!\, n_2!\cdots n_r!}.$$
 
-```{r}
-library(igraph)
+*Ejemplo:* la palabra *MAMA* ($n=4$, $M$ repetida 2 veces, $A$ repetida 2 veces) tiene $\dfrac{4!}{2!\,2!} = 6$ ordenaciones distintas.
+:::
 
-# Definición de conjuntos
-hombres <- c("Antonio", "Juan", "Héctor")
-mujeres <- c("Denisse", "Lucila", "Laura")
+### Variaciones
 
-# Combinaciones
-comb_hombres <- combn(hombres, 2)
-comb_mujeres <- combn(mujeres, 2)
+::: {#def-cap01b-variaciones}
+## Variaciones
 
-# Construcción de la tabla de comités
-resultado <- data.frame()
+Una **variación** es una selección **ordenada** de $r$ elementos tomados de un conjunto de $n$ elementos.
 
-for (i in 1:ncol(comb_hombres)) {
-  for (j in 1:ncol(comb_mujeres)) {
-    resultado <- rbind(
-      resultado,
-      data.frame(
-        Hombre1 = comb_hombres[1, i],
-        Hombre2 = comb_hombres[2, i],
-        Mujer1  = comb_mujeres[1, j],
-        Mujer2  = comb_mujeres[2, j]
-      )
-    )
-  }
-}
+**Sin repetición:**
+$$V(n,r) = \frac{n!}{(n-r)!}.$$
+*Ejemplo:* elegir presidente, vicepresidente y secretario entre 5 personas: $V(5,3) = \dfrac{5!}{2!} = 60$.
 
-resultado
+**Con repetición:** si se permite repetir elementos,
+$$n^r.$$
+*Ejemplo:* claves de 3 dígitos con dígitos 0–9: $10^3 = 1000$ claves posibles.
+:::
 
-```
+### Combinaciones
 
-::: {#exr-cap01b-propuestos}
-## Ejercicios propuestos
+::: {#def-cap01b-combinaciones}
+## Combinaciones
 
-1. Una placa vehicular consta de 3 letras (de un alfabeto de 26) seguidas de
-   4 dígitos. ¿Cuántas placas distintas pueden formarse si se permiten
-   repeticiones? ¿Y si no se permite repetir ninguna letra ni ningún dígito?
-2. ¿De cuántas formas distintas pueden sentarse 6 personas en una fila de 6
-   asientos? ¿Y si dos de esas personas insisten en sentarse juntas?
-3. Un comité de 5 personas debe elegirse de un grupo de 8 hombres y 6
-   mujeres, sin restricción de género. ¿Cuántos comités distintos son
-   posibles? ¿Cuántos de ellos tienen exactamente 3 hombres y 2 mujeres?
+Una **combinación** es una selección de $r$ elementos tomados de un conjunto de $n$ elementos donde el **orden no importa**. El número de combinaciones sin repetición es
+$$\binom{n}{r} = \frac{n!}{r!\,(n-r)!}.$$
 
+*Ejemplo:* elegir 3 estudiantes de un grupo de 10: $\dbinom{10}{3} = 120$.
+:::
+
+::: {#def-cap01b-combinaciones-repeticion}
+## Combinaciones con repetición
+
+Si se pueden elegir $r$ elementos de un conjunto de $n$ tipos con repetición y sin importar el orden:
+$$\binom{n+r-1}{r}.$$
+
+*Ejemplo:* elegir 4 sabores de helado entre 3 opciones con repetición: $\dbinom{6}{4} = 15$.
+:::
+
+::: {.callout-note icon=false}
+### Relación con probabilidad
+
+En un espacio equiprobable finito,
+$$P(A) = \frac{\#A}{\#\Omega},$$
+donde $\#A$ es el número de casos favorables y $\#\Omega$ el total. El análisis combinatorio es la herramienta para calcular ambos.
+:::
+
+::: {#exm-cap01b-comite-12}
+## Formación de un comité de 4 personas
+
+¿Cuántas maneras hay de elegir un comité de 4 personas de un grupo de 12?
+
+Como el orden no importa, usamos combinaciones:
+$$\binom{12}{4} = \frac{12!}{4!\,8!} = 495.$$
+:::
+
+::: {#exm-cap01b-probabilidad-anagrama}
+## Anagramas de PROBABILIDAD
+
+¿Cuántas palabras distintas se pueden formar con las letras de *PROBABILIDAD*?
+
+La palabra tiene 12 letras con $B$ repetida 2 veces, $I$ repetida 2 veces y $A$ repetida 2 veces:
+$$\frac{12!}{2!\,2!\,2!} = 59\,875\,200.$$
+:::
+
+::: {#exm-cap01b-numeros-5cifras}
+## Números de 5 cifras sin repetición
+
+¿Cuántos números de 5 cifras se pueden formar con los dígitos $1,2,3,4,5$ sin repetir?
+
+Se trata de una variación sin repetición:
+$$V(5,5) = 5! = 120.$$
+:::
+
+::: {#exr-cap01b-combinatoria}
+## Ejercicios propuestos — Análisis combinatorio
+
+**Básicos:**
+
+1. Calcula cuántas formas hay de ordenar 7 libros distintos.
+2. ¿Cuántas combinaciones de 3 elementos pueden formarse a partir de un conjunto de 8 elementos?
+3. ¿Cuántas contraseñas de 4 caracteres se pueden formar usando letras mayúsculas del alfabeto inglés si se permite repetición?
+4. ¿Cuántas maneras hay de elegir 2 estudiantes de un grupo de 15?
+5. Determina cuántas permutaciones distintas tiene la palabra *MATEMATICAS*.
+
+**De mayor nivel:**
+
+6. Demuestra la identidad $\dbinom{n}{r} = \dbinom{n}{n-r}$.
+7. Prueba la identidad de Pascal: $\dbinom{n}{r} = \dbinom{n-1}{r} + \dbinom{n-1}{r-1}$.
+8. Sea $S$ un conjunto con $n$ elementos. Determina cuántos subconjuntos tiene $S$.
+9. Explica cómo el principio multiplicativo permite derivar la fórmula de las variaciones sin repetición.
 :::
 
 ## Probabilidad condicional e independencia de eventos
