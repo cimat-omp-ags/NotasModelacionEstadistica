@@ -297,29 +297,35 @@ abline(h = 0.5, col = "red", lty = 2)
 
 ### Probabilidad axiomática
 
-En el enfoque **axiomático de la probabilidad** no se especifica una fórmula directa para calcular probabilidades.  
-En su lugar, se establecen **reglas fundamentales** que cualquier asignación de probabilidad debe cumplir.
+Una vez definido el espacio muestral y la colección de eventos, el siguiente paso consiste en asignar a cada evento un número que mida su posibilidad de ocurrencia. La formulación axiomática de Kolmogorov proporciona un marco riguroso y general para tratar tanto modelos discretos como continuos.
 
-Estas reglas, conocidas como **axiomas de la probabilidad**, fueron formuladas por el matemático ruso **A. N. Kolmogorov** y constituyen la base teórica de toda la probabilidad moderna.
+::: {#def-cap01b-espacio-probabilidad}
+## Espacio de probabilidad
+
+Un **espacio de probabilidad** es una terna $(\Omega, \mathcal{F}, P)$ donde:
+
+- $\Omega$ es el espacio muestral.
+- $\mathcal{F}$ es una $\sigma$-álgebra de subconjuntos de $\Omega$, cuyos elementos se llaman **eventos**.
+- $P : \mathcal{F} \to [0,1]$ es una **medida de probabilidad**.
+
+La función $P$ asigna a cada evento $A \in \mathcal{F}$ un número real $P(A)$ interpretado como la probabilidad de que ocurra $A$.
+:::
 
 ::: {#def-cap01b-axiomas-kolmogorov}
 ## Axiomas de Kolmogorov
 
-Sea $S$ el espacio muestral y $P$ una función sobre los eventos de $S$. Decimos que $P$ es una **función de probabilidad** si cumple los tres axiomas:
+Sea $(\Omega, \mathcal{F}, P)$ un espacio de probabilidad. La medida $P$ satisface los siguientes axiomas:
 
-**Axioma 1 (no negatividad):**
-$$0 \leq P(A) \leq 1 \quad \text{para todo evento } A \subseteq S$$
+**Axioma 1 (no negatividad):** Para todo $A \in \mathcal{F}$,
+$$P(A) \geq 0.$$
 
 **Axioma 2 (normalización):**
-$$P(S) = 1$$
+$$P(\Omega) = 1.$$
 
-**Axioma 3 (aditividad):**
-$$P(A \cup B) = P(A) + P(B) \quad \text{cuando } A \cap B = \varnothing$$
+**Axioma 3 (aditividad numerable):** Si $\{A_i\}_{i=1}^\infty$ es una colección de eventos mutuamente disjuntos ($A_i \cap A_j = \varnothing$ para $i \neq j$), entonces
+$$P\!\left(\bigcup_{i=1}^{\infty} A_i\right) = \sum_{i=1}^{\infty} P(A_i).$$
 
-Más en general, si $A_1, A_2, \ldots$ son eventos mutuamente excluyentes:
-$$P\!\left(\bigcup_{i=1}^\infty A_i\right) = \sum_{i=1}^\infty P(A_i)$$
-
-De estos axiomas se derivan todas las demás propiedades de la probabilidad.
+Estos axiomas constituyen la base formal de la teoría moderna de la probabilidad.
 :::
 
 
@@ -392,47 +398,52 @@ ggplot(df_moneda, aes(x = Resultado, y = Probabilidad, fill = Resultado)) +
 ```
 
 
-### Reglas de probabilidad derivadas de los axiomas
+### Propiedades derivadas de los axiomas
 
-A partir de los axiomas básicos de la probabilidad, se pueden deducir varias reglas que facilitan el cálculo de probabilidades en situaciones más complejas. A continuación se presentan algunas de las más importantes.
+::: {#thm-cap01b-propiedades-prob}
+## Propiedades de la medida de probabilidad
 
-::: {.callout-note icon=false}
-## Observaciones
+Sea $(\Omega, \mathcal{F}, P)$ un espacio de probabilidad. Se cumplen las siguientes propiedades:
 
-- **Regla del complemento**  
-  Si $A$ es un evento, la probabilidad de que **no ocurra** se define como:
-  
-  $$
-  P(A^c) = 1 - P(A)
-  $$
-
-- **Evento imposible**  
-  La probabilidad del conjunto vacío es:
-  
-  $$
-  P(\varnothing) = 0
-  $$
-
-- **Regla de la unión de dos eventos**  
-  Para dos eventos $A$ y $B$:
-  
-  $$
-  P(A \cup B) = P(A) + P(B) - P(A \cap B),
-  \quad \text{cuando } A \cap B \neq \varnothing
-  $$
-
-- **Regla de la unión de tres eventos**  
-  Para tres eventos $A$, $B$ y $C$:
-  
-  $$
-  P(A \cup B \cup C) =
-  P(A) + P(B) + P(C)
-  - P(A \cap B) - P(A \cap C) - P(B \cap C)
-  + P(A \cap B \cap C)
-  $$
-
+1. **Evento imposible:** $P(\varnothing) = 0.$
+2. **Complemento:** $P(A^c) = 1 - P(A).$
+3. **Monotonía:** Si $A \subseteq B$, entonces $P(A) \leq P(B).$
+4. **Aditividad finita:** Si $A \cap B = \varnothing$, entonces $P(A \cup B) = P(A) + P(B).$
+5. **Fórmula de la unión:** Para cualesquiera $A, B \in \mathcal{F}$,
+$$P(A \cup B) = P(A) + P(B) - P(A \cap B).$$
 :::
 
+::: {.callout-note collapse=true icon=false}
+### Demostraciones
+
+**$P(\varnothing) = 0$:** Como $\Omega \cup \varnothing = \Omega$ con $\Omega \cap \varnothing = \varnothing$, por aditividad: $P(\Omega) = P(\Omega) + P(\varnothing)$, luego $P(\varnothing) = 0$.
+
+**Complemento:** Como $A \cup A^c = \Omega$ y $A \cap A^c = \varnothing$, por aditividad: $1 = P(A) + P(A^c)$, luego $P(A^c) = 1 - P(A)$.
+
+**Fórmula de la unión:** $A \cup B = A \cup (B \setminus A)$ con $A \cap (B \setminus A) = \varnothing$, y $P(B) = P(B \setminus A) + P(A \cap B)$. Por aditividad:
+$$P(A \cup B) = P(A) + P(B \setminus A) = P(A) + P(B) - P(A \cap B).$$
+:::
+
+
+::: {#exm-cap01b-dado-equiprobable}
+## Espacio equiprobable — lanzamiento de un dado
+
+Al lanzar un dado justo, $\Omega = \{1,2,3,4,5,6\}$. Si todos los resultados son equiprobables:
+$$P(\{i\}) = \frac{1}{6}, \qquad i = 1,\ldots,6.$$
+
+Para $A = \{2,4,6\}$ ("cara par"):
+$$P(A) = P(\{2\}) + P(\{4\}) + P(\{6\}) = \frac{3}{6} = \frac{1}{2}.$$
+:::
+
+::: {#exm-cap01b-formula-union-dado}
+## Fórmula de la unión — lanzamiento de un dado
+
+Con $\Omega = \{1,2,3,4,5,6\}$, $A = \{2,4,6\}$ y $B = \{4,5,6\}$:
+$$P(A) = \frac{1}{2}, \quad P(B) = \frac{1}{2}, \quad P(A \cap B) = P(\{4,6\}) = \frac{1}{3}.$$
+
+Por la fórmula de la unión:
+$$P(A \cup B) = \frac{1}{2} + \frac{1}{2} - \frac{1}{3} = \frac{2}{3}.$$
+:::
 
 Retomemos el ejemplo de una empresa que cuenta con un archivo que registra **todos los reclamos de garantía realizados por los clientes durante un año**.
 
@@ -504,16 +515,27 @@ text(
 ```
 
 ::: {#exr-cap01b-propuestos-3}
-## Ejercicios propuestos
+## Ejercicios propuestos — Axiomas de probabilidad
 
-1. Una urna contiene 8 bolas rojas y 12 azules. Se extrae una bola al azar.
-   Calcule, usando la probabilidad clásica, la probabilidad de obtener una
-   bola roja.
-2. En 500 lanzamientos de una moneda se observaron 268 águilas. Estime, con
-   el enfoque frecuentista, la probabilidad de obtener águila en esa moneda.
-3. Sean $A$ y $B$ dos eventos con $P(A) = 0.4$, $P(B) = 0.5$ y
-   $P(A \cap B) = 0.2$. Verifique que $P(A)$ y $P(B)$ satisfacen el primer
-   axioma de Kolmogorov y calcule $P(A \cup B)$ y $P(A^c)$.
+**Básicos:**
+
+1. Sea $\Omega = \{1,2,3,4,5,6\}$ con probabilidad uniforme. Calcula la probabilidad de obtener un número primo, un número $\geq 4$ y un número impar.
+
+2. Una urna contiene 8 bolas rojas y 12 azules. Se extrae una bola al azar. Calcule $P(\text{roja})$.
+
+3. Sean $A$ y $B$ eventos con $P(A) = 0.4$, $P(B) = 0.5$ y $P(A \cap B) = 0.2$. Calcule $P(A \cup B)$ y $P(A^c)$.
+
+4. Verifica que para cualquier evento $A$ se cumple $P(A) + P(A^c) = 1$.
+
+**De mayor nivel:**
+
+5. Demuestra que si $A \subseteq B$, entonces $P(A) \leq P(B)$.
+
+6. Demuestra que $P(A \cup B) = P(A) + P(B) - P(A \cap B)$ para cualesquiera $A, B \in \mathcal{F}$.
+
+7. Sea $\{A_i\}_{i=1}^\infty$ una sucesión de eventos mutuamente disjuntos. Demuestra que $P\!\left(\bigcup_{i=1}^{\infty} A_i\right) = \sum_{i=1}^{\infty} P(A_i)$.
+
+8. En un espacio de probabilidad finito, define una asignación no uniforme y verifica los tres axiomas de Kolmogorov.
 
 :::
 
