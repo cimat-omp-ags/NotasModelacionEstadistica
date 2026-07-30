@@ -439,33 +439,7 @@ cat("P(Xbar > 75) =", round(prob_mayor_75, 4))
 
 [📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
-Esta sección aborda el comportamiento de $\bar{X}_n$ cuando el tamaño de muestra $n\to\infty$, desde un enfoque teórico.
-
-### Convergencia en probabilidad
-
-::: {#def-convergencia-prob .definition}
-### Convergencia en probabilidad
-
-Una secuencia de variables aleatorias $X_1,X_2,\ldots$ **converge en probabilidad** a $X$ si para todo $\varepsilon>0$:
-
-$$\lim_{n\to\infty}P(|X_n-X|\ge\varepsilon)=0$$
-:::
-
-::: {#thm-lgn-debil .theorem}
-### Ley Débil de los Grandes Números (LDGN)
-
-Sea $X_1,X_2,\ldots$ variables iid con $E[X_i]=\mu$ y $\operatorname{Var}(X_i)=\sigma^2<\infty$. Entonces, para todo $\varepsilon>0$:
-
-$$\lim_{n\to\infty}P(|\bar{X}_n-\mu|<\varepsilon)=1$$
-
-es decir, $\bar{X}_n\xrightarrow{P}\mu$.
-:::
-
-::: {.proof}
-Por la desigualdad de Chebyshev:
-
-$$P(|\bar{X}_n-\mu|\ge\varepsilon)\le\frac{\operatorname{Var}(\bar{X}_n)}{\varepsilon^2}=\frac{\sigma^2}{n\varepsilon^2}\xrightarrow{n\to\infty}0 \qquad\square$$
-:::
+Esta sección aborda el comportamiento de $\bar{X}_n$ cuando $n\to\infty$. La convergencia en probabilidad y la Ley Débil de los Grandes Números se estudiaron en detalle en la @sec-48-lgn-debil — en particular, $\bar{X}_n\xrightarrow{P}\mu$ bajo la sola condición $\operatorname{Var}(X_i)<\infty$. Aquí damos un paso más y caracterizamos la **distribución límite** de $\bar{X}_n$ estandarizada.
 
 ### Teorema Central del Límite
 

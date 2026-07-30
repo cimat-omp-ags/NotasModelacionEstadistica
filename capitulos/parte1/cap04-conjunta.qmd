@@ -354,7 +354,7 @@ cat("Verificación numérica:", round(E_exp, 6), "\n")
 
 **Tabla resumen de esperanzas** de las distribuciones principales:
 
-| Distribución | Parámetros | $E[X]$ | $\text{Var}(X)$ |
+| Distribución | Parámetros | $E[X]$ | $\operatorname{Var}(X)$ |
 |:-------------|:-----------|:------:|:---------------:|
 | Bernoulli | $p$ | $p$ | $p(1-p)$ |
 | Binomial | $n, p$ | $np$ | $np(1-p)$ |
@@ -375,20 +375,20 @@ la probabilidad alrededor de la media.
 ### Varianza
 
 Si $X$ es una variable aleatoria con $E[X] = \mu$, entonces:
-$$\text{Var}(X) = E[(X-\mu)^2].$$
+$$\operatorname{Var}(X) = E[(X-\mu)^2].$$
 
-La **desviación estándar** es $\sigma = \sqrt{\text{Var}(X)}$.
+La **desviación estándar** es $\sigma = \sqrt{\operatorname{Var}(X)}$.
 
 :::
 
 **Fórmula computacional** (frecuentemente más práctica):
-$$\text{Var}(X) = E[X^2] - (E[X])^2.$$
+$$\operatorname{Var}(X) = E[X^2] - (E[X])^2.$$
 
 **Propiedades de la varianza:**
 
-1. Si $X$ y $Y$ son **independientes**: $\text{Var}(X+Y) = \text{Var}(X) + \text{Var}(Y)$.
-2. Para constantes $a$ y $b$: $\text{Var}(aX+b) = a^2\,\text{Var}(X)$.
-3. $\text{Var}(X) = E[X^2] - \mu^2$.
+1. Si $X$ y $Y$ son **independientes**: $\operatorname{Var}(X+Y) = \operatorname{Var}(X) + \operatorname{Var}(Y)$.
+2. Para constantes $a$ y $b$: $\operatorname{Var}(aX+b) = a^2\,\operatorname{Var}(X)$.
+3. $\operatorname{Var}(X) = E[X^2] - \mu^2$.
 
 :::: {.content-visible when-format="html"}
 [📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
@@ -400,19 +400,19 @@ $$\text{Var}(X) = E[X^2] - (E[X])^2.$$
 
 **Varianza de Bernoulli($p$).** Sea $X \sim \text{Ber}(p)$. Como $X \in \{0,1\}$, tenemos $X^2 = X$, luego $E[X^2] = p$, y:
 
-$$\text{Var}(X) = E[X^2] - \mu^2 = p - p^2 = p(1-p)$$
+$$\operatorname{Var}(X) = E[X^2] - \mu^2 = p - p^2 = p(1-p)$$
 
 **Varianza de Binomial($n,p$).** Como $X = \sum_{i=1}^n X_i$ con $X_i \sim \text{Ber}(p)$ independientes:
 
-$$\text{Var}(X) = \sum_{i=1}^n \text{Var}(X_i) = n\,p(1-p)$$
+$$\operatorname{Var}(X) = \sum_{i=1}^n \operatorname{Var}(X_i) = n\,p(1-p)$$
 
 **Varianza de Uniforme($[0,1]$).** Con $\mu = 1/2$:
 
-$$\text{Var}(X) = \int_0^1 \left(x - \tfrac{1}{2}\right)^2 dx = \left[\frac{(x-1/2)^3}{3}\right]_0^1 = \frac{1}{12}$$
+$$\operatorname{Var}(X) = \int_0^1 \left(x - \tfrac{1}{2}\right)^2 dx = \left[\frac{(x-1/2)^3}{3}\right]_0^1 = \frac{1}{12}$$
 
 **Varianza de Exponencial($\lambda$).** Usando $E[X^2] = 2/\lambda^2$ y $\mu = 1/\lambda$:
 
-$$\text{Var}(X) = \frac{2}{\lambda^2} - \frac{1}{\lambda^2} = \frac{1}{\lambda^2}$$
+$$\operatorname{Var}(X) = \frac{2}{\lambda^2} - \frac{1}{\lambda^2} = \frac{1}{\lambda^2}$$
 
 ```{r var-propiedades, message=FALSE}
 # Verificación numérica de las varianzas
@@ -487,7 +487,7 @@ Equivalentemente: $\text{Cov}(X,Y) = E[XY] - E[X]\,E[Y]$.
   (aunque no implica independencia en general).
 
 **Consecuencia para la varianza de la suma:**
-$$\text{Var}(X+Y) = \text{Var}(X) + \text{Var}(Y) + 2\,\text{Cov}(X,Y).$$
+$$\operatorname{Var}(X+Y) = \operatorname{Var}(X) + \operatorname{Var}(Y) + 2\,\text{Cov}(X,Y).$$
 
 **Independencia implica no correlación** (pero no al revés): si $X$ e $Y$
 son independientes, entonces $\text{Cov}(X,Y) = 0$.
@@ -501,7 +501,7 @@ es una versión estandarizada e **adimensional**:
 ::: {#def-cap03-correlacion-de-pearson}
 ### Correlación de Pearson
 
-$$\rho(X,Y) = \frac{\text{Cov}(X,Y)}{\sqrt{\text{Var}(X)\,\text{Var}(Y)}}.$$
+$$\rho(X,Y) = \frac{\text{Cov}(X,Y)}{\sqrt{\operatorname{Var}(X)\,\operatorname{Var}(Y)}}.$$
 
 Se cumple que $-1 \leq \rho(X,Y) \leq 1$.
 
@@ -555,7 +555,7 @@ Para cualesquiera variables aleatorias $X$ y $Y$:
 $$E[Y] = E[E[Y \mid X]].$$
 
 Análogamente, la **ley de la varianza total**:
-$$\text{Var}(Y) = E[\text{Var}(Y \mid X)] + \text{Var}(E[Y \mid X]).$$
+$$\operatorname{Var}(Y) = E[\operatorname{Var}(Y \mid X)] + \operatorname{Var}(E[Y \mid X]).$$
 
 :::
 
@@ -722,12 +722,12 @@ $\lim_{n \to \infty} P(|X_n - X| < \varepsilon) = 1.$
 ### Teorema: Ley débil de los grandes números (con prueba)
 
 Sea $X_1, X_2, \ldots$ iid con $E[X_i] = \mu$ y
-$\text{Var}(X_i) = \sigma^2 < \infty$. Entonces
+$\operatorname{Var}(X_i) = \sigma^2 < \infty$. Entonces
 $\bar{X}_n \xrightarrow{p} \mu$.
 
 **Prueba** (via desigualdad de Chebyshev): Para todo $\varepsilon > 0$,
 $$P(|\bar{X}_n - \mu| \geq \varepsilon) \leq
-  \frac{\text{Var}(\bar{X}_n)}{\varepsilon^2} =
+  \frac{\operatorname{Var}(\bar{X}_n)}{\varepsilon^2} =
   \frac{\sigma^2}{n\varepsilon^2} \xrightarrow{n\to\infty} 0.$$
 
 :::
@@ -736,10 +736,10 @@ $$P(|\bar{X}_n - \mu| \geq \varepsilon) \leq
 ### Consistencia de $S^2$
 
 Si $X_1, X_2, \ldots$ son iid con $E[X_i] = \mu$,
-$\text{Var}(X_i) = \sigma^2 < \infty$, entonces por Chebyshev:
+$\operatorname{Var}(X_i) = \sigma^2 < \infty$, entonces por Chebyshev:
 $$P(|S_n^2 - \sigma^2| \geq \varepsilon) \leq
-  \frac{\text{Var}(S_n^2)}{\varepsilon^2} \to 0,$$
-ya que $\text{Var}(S_n^2) \to 0$ cuando $n \to \infty$. Por tanto
+  \frac{\operatorname{Var}(S_n^2)}{\varepsilon^2} \to 0,$$
+ya que $\operatorname{Var}(S_n^2) \to 0$ cuando $n \to \infty$. Por tanto
 $S_n^2 \xrightarrow{p} \sigma^2$.
 
 :::
@@ -810,33 +810,28 @@ legend("topright", c(paste0("Trayectorias (k=",n_traj,")"),"μ = 0.4"),
 
 ### Resumen del capítulo
 
-| Distribución | Parámetros | $E[X]$ | $\text{Var}(X)$ | Propiedad clave |
-|:-------------|:----------:|:------:|:---------------:|:----------------|
-| Uniforme continua | $a, b$ | $\frac{a+b}{2}$ | $\frac{(b-a)^2}{12}$ | Densidad constante en $[a,b]$ |
-| Normal | $\mu, \sigma^2$ | $\mu$ | $\sigma^2$ | Simétrica, campana de Gauss |
-| Exponencial | $\lambda$ | $\frac{1}{\lambda}$ | $\frac{1}{\lambda^2}$ | Falta de memoria |
-| Gamma | $\alpha, \lambda$ | $\frac{\alpha}{\lambda}$ | $\frac{\alpha}{\lambda^2}$ | Suma de $\alpha$ Exp($\lambda$) |
-| Weibull | $k, \lambda$ | $\lambda\,\Gamma(1+1/k)$ | $\lambda^2[\Gamma(1+2/k)-\Gamma(1+1/k)^2]$ | Tasa de fallo variable |
-
-::: {.callout-note icon=false}
-### Criterio de selección del modelo continuo
-
-- Valor en un intervalo sin preferencia: **Uniforme** continua.
-- Fenómeno gobernado por muchos factores aditivos: **Normal**.
-- Tiempo hasta el primer evento, sin memoria: **Exponencial**.
-- Suma de $k$ tiempos exponenciales independientes: **Gamma**.
-- Tiempo de vida con tasa de fallo creciente/decreciente: **Weibull**.
-
-:::
+| Concepto | Definición / resultado clave |
+|:---------|:-----------------------------|
+| Independencia ($X \perp Y$) | $f_{X,Y}(x,y)=f_X(x)\,f_Y(y)$ para todo $(x,y)$ |
+| Distribución marginal | $f_X(x)=\int f_{X,Y}(x,y)\,dy$ (caso continuo) |
+| Esperanza de suma | $E[X+Y]=E[X]+E[Y]$ (siempre) |
+| Varianza de suma | $\operatorname{Var}(X+Y)=\operatorname{Var}(X)+\operatorname{Var}(Y)+2\operatorname{Cov}(X,Y)$ |
+| Covarianza | $\operatorname{Cov}(X,Y)=E[XY]-E[X]E[Y]$ |
+| Correlación de Pearson | $\rho_{X,Y}=\operatorname{Cov}(X,Y)/\sqrt{\operatorname{Var}(X)\operatorname{Var}(Y)}\in[-1,1]$ |
+| Esperanza condicional | $E[X\mid Y=y]=\int x\,f_{X\mid Y}(x\mid y)\,dx$ |
+| FGM | $M_X(t)=E[e^{tX}]$; identifica distribuciones y genera momentos |
+| LGN débil | $\bar{X}_n\xrightarrow{P}\mu$ cuando $n\to\infty$ |
+| LGN fuerte | $\bar{X}_n\xrightarrow{\text{c.s.}}\mu$ cuando $n\to\infty$ |
 
 ::: {.callout-tip icon=false}
 ### Ideas clave del capítulo
 
-- Para una VA continua $X$, $P(X = x) = 0$ siempre; las probabilidades son áreas bajo $f(x)$.
-- La **estandarización** $Z = (X - \mu)/\sigma$ transforma cualquier $N(\mu,\sigma^2)$ en $N(0,1)$.
 - **Distribuciones conjuntas**: $f_{X,Y}(x,y)$ describe el comportamiento simultáneo; las marginales se obtienen integrando sobre la otra variable.
-- **Independencia**: $X$ e $Y$ son independientes si y solo si $f_{X,Y}(x,y) = f_X(x)\,f_Y(y)$.
-- **TCL**: para muestras grandes, $\bar{X} \approx N(\mu, \sigma^2/n)$ sin importar la distribución original.
+- **Independencia** implica $\operatorname{Cov}(X,Y)=0$, pero el recíproco es **falso** en general.
+- La **correlación** mide asociación lineal; valores cercanos a $\pm 1$ indican relación lineal fuerte.
+- La **FGM** es la herramienta más poderosa para derivar distribuciones de sumas de VA independientes.
+- Los **teoremas de la esperanza iterada y la varianza total** permiten calcular $E[X]$ y $\operatorname{Var}(X)$ descomponiendo por condicionamiento.
+- La **LGN** (débil y fuerte) garantiza que los promedios muestrales convergen a la media poblacional, respaldando la práctica estadística.
 
 :::
 
@@ -847,25 +842,25 @@ Los siguientes ejercicios cubren esperanza, varianza, covarianza, distribuciones
 1. Sea $X \sim \text{Poisson}(\lambda)$. Use el TCL para aproximar $P(\bar{X}_n > 5.2)$
    cuando $\lambda = 5$ y $n = 100$.
 2. Demuestre que si $X_n \xrightarrow{p} c$ (constante), entonces $X_n^2 \xrightarrow{p} c^2$.
-3. ¿Por qué el TCL no aplica directamente cuando $\text{Var}(X_i) = \infty$?
+3. ¿Por qué el TCL no aplica directamente cuando $\operatorname{Var}(X_i) = \infty$?
    Dé un ejemplo de distribución con varianza infinita.
 
-1. Sea $X \sim \text{Poisson}(3)$. Calcule $E[X]$, $\text{Var}(X)$ y
+1. Sea $X \sim \text{Poisson}(3)$. Calcule $E[X]$, $\operatorname{Var}(X)$ y
    $E[X(X-1)]$.
 
-2. Sean $X$ y $Y$ v.a. con $E[X]=2$, $E[Y]=5$, $\text{Var}(X)=4$,
-   $\text{Var}(Y)=9$ y $\text{Cov}(X,Y) = -3$. Calcule:
+2. Sean $X$ y $Y$ v.a. con $E[X]=2$, $E[Y]=5$, $\operatorname{Var}(X)=4$,
+   $\operatorname{Var}(Y)=9$ y $\text{Cov}(X,Y) = -3$. Calcule:
    a) $E[2X - Y + 1]$.
-   b) $\text{Var}(X + Y)$ y $\text{Var}(3X - 2Y)$.
+   b) $\operatorname{Var}(X + Y)$ y $\operatorname{Var}(3X - 2Y)$.
    c) $\rho(X,Y)$.
 
 3. Demuestre que si $X$ e $Y$ son independientes, entonces
    $\text{Cov}(X,Y) = 0$. ¿Es cierto el recíproco? Construya un
    contraejemplo.
 
-4. Sea $X \sim N(\mu, \sigma^2)$. Demuestre que $\text{Cov}(X, X) = \text{Var}(X)$.
+4. Sea $X \sim N(\mu, \sigma^2)$. Demuestre que $\text{Cov}(X, X) = \operatorname{Var}(X)$.
 
-5. Si $X$ e $Y$ son independientes con $E[X]=3$, $E[Y]=4$, $\text{Var}(X)=2$, $\text{Var}(Y)=5$, calcule $E[XY]$, $\text{Cov}(X,Y)$ y $\text{Var}(2X-3Y+1)$.
+5. Si $X$ e $Y$ son independientes con $E[X]=3$, $E[Y]=4$, $\operatorname{Var}(X)=2$, $\operatorname{Var}(Y)=5$, calcule $E[XY]$, $\text{Cov}(X,Y)$ y $\operatorname{Var}(2X-3Y+1)$.
 
 ### Conexión con el siguiente capítulo
 

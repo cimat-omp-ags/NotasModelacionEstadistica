@@ -9,7 +9,7 @@
 Al finalizar este capítulo, el estudiante será capaz de:
 
 - Definir variable aleatoria discreta y construir su función de probabilidad (pmf) y función de distribución acumulada (cdf) a partir de un experimento aleatorio.
-- Calcular el valor esperado $E[X]$ y la varianza $\text{Var}(X)$ de una variable aleatoria discreta mediante sus definiciones y propiedades.
+- Calcular el valor esperado $E[X]$ y la varianza $\operatorname{Var}(X)$ de una variable aleatoria discreta mediante sus definiciones y propiedades.
 - Reconocer y aplicar las distribuciones discretas más importantes (Bernoulli, Binomial, Hipergeométrica, Poisson, Geométrica y Binomial Negativa), identificando en qué situación usar cada una.
 - Distinguir entre muestreo con y sin reemplazo, y elegir el modelo probabilístico adecuado (Binomial vs Hipergeométrica) según el contexto.
 - Calcular probabilidades de eventos complejos usando las distribuciones discretas vistas, tanto manualmente como con R.
@@ -267,7 +267,7 @@ La esperanza matemática, valor esperado o media de una variable aleatoria discr
 
 La varianza de una variable aleatoria discreta se define como la suma de los desvíos de cada valor que toma la variable aleatoria con respecto a su media, elevados al cuadrado y multiplicado por su respectiva probabilidad. Esto nos indica qué tan dispersos llegan a estar nuestros datos con respecto de nuestro promedio o media.
 
- $\text{Var}(X) = \sum_{i=0}^{k}(x_i-E[X]) \cdot P(x_i)$
+ $\operatorname{Var}(X) = \sum_{i=0}^{k}(x_i-E[X]) \cdot P(x_i)$
 
 
 **Ejemplo 2**:
@@ -290,13 +290,13 @@ $0 \cdot \dfrac{1}{6} + 1 \cdot \dfrac{1}{3}+ 2 \cdot \dfrac{1}{3} + 3 \cdot \df
 
 Por lo tanto, se esperan alrededor de 2 accidentes por jornada laboral. Veamos la varianza:
 
-$\text{Var}(X) = \sum_{i=0}^{k}(x_i-E[X]) \cdot P(x_i) = (0-1.5)^2 \cdot \dfrac{1}{6} + (1-1.5)^2 \cdot \dfrac{1}{3} + (2-1.5)^2 \cdot \dfrac{1}{3} + (3-1.5)^2 \cdot \dfrac{1}{6} = 0.375 + 0.83 + 0.083 + 0.375 = 0.916$
+$\operatorname{Var}(X) = \sum_{i=0}^{k}(x_i-E[X]) \cdot P(x_i) = (0-1.5)^2 \cdot \dfrac{1}{6} + (1-1.5)^2 \cdot \dfrac{1}{3} + (2-1.5)^2 \cdot \dfrac{1}{3} + (3-1.5)^2 \cdot \dfrac{1}{6} = 0.375 + 0.83 + 0.083 + 0.375 = 0.916$
 
 Entonces la variación es de 1 accidente por jornada laboral.
 
 __Nota:__ 
 
-La raíz cuadrada de la varianza:$\sqrt{\text{Var}(X)}$, se le conoce como desviación estándar.
+La raíz cuadrada de la varianza:$\sqrt{\operatorname{Var}(X)}$, se le conoce como desviación estándar.
 
 **Ejemplo 3**
 
@@ -346,7 +346,7 @@ Lo invitamos a calcular $E[X]$, así como las correspondientes varianzas de cada
 ::: {#exr-cap02-propuestos}
 ### Ejercicios propuestos
 
-1. Una variable aleatoria $X$ tiene la siguiente función de probabilidad: $P(X=0)=0.1$, $P(X=1)=0.3$, $P(X=2)=0.4$, $P(X=3)=0.2$. Verifique que es una función de probabilidad válida y calcule $E[X]$ y $\text{Var}(X)$.
+1. Una variable aleatoria $X$ tiene la siguiente función de probabilidad: $P(X=0)=0.1$, $P(X=1)=0.3$, $P(X=2)=0.4$, $P(X=3)=0.2$. Verifique que es una función de probabilidad válida y calcule $E[X]$ y $\operatorname{Var}(X)$.
 2. El número de llamadas que recibe una central telefónica en un minuto tiene la distribución $P(X=0)=0.2$, $P(X=1)=0.3$, $P(X=2)=0.3$, $P(X=3)=0.2$. Calcule $P(X \ge 2)$ y la desviación estándar de $X$.
 3. Explique, con sus propias palabras, la diferencia entre la función de probabilidad $P(X=x)$ y la función de probabilidad acumulada $F(x)$, y dé un ejemplo donde se use cada una.
 
@@ -502,7 +502,7 @@ Por lo tanto: $E[X] = (1+2+3+4+5+6) \cdot \dfrac{1}{6}$ = $3.5$
 
 Similarmente, la varianza para una distribución uniforme está dada por:
 
- $\text{Var}(X) = \sum_{i=1}^{n}(x_i-E[X])^2 \cdot P(X=x_i)$
+ $\operatorname{Var}(X) = \sum_{i=1}^{n}(x_i-E[X])^2 \cdot P(X=x_i)$
  
  En estos casos, es factible tener una tabla como la siguiente para no perder de vista nuestros datos:
  
@@ -515,7 +515,7 @@ Similarmente, la varianza para una distribución uniforme está dada por:
 | 5 |   1/6  |    5/6    |     2.25     |         0.375         |
 | 6 |   1/6  |    6/6    |     6.25     |         1.041         |
 
-Entonces, $\text{Var}(X)= (1-3.5)^2 +(2-3.5)^2+(3-3.5)^2+(4-3.5)^2+(5-3.5)^2+(6-3.5)^2 \cdot \dfrac{1}{6}$
+Entonces, $\operatorname{Var}(X)= (1-3.5)^2 +(2-3.5)^2+(3-3.5)^2+(4-3.5)^2+(5-3.5)^2+(6-3.5)^2 \cdot \dfrac{1}{6}$
 =$2.91$
  
  
@@ -538,7 +538,7 @@ $E[X] = p$
 
 Y su varianza:
 
-$\text{Var}(X) = p(1-p)$
+$\operatorname{Var}(X) = p(1-p)$
 
 :::: {.content-visible when-format="html"}
 [📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
@@ -1357,7 +1357,7 @@ $$
 La varianza está dada por:
 
 $$
-\text{Var}(X) = n\frac{K}{N}\frac{N-K}{N}\frac{N-n}{N-1}
+\operatorname{Var}(X) = n\frac{K}{N}\frac{N-K}{N}\frac{N-n}{N-1}
 = npq\frac{N-n}{N-1}
 $$
 
@@ -1496,7 +1496,7 @@ E[X] = n\frac{K}{N} = 5 \cdot \frac{8}{20} = 2
 $$
 
 $$
-\text{Var}(X) = n\frac{K}{N}\frac{N-K}{N}\frac{N-n}{N-1}
+\operatorname{Var}(X) = n\frac{K}{N}\frac{N-K}{N}\frac{N-n}{N-1}
 = 5 \cdot \frac{8}{20} \cdot \frac{12}{20} \cdot \frac{15}{19}
 \approx 0.947
 $$
@@ -1684,7 +1684,7 @@ En la distribución Poisson, el parámetro $\lambda$ representa simultáneamente
 :::
 
 $$
-E[X] = \text{Var}(X) = \lambda
+E[X] = \operatorname{Var}(X) = \lambda
 $$
 
 
@@ -1908,7 +1908,7 @@ Los valores confirman que con $\lambda = 10$, obtener 0 partículas es un evento
 1. Una máquina produce piezas defectuosas con probabilidad $p=0.04$. Si se inspeccionan 10 piezas, calcule la probabilidad de encontrar exactamente 2 defectuosas usando la distribución Binomial.
 2. De un lote de 25 artículos, 5 son defectuosos. Si se seleccionan 4 artículos sin reemplazo, calcule la probabilidad de obtener al menos un defectuoso usando la distribución Hipergeométrica.
 3. El número de accidentes en una intersección sigue una distribución Poisson con una media de 1.5 accidentes por semana. Calcule la probabilidad de que ocurran más de 2 accidentes en una semana dada.
-4. Una ruleta de casino tiene números del 0 al 36. Se considera éxito que caiga el número elegido. Si se juega 15 veces: (a) determine $p$; (b) calcule $P(X < 3)$; (c) obtenga $E[X]$ y $\text{Var}(X)$.
+4. Una ruleta de casino tiene números del 0 al 36. Se considera éxito que caiga el número elegido. Si se juega 15 veces: (a) determine $p$; (b) calcule $P(X < 3)$; (c) obtenga $E[X]$ y $\operatorname{Var}(X)$.
 
 :::
 
@@ -1944,7 +1944,7 @@ Su pmf en forma tabular:
 
 $$p(k;\,p) = (1-p)^k\,p, \quad k = 0, 1, 2, \ldots$$
 
-$$E[X] = \frac{1-p}{p}, \qquad \text{Var}(X) = \frac{1-p}{p^2}$$
+$$E[X] = \frac{1-p}{p}, \qquad \operatorname{Var}(X) = \frac{1-p}{p^2}$$
 
 Una propiedad importante es la **falta de memoria**: dado que han ocurrido $k$ fracasos, la distribución de los fracasos adicionales hasta el primer éxito sigue siendo $\text{geo}(p)$.
 
@@ -1992,7 +1992,7 @@ $$p(k;\,r,p) = \binom{k+r-1}{r-1}(1-p)^k\,p^r, \qquad k = 0, 1, 2, \ldots$$
 
 **Esperanza y varianza:**
 
-$$E[X] = \frac{r(1-p)}{p}, \qquad \text{Var}(X) = \frac{r(1-p)}{p^2}$$
+$$E[X] = \frac{r(1-p)}{p}, \qquad \operatorname{Var}(X) = \frac{r(1-p)}{p^2}$$
 
 ::: {.callout-note icon=false}
 ### Observación
@@ -2303,7 +2303,7 @@ c. Se elige un alumno de posgrado: $X =$ calificación del examen de probabilida
 
 ### Resumen del capítulo
 
-| Distribución | Parámetros | $E[X]$ | $\text{Var}(X)$ | Uso típico |
+| Distribución | Parámetros | $E[X]$ | $\operatorname{Var}(X)$ | Uso típico |
 |:-------------|:----------:|:------:|:--------:|:-----------|
 | Uniforme discreta | $a, b$ | $(a+b)/2$ | $(b-a)(b-a+2)/12$ | Equiprobabilidad |
 | Bernoulli | $p$ | $p$ | $p(1-p)$ | Ensayo éxito/fracaso |
@@ -2326,7 +2326,7 @@ c. Se elige un alumno de posgrado: $X =$ calificación del examen de probabilida
 
 ### Conexión con el siguiente capítulo
 
-En este capítulo modelamos variables que toman valores *contables* (0, 1, 2, ...). Muchos fenómenos reales — tiempos de espera, medidas físicas, proporciones — producen en cambio valores en un continuo. En el siguiente capítulo generalizaremos las ideas de pmf, $E[X]$ y $\text{Var}(X)$ al mundo continuo, donde la probabilidad se mide como área bajo una curva de densidad, y conoceremos las distribuciones Normal, Exponencial, Gamma y Weibull.
+En este capítulo modelamos variables que toman valores *contables* (0, 1, 2, ...). Muchos fenómenos reales — tiempos de espera, medidas físicas, proporciones — producen en cambio valores en un continuo. En el siguiente capítulo generalizaremos las ideas de pmf, $E[X]$ y $\operatorname{Var}(X)$ al mundo continuo, donde la probabilidad se mide como área bajo una curva de densidad, y conoceremos las distribuciones Normal, Exponencial, Gamma y Weibull.
 
 ## Variables aleatorias continuas {#sec-va-continua}
 
@@ -2626,7 +2626,7 @@ La esperanza matemática y la varianza de variables aleatorias continuas se obti
 
 $$E[X] = \int_{S_x} x f(x) dx \quad (5)$$
 
-$$\text{Var}(X) = \int_{S_x} (x - E[X])^2 f(x) dx \quad (6)$$
+$$\operatorname{Var}(X) = \int_{S_x} (x - E[X])^2 f(x) dx \quad (6)$$
 
 Donde $\int$ es el símbolo de una integral y $S_x$ se conoce con el soporte de la v.a $X$.
 
@@ -2725,7 +2725,7 @@ Donde: \* $a$ es el valor mínimo (límite inferior). \* $b$ es el valor máximo
 
 Para esta distribución continua, la esperanza matemática (media) y la varianza están dadas por las siguientes expresiones:
 
-$$E[Y] = \frac{a +b}{2}$$ $$\text{Var}(Y) = \frac{(b - a)^2}{12}$$
+$$E[Y] = \frac{a +b}{2}$$ $$\operatorname{Var}(Y) = \frac{(b - a)^2}{12}$$
 
 ------------------------------------------------------------------------
 
@@ -2766,7 +2766,7 @@ ggplot(df_tiempo, aes(x = x, y = y)) +
 
 ¿Cuál es el tiempo promedio esperado de espera del estudiante? $$E[Y] = \frac{0 + 20}{2} = 10 \text{ minutos}$$
 
-¿Y la varianza de dicho tiempo? $$\text{Var}(Y) = \frac{(20 - 0)^2}{12} = \frac{400}{12} \approx 33.33 \text{ minutos}^2$$
+¿Y la varianza de dicho tiempo? $$\operatorname{Var}(Y) = \frac{(20 - 0)^2}{12} = \frac{400}{12} \approx 33.33 \text{ minutos}^2$$
 
 La desviación estándar, que mide la dispersión, es $\sigma = \sqrt{33.33} \approx 5.77 \text{ minutos}$.
 
@@ -2805,7 +2805,7 @@ ggplot(df_tiempo, aes(x = x, y = y)) +
 ::: {#exr-cap03-propuestos}
 ### Ejercicios propuestos
 
-1. El tiempo que tarda un cajero en atender a un cliente se distribuye uniformemente entre 2 y 8 minutos. Calcule $E[X]$, $\text{Var}(X)$ y la probabilidad de que un cliente sea atendido en menos de 4 minutos.
+1. El tiempo que tarda un cajero en atender a un cliente se distribuye uniformemente entre 2 y 8 minutos. Calcule $E[X]$, $\operatorname{Var}(X)$ y la probabilidad de que un cliente sea atendido en menos de 4 minutos.
 2. Una variable aleatoria $Y$ tiene distribución uniforme en el intervalo $[10, 30]$. Calcule $P(15 \le Y \le 25)$ y la desviación estándar de $Y$.
 3. Explique, con sus propias palabras, por qué la función de densidad de una variable continua puede tomar valores mayores a 1, mientras que la función de probabilidad de una variable discreta nunca puede superar 1.
 
@@ -3501,7 +3501,7 @@ ggplot(df_expo, aes(x = x, y = fx, color = Lambda)) +
 La esperanza matemática (valor esperado) y la varianza de la variable aleatoria exponencial son:
 
 $$E[X] = \frac{1}{\lambda}$$
-$$\text{Var}(X) = \frac{1}{\lambda^2}$$
+$$\operatorname{Var}(X) = \frac{1}{\lambda^2}$$
 
 La función de probabilidad acumulada (que nos da el área a la izquierda de un valor $x$) es:
 
@@ -3702,7 +3702,7 @@ Cuando $\alpha = n$ entero positivo, $\Gamma(n) = (n-1)!$
 **Propiedades:**
 
 - $E[X] = \alpha/\lambda$
-- $\text{Var}(X) = \alpha/\lambda^2$
+- $\operatorname{Var}(X) = \alpha/\lambda^2$
 - La suma de $n$ variables exponenciales independientes $\text{Exp}(\lambda)$ sigue una $\text{Gamma}(n, \lambda)$.
 - Caso especial: si $\alpha = 1$, recuperamos la distribución $\text{Exp}(\lambda)$.
 
@@ -3748,7 +3748,7 @@ $$X = X_1 + X_2 + X_3, \quad X_i \sim \text{Exp}(2) \implies X \sim \text{Gamma}
 
 $$E[X] = \frac{\alpha}{\lambda} = \frac{3}{2} = 1.5 \text{ minutos}$$
 
-$$\text{Var}(X) = \frac{\alpha}{\lambda^2} = \frac{3}{4} = 0.75 \quad \Rightarrow \quad \text{DE} = \sqrt{0.75} \approx 0.866 \text{ min}$$
+$$\operatorname{Var}(X) = \frac{\alpha}{\lambda^2} = \frac{3}{4} = 0.75 \quad \Rightarrow \quad \text{DE} = \sqrt{0.75} \approx 0.866 \text{ min}$$
 
 **b) Probabilidad de esperar más de 2 minutos**
 
@@ -3815,7 +3815,7 @@ $$F(x) = 1 - \left(\frac{m}{x}\right)^{\alpha}, \quad x > m.$$
 **Propiedades:**
 
 - $E[X] = \dfrac{\alpha m}{\alpha - 1}$ si $\alpha > 1$.
-- $\text{Var}(X) = \dfrac{\alpha m^2}{(\alpha-1)^2(\alpha-2)}$ si $\alpha > 2$.
+- $\operatorname{Var}(X) = \dfrac{\alpha m^2}{(\alpha-1)^2(\alpha-2)}$ si $\alpha > 2$.
 - Cola más pesada que la exponencial: $P(X > x) = (m/x)^{\alpha}$ decrece como potencia, no exponencialmente.
 
 :::
@@ -3869,7 +3869,7 @@ $$F(x) = 1 - \exp\!\left[-\left(\frac{x}{\lambda}\right)^k\right], \quad x \geq 
 **Propiedades:**
 
 - $E[X] = \lambda\,\Gamma\!\left(1 + \tfrac{1}{k}\right)$
-- $\text{Var}(X) = \lambda^2\left[\Gamma\!\left(1+\tfrac{2}{k}\right) - \Gamma\!\left(1+\tfrac{1}{k}\right)^2\right]$
+- $\operatorname{Var}(X) = \lambda^2\left[\Gamma\!\left(1+\tfrac{2}{k}\right) - \Gamma\!\left(1+\tfrac{1}{k}\right)^2\right]$
 - **Función de riesgo (tasa de falla):** $h(x) = \dfrac{f(x)}{1-F(x)} = \dfrac{k}{\lambda}\left(\dfrac{x}{\lambda}\right)^{k-1}$
 
 **Casos especiales según el parámetro de forma $k$:**
@@ -3980,7 +3980,7 @@ A diferencia de las variables discretas, una **variable aleatoria continua** pue
 Modela fenómenos donde todos los subintervalos de la misma longitud dentro de un rango $[a, b]$ tienen exactamente la misma probabilidad de ocurrir. Su f.d.p. forma un rectángulo. Se denota como $X \sim U(a, b)$.
 
 * **Función de densidad:** $$f(x) = \frac{1}{b - a} \quad \text{para } a \le x \le b$$
-* **Esperanza y Varianza:** $$E[X] = \frac{a+b}{2} \quad \text{y} \quad \text{Var}(X) = \frac{(b-a)^2}{12}$$
+* **Esperanza y Varianza:** $$E[X] = \frac{a+b}{2} \quad \text{y} \quad \operatorname{Var}(X) = \frac{(b-a)^2}{12}$$
 * **Aplicación típica:** Tiempos de espera aleatorios con límites conocidos y equiprobables.
 
 ***
@@ -4022,6 +4022,12 @@ Se utiliza para modelar el tiempo o la distancia que transcurre hasta que ocurre
 
 ## Distribuciones muestrales {#sec-dist-muestrales}
 
+::: {.callout-note icon=false}
+### Relación con el Capítulo 5
+
+Esta sección introduce los conceptos de muestra aleatoria, estadísticos muestrales y distribuciones muestrales ($\chi^2$, $t$, $F$) desde una perspectiva aplicada. El **@cap-inferencia** retoma estos temas con mayor rigor formal, cubre los métodos de estimación puntual (momentos y máxima verosimilitud), las propiedades de estimadores y el Teorema del Límite Central con demostraciones completas. Se recomienda leer ambas secciones de manera complementaria.
+
+:::
 
 En esta unidad, estudiaremos las distribuciones generadas por características medidas a conjuntos de individuos (muestras). Antes de revisar las distribuciones de muestreo se definen conceptos importantes en la modelación estadística.
 
@@ -4284,9 +4290,9 @@ Si $X_1, X_2, \dots, X_n$ representan una muestra aleatoria extraída de una pob
 
 **Esperanza matemática (Valor esperado):** $$E[\bar{X}] = \mu_{\bar{X}} = \mu \quad (1)$$ *(Esto demuestra que* $\bar{X}$ es un estimador insesgado: en promedio, acierta al parámetro).
 
-**Varianza del estimador:** $$\text{Var}(\bar{X}) = \sigma_{\bar{X}}^2 = \frac{\sigma^2}{n} \quad (2)$$ *(Esto demuestra que a mayor tamaño de muestra* $n$, menor es la varianza del estimador, haciendo nuestras estimaciones más precisas).
+**Varianza del estimador:** $$\operatorname{Var}(\bar{X}) = \sigma_{\bar{X}}^2 = \frac{\sigma^2}{n} \quad (2)$$ *(Esto demuestra que a mayor tamaño de muestra* $n$, menor es la varianza del estimador, haciendo nuestras estimaciones más precisas).
 
-> *Nota: Cuando la muestra se realiza **sin reemplazo** desde una población finita de tamaño* $N$, la esperanza sigue siendo $\mu$, pero la varianza se ajusta multiplicándola por el factor de corrección por población finita: \> $$\text{Var}(\bar{X}) = \frac{\sigma^2}{n} \left(\frac{N-n}{N-1}\right) \quad (2.1)$$
+> *Nota: Cuando la muestra se realiza **sin reemplazo** desde una población finita de tamaño* $N$, la esperanza sigue siendo $\mu$, pero la varianza se ajusta multiplicándola por el factor de corrección por población finita: \> $$\operatorname{Var}(\bar{X}) = \frac{\sigma^2}{n} \left(\frac{N-n}{N-1}\right) \quad (2.1)$$
 
 **La forma de la distribución de** $\bar{X}$
 
@@ -4337,7 +4343,7 @@ Si elevamos al cuadrado cada una de estas variables estandarizadas independiente
 
 Por su propia naturaleza de suma de cuadrados, el soporte (campo de variación) de una variable $\chi^2$ es estrictamente no negativo, de $0$ a $+\infty$. Se simboliza como $\chi^2_n$, donde $n$ representa los **grados de libertad** (el número de variables normales independientes que se están sumando).
 
-**Propiedades teóricas:** Para una variable $Y \sim \chi^2_n$: \* Esperanza: $E[Y] = n$ \* Varianza: $\text{Var}(Y) = 2n$
+**Propiedades teóricas:** Para una variable $Y \sim \chi^2_n$: \* Esperanza: $E[Y] = n$ \* Varianza: $\operatorname{Var}(Y) = 2n$
 
 El parámetro único que define a esta distribución son sus grados de libertad $n$. En la figura siguiente se muestra cómo la forma fuertemente asimétrica a la derecha (sesgada) de la distribución $\chi^2$ va cambiando a medida que aumentan los grados de libertad.
 
@@ -4657,7 +4663,7 @@ Sea $X_1, X_2, \dots, X_n$ una muestra aleatoria extraída de una distribución 
 
 **Esperanza matemática:** $$E[\hat{P}] = \mu_{\hat{P}} = P \quad (18)$$ *(El estimador de la proporción es insesgado).*
 
-**Varianza del estimador:** $$\text{Var}(\hat{P}) = \sigma_{\hat{P}}^2 = \frac{P \cdot Q}{n} \quad (19)$$ Donde $Q = 1 - P$.
+**Varianza del estimador:** $$\operatorname{Var}(\hat{P}) = \sigma_{\hat{P}}^2 = \frac{P \cdot Q}{n} \quad (19)$$ Donde $Q = 1 - P$.
 
 **Ejemplo 1**
 
@@ -4687,7 +4693,7 @@ Ahora construyamos la distribución muestral del estimador $\hat{P}$ tomando tod
 
 Con base en la Tabla 8, es evidente que $\hat{P}$ es una variable aleatoria. Podemos comprobar la Ecuación (18) calculando la esperanza a partir de esta distribución muestral empírica: $$E[\hat{P}] = \sum \left( \hat{p}_i \cdot P(\hat{P} = \hat{p}_i) \right) = \left(0 \cdot \frac{9}{16}\right) + \left(0.5 \cdot \frac{6}{16}\right) + \left(1 \cdot \frac{1}{16}\right) = \frac{3}{16} + \frac{1}{16} = \frac{4}{16} = 0.25$$ Vemos que $E[\hat{P}] = P = 0.25$.
 
-Comprobando la Ecuación (19) para la varianza: $$\text{Var}(\hat{P}) = \frac{P(1-P)}{n} = \frac{0.25(0.75)}{2} = \frac{0.1875}{2} = 0.09375$$
+Comprobando la Ecuación (19) para la varianza: $$\operatorname{Var}(\hat{P}) = \frac{P(1-P)}{n} = \frac{0.25(0.75)}{2} = \frac{0.1875}{2} = 0.09375$$
 
 ------------------------------------------------------------------------
 
@@ -4817,7 +4823,7 @@ $$\bar{X} = \frac{1}{n}\sum_{i=1}^n X_i, \qquad S^2 = \frac{1}{n-1}\sum_{i=1}^n 
 
 **Propiedades exactas:**
 
-$$E[\bar{X}] = \mu, \qquad \text{Var}(\bar{X}) = \frac{\sigma^2}{n}, \qquad E[S^2] = \sigma^2$$
+$$E[\bar{X}] = \mu, \qquad \operatorname{Var}(\bar{X}) = \frac{\sigma^2}{n}, \qquad E[S^2] = \sigma^2$$
 
 La primera igualdad dice que $\bar{X}$ es un estimador **insesgado** de $\mu$; la segunda, que su precisión mejora con el tamaño de la muestra; la tercera, que $S^2$ es un estimador insesgado de $\sigma^2$ (de ahí el divisor $n-1$).
 
@@ -4852,7 +4858,7 @@ $$f(x) = \frac{1}{\Gamma(k/2)}\left(\frac{1}{2}\right)^{k/2} x^{k/2-1} e^{-x/2},
 
 **Resultado clave:** si $Z_1, \ldots, Z_n$ son normales estándar independientes, entonces $\sum Z_i^2 \sim \chi^2_n$.
 
-$$E[X] = k, \qquad \text{Var}(X) = 2k$$
+$$E[X] = k, \qquad \operatorname{Var}(X) = 2k$$
 
 ::: {.callout-note icon=false}
 #### Observación
@@ -5251,7 +5257,7 @@ estimador $T$ para $\theta$ es:
 $$\text{CME}(T, \theta) = E_\theta\!\left[(T - \theta)^2\right].$$
 
 **Descomposición fundamental:**
-$$\text{CME}(T,\theta) = \text{Var}(T) + \left[\text{Sesgo}(T)\right]^2.$$
+$$\text{CME}(T,\theta) = \operatorname{Var}(T) + \left[\text{Sesgo}(T)\right]^2.$$
 
 :::
 
@@ -5313,12 +5319,12 @@ Es decir, $\hat{\theta}_n \xrightarrow{p} \theta$.
 Sea $\hat{\theta}_n$ estimador puntual para $\theta$. Si
 
 - $\lim_{n\to\infty} E[\hat{\theta}_n] = \theta$ (asintóticamente insesgado), y
-- $\lim_{n\to\infty} \text{Var}(\hat{\theta}_n) = 0$,
+- $\lim_{n\to\infty} \operatorname{Var}(\hat{\theta}_n) = 0$,
 
 entonces $\hat{\theta}_n$ es consistente.
 
 **Corolario:** $\bar{X}$ es consistente para $\mu$ (ya que
-$E[\bar{X}]=\mu$ y $\text{Var}(\bar{X})=\sigma^2/n \to 0$).
+$E[\bar{X}]=\mu$ y $\operatorname{Var}(\bar{X})=\sigma^2/n \to 0$).
 
 :::
 
@@ -5338,10 +5344,10 @@ de varianza uniformemente mínima (EIVUM)** si:
 
 **Ejemplo — Poisson:** Sea $X_1,\ldots,X_n$ muestra de $\text{Poi}(\lambda)$.
 Tanto $\bar{X}$ como $S^2$ son insesgados para $\lambda$ (pues
-$E[X_i]=\text{Var}(X_i)=\lambda$). Sus varianzas son:
-$$\text{Var}(\bar{X}) = \frac{\lambda}{n}, \qquad
-  \text{Var}(S^2) = \frac{\lambda}{n} + \frac{2\lambda^2}{n-1}.$$
-Como $\text{Var}(\bar{X}) < \text{Var}(S^2)$, $\bar{X}$ es el mejor
+$E[X_i]=\operatorname{Var}(X_i)=\lambda$). Sus varianzas son:
+$$\operatorname{Var}(\bar{X}) = \frac{\lambda}{n}, \qquad
+  \operatorname{Var}(S^2) = \frac{\lambda}{n} + \frac{2\lambda^2}{n-1}.$$
+Como $\operatorname{Var}(\bar{X}) < \operatorname{Var}(S^2)$, $\bar{X}$ es el mejor
 estimador insesgado entre los dos.
 
 #### Cota de Cramér-Rao e información de Fisher
@@ -5352,7 +5358,7 @@ estimador insesgado entre los dos.
 Sea $X_1,\ldots,X_n$ muestra aleatoria de $f(x;\theta)$ y
 $g(T(X_1,\ldots,X_n))$ estimador insesgado para $g(\theta)$. Bajo
 condiciones de regularidad:
-$$\text{Var}(g(T)) \geq
+$$\operatorname{Var}(g(T)) \geq
   \frac{[g'(\theta)]^2}{n\, \mathcal{I}(\theta)},$$
 donde la **información de Fisher** es:
 $$\mathcal{I}(\theta) = E\!\left[\left(\frac{\partial}{\partial\theta}
@@ -5380,7 +5386,7 @@ $$\mathcal{I}(\theta) = E\!\left[\left(\frac{X}{\theta}-\frac{1-X}{1-\theta}\rig
 Por lo tanto:
 $$\text{CICR}(\theta) = \frac{\theta(1-\theta)}{n}.$$
 
-Como $\text{Var}(\bar{X}) = \theta(1-\theta)/n = \text{CICR}(\theta)$,
+Como $\operatorname{Var}(\bar{X}) = \theta(1-\theta)/n = \text{CICR}(\theta)$,
 el estimador $\bar{X}$ alcanza la cota y es EIVUM.
 
 :::
@@ -5403,7 +5409,7 @@ for (i in seq_along(theta_vals)) {
 
 Un estimador insesgado es **eficiente** si su varianza alcanza la cota
 inferior de Cramér-Rao. La **eficiencia** de $\hat{\theta}$ es:
-$$\text{Efi}(\hat{\theta}) = \frac{\text{CICR}(\theta)}{\text{Var}(\hat{\theta})}, \quad 0 < \text{Efi} \leq 1.$$
+$$\text{Efi}(\hat{\theta}) = \frac{\text{CICR}(\theta)}{\operatorname{Var}(\hat{\theta})}, \quad 0 < \text{Efi} \leq 1.$$
 
 Se dice que $\hat{\theta}_n$ es **asintóticamente eficiente** si:
 $$\lim_{n\to\infty} \text{Efi}(\hat{\theta}_n) = 1.$$
@@ -5467,7 +5473,7 @@ $$\phi(T) = E[\hat{\theta}\mid T].$$
 Entonces:
 
 1. $E[\phi(T)] = \theta$ ($\phi(T)$ es insesgado).
-2. $\text{Var}(\phi(T)) \leq \text{Var}(\hat{\theta})$ para todo $\theta$.
+2. $\operatorname{Var}(\phi(T)) \leq \operatorname{Var}(\hat{\theta})$ para todo $\theta$.
 
 Es decir, $\phi(T)$ es un estimador insesgado **uniformemente mejor**
 que $\hat{\theta}$.
@@ -5475,9 +5481,9 @@ que $\hat{\theta}$.
 **Demostración:** Por la ley de la esperanza total:
 $$E[\phi(T)] = E[E(\hat{\theta}\mid T)] = E[\hat{\theta}] = \theta.$$
 Por la ley de la varianza total:
-$$\text{Var}(\hat{\theta}) = \underbrace{\text{Var}(E[\hat{\theta}\mid T])}_{=\,\text{Var}(\phi(T))}
-  + \underbrace{E[\text{Var}(\hat{\theta}\mid T)]}_{\geq\,0}
-  \geq \text{Var}(\phi(T)).$$
+$$\operatorname{Var}(\hat{\theta}) = \underbrace{\operatorname{Var}(E[\hat{\theta}\mid T])}_{=\,\operatorname{Var}(\phi(T))}
+  + \underbrace{E[\operatorname{Var}(\hat{\theta}\mid T)]}_{\geq\,0}
+  \geq \operatorname{Var}(\phi(T)).$$
 
 :::
 
@@ -5915,7 +5921,7 @@ ggplot(df_np, aes(x=theta, y=gamma)) +
 
 ### Resumen del capítulo
 
-| Distribución | Origen | Parámetros | $E[X]$ | $\text{Var}(X)$ | Uso típico |
+| Distribución | Origen | Parámetros | $E[X]$ | $\operatorname{Var}(X)$ | Uso típico |
 |:-------------|:------:|:----------:|:------:|:---------------:|:-----------|
 | $\chi^2_\nu$ | $\sum_{i=1}^\nu Z_i^2$ | $\nu$ (g.l.) | $\nu$ | $2\nu$ | Pruebas sobre varianzas |
 | $t_\nu$ | $Z/\sqrt{\chi^2_\nu/\nu}$ | $\nu$ (g.l.) | $0$ ($\nu>1$) | $\nu/(\nu-2)$ | IC y pruebas sobre $\mu$ con $\sigma^2$ desconocida |
