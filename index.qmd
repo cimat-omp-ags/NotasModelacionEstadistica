@@ -21,13 +21,13 @@ La estadística clásica se divide en dos grandes áreas: **estadística descrip
 
 **Parte I — Probabilidad, Variables Aleatorias y Distribuciones Muestrales**
 
-| Cap. | Tema | Descripción |
-|:----:|:-----|:------------|
-| 1a | Estadística | Introducción a la estadística descriptiva y análisis exploratorio de datos |
+| Cap. | Tema | Contenido |
+|:----:|:-----|:----------|
+| 1a | Estadística | Introducción, estadística descriptiva, análisis exploratorio de datos |
 | 1b | Probabilidad | Espacio muestral, axiomas, probabilidad condicional, independencia, Bayes |
-| 3 | Distribuciones | Variables aleatorias discretas y continuas; Bernoulli, Binomial, Poisson, Normal, Gamma, Exponencial, Weibull y más |
-| 4 | Distribuciones conjuntas | Covarianza, correlación, esperanza condicional, FGM, Ley de los Grandes Números |
-| 5 | Inferencia estadística | Muestras aleatorias, estimadores, EMM, EMV, TLC, distribuciones muestrales ($\chi^2$, $t$, $F$) |
+| 3 | Distribuciones de probabilidad | **3.1** Variable aleatoria · **3.2** pmf y cdf · **3.3** Distribuciones discretas: Bernoulli, Binomial, Geométrica, Binomial Negativa, Uniforme, Hipergeométrica, Poisson · **3.4** Variables aleatorias continuas · **3.5** Distribuciones continuas: Uniforme, Exponencial, Normal, Gamma, Pareto, Weibull · **3.6** Ejercicios · **3.7** Estadísticas de orden |
+| 4 | Distribuciones conjuntas | Covarianza, correlación, esperanza condicional, FGM, Ley de los Grandes Números (débil y fuerte) |
+| 5 | Inferencia estadística | Muestras aleatorias, estimadores (EMM, EMV), TLC, distribuciones muestrales ($\chi^2$, $t$ de Student, $F$) |
 
 **Parte II — Aplicaciones con Datos Reales**
 
