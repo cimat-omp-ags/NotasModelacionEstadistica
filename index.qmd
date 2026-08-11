@@ -35,6 +35,7 @@ La estadística clásica se divide en dos grandes áreas: **estadística descrip
 |:----:|:-----|:------------|
 | — | Precios de vivienda | Caso de estudio: modelación de precios de casas en Aguascalientes |
 | — | Mercado de autos | Caso de estudio: análisis de precios de vehículos |
+| — | Laringoscopia | Caso de estudio clínico: comparación Pentax AWS vs Macintosh en pacientes con obesidad mórbida (ANOVA, regresión logística, Kaplan-Meier, Cox) |
 
 **Apéndice**
 

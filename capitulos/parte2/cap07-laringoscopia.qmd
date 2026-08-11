@@ -1,0 +1,691 @@
+# Caso de Estudio: Laringoscopia en Pacientes con Obesidad Mórbida {#cap-laringoscopia}
+
+[📖 Humberto Martínez Bautista]{.fuente-badge .fuente-humberto}
+
+Este capítulo presenta una revisión estadística aplicada del ensayo clínico aleatorizado *"A Randomized Comparison Between the Pentax AWS Video Laryngoscope and the Macintosh Laryngoscope in Morbidly Obese Patients"*, publicado en *Anesthesia & Analgesia* (2011). El objetivo es ilustrar cómo los métodos estadísticos del curso —estadística descriptiva, pruebas de hipótesis, regresión y análisis de supervivencia— se aplican a datos reales en ciencias de la salud.
+
+El análisis fue desarrollado por el **Dr. Humberto Martínez Bautista** (CIMAT), en colaboración con Ricardo A. Rodríguez Ojeda y María de Lourdes Delgadillo Hurtado, como producto de las estancias de verano 2023 de CIMAT.
+
+::: {.callout-tip icon=false}
+### Objetivos de aprendizaje
+
+Al finalizar este capítulo el estudiante será capaz de:
+
+- Construir y interpretar una tabla de características basales (Tabla 1) para evaluar el balance entre grupos de un ensayo clínico.
+- Aplicar la prueba exacta de Fisher para comparar proporciones entre dos grupos.
+- Ajustar e interpretar modelos de regresión logística, logística ordinal y ANOVA en datos clínicos.
+- Implementar el análisis de supervivencia de Kaplan-Meier y el modelo de riesgos proporcionales de Cox.
+- Reproducir y contrastar resultados publicados usando R.
+
+:::
+
+---
+
+## Descripción del estudio {#sec-laringoscopia-descripcion}
+
+La proporción de pacientes con obesidad mórbida que requieren intubación traqueal ha aumentado globalmente. En estos pacientes el acceso a la vía aérea es más difícil, lo que aumenta el riesgo anestésico. El estudio compara dos dispositivos:
+
+- **Pentax AWS**: videolaringoscopio con cámara integrada y monitor LCD, disponible en Japón desde 2006.
+- **Macintosh estándar (hoja n° 4)**: laringoscopio convencional de uso generalizado.
+
+**Hipótesis de investigación:** La intubación con Pentax AWS tiene mayor eficacia y rapidez que con Macintosh en pacientes con obesidad mórbida.
+
+**Diseño:** Ensayo clínico aleatorizado de dos brazos. De 105 pacientes reclutados, 99 completaron el estudio (Macintosh $n=49$, Pentax AWS $n=50$). La aleatorización se realizó con números aleatorios generados por computadora.
+
+**Población:** Pacientes con obesidad mórbida (IMC 30–50 kg/m²) sometidos a cirugía electiva bajo anestesia general.
+
+---
+
+## Instalación y carga de paquetes {#sec-laringoscopia-paquetes}
+
+```{r}
+#| label: paquetes-laringoscopia
+#| message: false
+#| warning: false
+#| code-fold: true
+#| code-summary: "Ver paquetes"
+
+# Instalación automática de paquetes faltantes
+list.of.packages <- c(
+  "Hmisc", "janitor", "dplyr", "ggplot2", "cowplot",
+  "gmodels", "rstatix", "psych", "RColorBrewer", "ggpubr", "car",
+  "stats", "corrplot", "tidyverse", "MVN", "DescTools", "broom",
+  "survival", "survminer", "kableExtra", "gtsummary", "forcats",
+  "MASS", "smd"
+)
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if (length(new.packages)) install.packages(new.packages, repos = "https://cran.rstudio.com")
+
+# Manejo de datos
+library(dplyr); library(Hmisc); library(janitor); library(gmodels)
+library(rstatix); library(car); library(stats); library(tidyverse)
+library(MVN); library(DescTools); library(broom)
+library(survival); library(survminer); library(forcats); library(MASS); library(smd)
+
+# Visualización
+library(ggplot2); library(cowplot); library(psych)
+library(RColorBrewer); library(ggpubr); library(corrplot); library(gtsummary)
+
+# Tablas
+library(kableExtra)
+
+# Base de datos
+library(medicaldata)
+```
+
+---
+
+## Base de datos `laringoscopia` {#sec-laringoscopia-datos}
+
+Los datos provienen del paquete **medicaldata** y contienen información de 99 pacientes con 22 variables.
+
+```{r}
+#| label: cargar-datos
+data(laryngoscope, package = "medicaldata")
+names(laryngoscope)
+```
+
+### Gestión de datos
+
+Renombramos variables al español y declaramos los factores — este proceso ya está integrado en `modelEstCIMAT::laringoscopia`.
+
+```{r}
+#| label: renombrar-variables
+#| code-fold: true
+#| code-summary: "Ver transformación de variables"
+
+laringoscopia <- dplyr::rename(laryngoscope,
+  Edad                    = age,        Sexo                    = gender,
+  Estado_fisico           = asa,        IMC                     = BMI,
+  Grupo                   = Randomization,
+  Tiempo_total_intubacion = total_intubation_time,
+  Num_intentos            = attempts,   Nivel_dificultad        = ease,
+  Tiempo_1_intento        = attempt1_time,  Exito_1_intento     = attempt1_S_F,
+  Tiempo_2_intento        = attempt2_time,  Exito_2_intento     = attempt2_S_F,
+  Metodo_2_intento        = attempt2_assigned_method,
+  Tiempo_3_intento        = attempt3_time,  Exito_3_intento     = attempt3_S_F,
+  Metodo_3_intento        = attempt3_assigned_method,
+  Fracasos                = failures,   Exito_intubacion        = intubation_overall_S_F,
+  Sangrado                = bleeding,   Dolor_garganta          = sore_throat,
+  Vista_glotis            = view
+)
+
+laringoscopia$Sexo             <- factor(laringoscopia$Sexo,             c(0,1),     c("Femenino","Masculino"))
+laringoscopia$Grupo            <- factor(laringoscopia$Grupo,            c(0,1),     c("Macintosh","Pentax_AWS"))
+laringoscopia$Estado_fisico    <- factor(laringoscopia$Estado_fisico,    c(2,3,4),   c("II","III","IV"))
+laringoscopia$Exito_1_intento  <- factor(laringoscopia$Exito_1_intento,  c(0,1),     c("No","Si"))
+laringoscopia$Exito_2_intento  <- factor(laringoscopia$Exito_2_intento,  c(0,1),     c("No","Si"))
+laringoscopia$Exito_3_intento  <- factor(laringoscopia$Exito_3_intento,  c(0,1),     c("No","Si"))
+laringoscopia$Fracasos         <- factor(laringoscopia$Fracasos,         c(1,2,3),   c("1","2","3"))
+laringoscopia$Exito_intubacion <- factor(laringoscopia$Exito_intubacion, c(0,1),     c("No","Si"))
+laringoscopia$Sangrado         <- factor(laringoscopia$Sangrado,         c(0,1),     c("No","Si"))
+laringoscopia$Dolor_garganta   <- factor(laringoscopia$Dolor_garganta,   c(0,1,2,3), c("Ninguno","Leve","Moderado","Severo"))
+laringoscopia$Vista_glotis     <- factor(laringoscopia$Vista_glotis,     c(0,1),     c("Malo","Bueno"))
+laringoscopia$Metodo_2_intento <- factor(laringoscopia$Metodo_2_intento, c(0,1),     c("No","Si"))
+laringoscopia$Metodo_3_intento <- factor(laringoscopia$Metodo_3_intento, c(0,1),     c("No","Si"))
+
+head(laringoscopia, 6)
+```
+
+### Diccionario de variables
+
+```{r}
+#| label: diccionario
+#| echo: false
+
+diccionario <- data.frame(
+  Variable    = c("Edad","Sexo","Estado_fisico","IMC","Mallampati","Grupo",
+                  "Tiempo_total_intubacion","Num_intentos","Nivel_dificultad",
+                  "Exito_1_intento","Exito_intubacion","Sangrado",
+                  "Dolor_garganta","Vista_glotis"),
+  Descripcion = c("Años del paciente","Género del paciente",
+                  "Estado físico ASA (II, III o IV)",
+                  "Índice de masa corporal (kg/m²)",
+                  "Escala Mallampati (dificultad de intubación esperada)",
+                  "Grupo de tratamiento (Macintosh o Pentax AWS)",
+                  "Tiempo total de intubación (segundos)",
+                  "Número de intentos de intubación",
+                  "Dificultad de intubación (0 = fácil, 100 = difícil)",
+                  "Éxito en el primer intento (Sí/No)",
+                  "Éxito global de intubación (Sí/No)",
+                  "Presencia de sangrado (Sí/No)",
+                  "Dolor de garganta posoperatorio (Ninguno/Leve/Moderado/Severo)",
+                  "Vista de la glotis — Cormack-Lehane (Malo/Bueno)")
+)
+kbl(diccionario, col.names = c("Variable", "Descripción")) |>
+  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+```
+
+---
+
+## Tabla de características basales {#sec-laringoscopia-tabla1}
+
+La **Tabla 1** evalúa el balance entre los grupos de tratamiento al inicio del estudio. Se calcula la diferencia estandarizada (SMD) para cada variable; un SMD > 0.25 indica desbalance y la variable debe ajustarse en el análisis.
+
+```{r}
+#| label: tabla1-laringoscopia
+#| code-fold: true
+#| code-summary: "Ver código Tabla 1"
+
+tabla1 <- medicaldata::laryngoscope |>
+  select(Randomization, age, gender, BMI, asa, Mallampati) |>
+  mutate(Randomization = factor(Randomization, labels = c("Macintosh","Pentax_AWS")),
+         Randomization = fct_relevel(Randomization, "Pentax_AWS","Macintosh")) |>
+  tbl_summary(
+    by         = Randomization,
+    missing    = "no",
+    statistic  = list(c("age","BMI") ~ "{mean} ({sd})",
+                      c("asa","Mallampati","gender") ~ "{n} ({p}%)")
+  ) |>
+  add_difference(test = list(all_continuous()   ~ "smd",
+                             all_categorical()  ~ "smd")) |>
+  italicize_levels() |>
+  modify_spanning_header(c("stat_1","stat_2") ~ "*Grupos:*") |>
+  modify_header(label = "*Característica*") |>
+  modify_caption("Tabla 1. Características demográficas y clínicas basales por grupo de tratamiento.") |>
+  bold_labels()
+
+tabla1
+```
+
+::: {.callout-note icon=false}
+### Interpretación
+
+Ninguna covariable presenta SMD > 0.25, lo que indica que los grupos están balanceados en sus características basales. El ensayo tiene una asignación aleatoria efectiva.
+
+:::
+
+---
+
+## Análisis estadístico {#sec-laringoscopia-analisis}
+
+```{r}
+#| label: attach-datos
+#| include: false
+attach(laryngoscope)
+```
+
+```{r}
+#| label: estructura-datos
+#| code-fold: true
+#| code-summary: "Ver estructura de la BD"
+str(laryngoscope)
+```
+
+### Análisis descriptivo (univariado) {#sec-laringoscopia-univariado}
+
+::: {.panel-tabset}
+
+#### Tiempo de intubación
+
+La variable primaria es el **tiempo total de intubación** (segundos), desde el primer intento hasta la señal del capnograma.
+
+```{r}
+#| label: univariado-tiempo
+#| fig-cap: "Distribución del tiempo de intubación por grupo"
+#| fig-width: 8
+#| fig-height: 4
+
+summary(laryngoscope$total_intubation_time)
+
+laryngoscope |>
+  mutate(Randomization = factor(Randomization, labels = c("Macintosh","Pentax_AWS"))) |>
+  ggplot(aes(x = total_intubation_time)) +
+  geom_histogram(aes(y = after_stat(density)), colour = 1, fill = "white", binwidth = 10) +
+  geom_density(col = 2, lwd = 1) +
+  facet_wrap(~ Randomization) +
+  labs(x = "Tiempo (segundos)", y = "Densidad",
+       title = "Tiempo total de intubación por grupo") +
+  theme_bw()
+```
+
+#### Nivel de dificultad
+
+La dificultad se midió en escala Likert de 0 (extremadamente fácil) a 100 (extremadamente difícil).
+
+```{r}
+#| label: univariado-dificultad
+#| fig-cap: "Distribución del nivel de dificultad por grupo"
+#| fig-width: 8
+#| fig-height: 4
+
+summary(laryngoscope$ease)
+
+laryngoscope |>
+  mutate(Randomization = factor(Randomization, labels = c("Macintosh","Pentax_AWS"))) |>
+  ggplot(aes(x = ease)) +
+  geom_histogram(aes(y = after_stat(density)), colour = 1, fill = "white") +
+  geom_density(col = 2, lwd = 1) +
+  facet_wrap(~ Randomization) +
+  labs(x = "Escala de dificultad (0-100)", y = "Densidad",
+       title = "Nivel de dificultad de intubación por grupo") +
+  theme_bw()
+```
+
+#### Prueba de normalidad
+
+Antes de elegir entre métodos paramétricos y no paramétricos, evaluamos la normalidad de las variables continuas con la prueba de Shapiro-Wilk.
+
+```{r}
+#| label: normalidad
+normalidad <- mvn(laryngoscope[, c(17, 20)], univariateTest = "SW", desc = FALSE)
+normalidad$univariateNormality
+```
+
+::: {.callout-important icon=false}
+### Decisión metodológica
+
+Ambas variables rechazan la hipótesis de normalidad ($p < 0.05$). Por ello se utilizarán:
+
+- **Prueba de Wilcoxon** para comparar el número de intentos y la dificultad.
+- **Kaplan-Meier + log-rank** y **modelo de Cox** para el tiempo de intubación.
+
+:::
+
+:::
+
+---
+
+### Análisis bivariado (asociación) {#sec-laringoscopia-bivariado}
+
+::: {.panel-tabset}
+
+#### Éxito de intubación (Fisher)
+
+La prueba exacta de Fisher es adecuada cuando alguna celda de la tabla de contingencia tiene frecuencias $\leq 5$.
+
+```{r}
+#| label: fisher-exito
+
+table(laryngoscope$intubation_overall_S_F, laryngoscope$Randomization)
+
+prueba_fisher_intub <- fisher.test(
+  table(laryngoscope$intubation_overall_S_F, laryngoscope$Randomization))
+prueba_fisher_intub
+
+valorp_exitoGe <- round(prueba_fisher_intub$p.value, 2)
+
+tbl_est_exito_intu <- laryngoscope |>
+  dplyr::select(Randomization, intubation_overall_S_F) |>
+  tbl_summary(by = Randomization) |>
+  bold_labels()
+tbl_est_exito_intu
+```
+
+> Con Macintosh todos los pacientes fueron intubados exitosamente; con Pentax AWS hubo 4 fracasos, por lo que no es posible estimar un odds ratio con la prueba exacta de Fisher.
+
+#### Sangrado (Fisher)
+
+```{r}
+#| label: fisher-sangrado
+
+table(laryngoscope$bleeding, laryngoscope$Randomization)
+
+prueba_fisher_sangrado <- fisher.test(
+  table(laryngoscope$bleeding, laryngoscope$Randomization))
+prueba_fisher_sangrado
+
+valorp_sangrado <- round(prueba_fisher_sangrado$p.value, 2)
+
+laryngoscope |>
+  dplyr::select(Randomization, bleeding) |>
+  tbl_summary(by = Randomization) |>
+  bold_labels()
+```
+
+:::
+
+---
+
+### Modelación paramétrica {#sec-laringoscopia-parametrica}
+
+::: {.panel-tabset}
+
+#### ANOVA — Nivel de dificultad
+
+El ANOVA compara las medias del nivel de dificultad entre los dos grupos de tratamiento.
+
+$$H_0: \mu_{\text{Macintosh}} = \mu_{\text{Pentax AWS}} \qquad H_1: \mu_{\text{Macintosh}} \neq \mu_{\text{Pentax AWS}}$$
+
+```{r}
+#| label: anova-dificultad
+
+anova_result <- lm(ease ~ Randomization, data = laryngoscope)
+summary(anova_result)
+
+p_value_nivel <- round(summary(anova_result)$coefficients["Randomization","Pr(>|t|)"], 2)
+
+laryngoscope |>
+  select(ease, Randomization) |>
+  mutate(Randomization = factor(Randomization, labels = c("Macintosh","Pentax_AWS")),
+         Randomization = fct_relevel(Randomization, "Pentax_AWS","Macintosh")) |>
+  tbl_summary(by = Randomization,
+              statistic = list(ease ~ "{mean} ± {sd}")) |>
+  add_difference(test = list(all_continuous() ~ "smd"))
+```
+
+> Se obtiene $p = `r p_value_nivel`$ < 0.05: hay diferencia estadísticamente significativa en la dificultad de intubación entre los grupos.
+
+#### Regresión logística — Éxito 1er intento
+
+```{r}
+#| label: logistica-exito1
+
+model <- glm(attempt1_S_F ~ Randomization + asa + Mallampati,
+             data = laryngoscope, family = binomial)
+summary(model)
+
+tbl_regresion <- tbl_regression(model, exponentiate = TRUE)
+tbl_regresion
+
+tbl_estad_exito1 <- laryngoscope |>
+  dplyr::select(Randomization, attempt1_S_F) |>
+  tbl_summary(by = Randomization) |>
+  bold_labels()
+tbl_estad_exito1
+
+modelo_exito1 <- as_tibble(tbl_regresion$table_body[1,])
+oddR_exito1   <- round(modelo_exito1$estimate,  2)
+ConfLo_exito1 <- round(modelo_exito1$conf.low,  2)
+ConfSu_exito1 <- round(modelo_exito1$conf.high, 2)
+p_value_exito1 <- round(modelo_exito1$p.value,  2)
+```
+
+#### Regresión logística — Vista de la glotis
+
+```{r}
+#| label: logistica-glotis
+
+model_glotis <- glm(view ~ Randomization + asa + Mallampati,
+                    data = laryngoscope, family = binomial)
+tbl_modelo_glotis <- tbl_regression(model_glotis, exponentiate = TRUE)
+tbl_modelo_glotis
+
+tbl_estad_glotis <- laryngoscope |>
+  dplyr::select(Randomization, view) |>
+  tbl_summary(by = Randomization) |>
+  bold_labels()
+tbl_estad_glotis
+
+glotis_modelo  <- as_tibble(tbl_modelo_glotis$table_body[1,])
+oddR_glotis    <- round(glotis_modelo$estimate,  2)
+ConfLo_glotis  <- round(glotis_modelo$conf.low,  2)
+ConfSu_glotis  <- round(glotis_modelo$conf.high, 2)
+p_value_glotis <- round(glotis_modelo$p.value,   2)
+```
+
+#### Regresión ordinal — Dolor de garganta
+
+La regresión logística ordinal (odds proporcionales) modela variables con categorías ordenadas: Ninguno < Leve < Moderado < Severo.
+
+```{r}
+#| label: logistica-ordinal
+
+modelo_dolor <- polr(as.factor(sore_throat) ~ Randomization + asa + Mallampati,
+                     data = laryngoscope)
+tbl_modelo_dolor <- tbl_regression(modelo_dolor, exponentiate = TRUE)
+tbl_modelo_dolor
+
+valor_p_dolorg <- round(modelo_dolor$coefficients["Randomization"], 2)
+
+laryngoscope |>
+  select(Randomization, sore_throat) |>
+  tbl_summary(by = Randomization,
+              statistic = list(all_categorical() ~ "{n} ({p}%)"))
+
+tabla_dolor  <- as_tibble(tbl_modelo_dolor$table_body[1,])
+oddR_dolor   <- round(tabla_dolor$estimate,  2)
+ConfLo_dolor <- round(tabla_dolor$conf.low,  2)
+ConfSu_dolor <- round(tabla_dolor$conf.high, 2)
+```
+
+:::
+
+---
+
+### Modelación no paramétrica {#sec-laringoscopia-noparametrica}
+
+::: {.panel-tabset}
+
+#### Wilcoxon — Número de intentos
+
+La prueba de suma de rangos de Wilcoxon es la alternativa no paramétrica a la prueba $t$, adecuada cuando los datos no siguen una distribución normal.
+
+$$H_0: \text{No hay diferencia en la distribución del número de intentos entre grupos}$$
+
+```{r}
+#| label: wilcoxon-intentos
+
+wilcox_test <- wilcox.test(attempts ~ Randomization, data = laryngoscope)
+wilcox_test
+
+valorp_intentos <- round(wilcox_test$p.value, 2)
+
+tbl_intentos <- laryngoscope |>
+  select(Randomization, attempts) |>
+  tbl_summary(by = Randomization,
+              statistic = list(all_continuous()  ~ "{mean} ({sd})",
+                               all_categorical() ~ "{n} ({p}%)"))
+tbl_intentos
+```
+
+#### Kaplan-Meier — Éxito de intubación
+
+El estimador de Kaplan-Meier estima la función de supervivencia $S(t)=P(T>t)$, aquí interpretada como la probabilidad de **no** haber logrado la intubación hasta el tiempo $t$.
+
+```{r}
+#| label: kaplan-meier
+#| fig-cap: "Curvas de Kaplan-Meier por grupo de tratamiento (Macintosh vs Pentax AWS)"
+#| fig-width: 8
+#| fig-height: 5
+
+survObject <- Surv(total_intubation_time, intubation_overall_S_F)
+fit        <- survfit(survObject ~ Randomization, data = laryngoscope)
+logRank    <- survdiff(survObject ~ Randomization)
+pval       <- pchisq(logRank$chisq, length(logRank$n) - 1)
+
+ggsurvplot(fit, data = laryngoscope,
+           pval        = round(pval, 4),
+           conf.int    = TRUE,
+           xlab        = "Tiempo (segundos)",
+           ylab        = "Éxito de intubación (%)",
+           legend.labs = c("Macintosh","Pentax AWS"),
+           palette     = c("#2196F3","#F44336"),
+           ggtheme     = theme_bw())
+```
+
+> Las curvas muestran que el laringoscopio Macintosh logra la intubación en menor tiempo que el Pentax AWS. La diferencia es estadísticamente significativa según la prueba log-rank.
+
+:::
+
+---
+
+### Modelo de Cox {#sec-laringoscopia-cox}
+
+El modelo de riesgos proporcionales de Cox permite estimar el efecto del tratamiento sobre el tiempo de intubación, ajustando por covariables (estado físico ASA y escala Mallampati).
+
+$$\lambda(t \mid \mathbf{x}) = \lambda_0(t) \exp(\beta_1 \cdot \text{Grupo} + \beta_2 \cdot \text{ASA} + \beta_3 \cdot \text{Mallampati})$$
+
+El **Hazard Ratio (HR)** para el grupo Pentax AWS se interpreta como:
+
+- HR < 1: el grupo Pentax AWS tarda **más** en lograr la intubación que Macintosh.
+- HR > 1: el grupo Pentax AWS logra la intubación **más rápido**.
+
+```{r}
+#| label: cox-model
+
+surv_obj   <- Surv(total_intubation_time, intubation_overall_S_F)
+modelo_cox <- coxph(surv_obj ~ Randomization + asa + Mallampati, data = laryngoscope)
+summary(modelo_cox)
+
+tbl_cox <- tbl_regression(modelo_cox, exponentiate = TRUE,
+                          label = Randomization ~ "Grupo de tratamiento")
+tbl_cox
+
+# Extracción del HR del grupo de tratamiento
+tbl_efecto_tratamiento <- tbl_cox |>
+  modify_table_body(~.x[.x$variable == "Randomization",])
+tbl_efecto_tratamiento
+
+tbl_descriptivas_tiem <- laryngoscope |>
+  select(total_intubation_time, Randomization) |>
+  mutate(Randomization = factor(Randomization, labels = c("Macintosh","Pentax_AWS"))) |>
+  tbl_summary(by         = Randomization,
+              statistic  = total_intubation_time ~ "{median} ({p25}, {p75})",
+              label      = list(total_intubation_time = "Tiempo total (seg)"))
+tbl_descriptivas_tiem
+
+modelo_tiem  <- as_tibble(tbl_efecto_tratamiento$table_body)
+oddR_tiem    <- round(modelo_tiem$estimate,  2)
+ConfLo_tiem  <- round(modelo_tiem$conf.low,  2)
+ConfSu_tiem  <- round(modelo_tiem$conf.high, 2)
+pvalue_tiem  <- modelo_tiem$p.value
+p_value_tiem <- if (!is.null(pvalue_tiem) && !is.na(pvalue_tiem) && pvalue_tiem < 0.001) "<0.001" else round(as.numeric(pvalue_tiem), 3)
+
+pentax_aws_stats_tiem <- tbl_descriptivas_tiem$table_body$stat_2[1]
+macintosh_stats_tiem  <- tbl_descriptivas_tiem$table_body$stat_1[1]
+```
+
+::: {.callout-note icon=false}
+### Interpretación del modelo de Cox
+
+Un HR ≈ 0.34 para el grupo Pentax AWS indica que, en cada instante de tiempo, la **tasa de éxito de intubación** del Pentax AWS es aproximadamente el 34% de la del Macintosh (controlando por ASA y Mallampati). Dicho de otro modo: el Macintosh estándar logra la intubación con una velocidad ~3 veces mayor que el Pentax AWS en esta muestra.
+
+:::
+
+---
+
+## Tabla resumen de resultados {#sec-laringoscopia-resultados}
+
+```{r}
+#| label: tabla-resumen
+#| code-fold: true
+#| code-summary: "Ver código tabla resumen"
+
+# Extraer estadísticas adicionales para la tabla
+tbl_est_sangrado <- laryngoscope |>
+  dplyr::select(Randomization, bleeding) |>
+  tbl_summary(by = Randomization) |> bold_labels()
+sangrado_estadi            <- as_tibble(tbl_est_sangrado$table_body)
+pentax_aws_stats_sangrado  <- sangrado_estadi$stat_2[2]
+macintosh_stats_sangrado   <- sangrado_estadi$stat_1[2]
+valorp_exitoGe <- round(fisher.test(table(laryngoscope$intubation_overall_S_F, laryngoscope$Randomization))$p.value, 2)
+
+tbl_estad_exito1_b <- laryngoscope |>
+  dplyr::select(Randomization, attempt1_S_F) |>
+  tbl_summary(by = Randomization) |> bold_labels()
+exito_estadi               <- as_tibble(tbl_estad_exito1_b$table_body)
+pentax_aws_stats_exito1    <- exito_estadi$stat_2[2]
+macintosh_stats_exito1     <- exito_estadi$stat_1[2]
+
+tbl_estad_glotis_b <- laryngoscope |>
+  dplyr::select(Randomization, view) |>
+  tbl_summary(by = Randomization) |> bold_labels()
+glotis_estadi              <- as_tibble(tbl_estad_glotis_b$table_body)
+pentax_aws_stats_glotis    <- glotis_estadi$stat_2[2]
+macintosh_stats_glotis     <- glotis_estadi$stat_1[2]
+
+tbl_intentos_b <- laryngoscope |>
+  select(Randomization, attempts) |>
+  tbl_summary(by = Randomization,
+              statistic = list(all_continuous() ~ "{mean} ({sd})", all_categorical() ~ "{n} ({p}%)"))
+intentos_estadi              <- as_tibble(tbl_intentos_b$table_body)
+pentax_aws_stats_intentos_l1 <- intentos_estadi$stat_2[2]
+pentax_aws_stats_intentos_l2 <- intentos_estadi$stat_2[3]
+pentax_aws_stats_intentos_l3 <- intentos_estadi$stat_2[4]
+macintosh_stats_intentos_l1  <- intentos_estadi$stat_1[2]
+macintosh_stats_intentos_l2  <- intentos_estadi$stat_1[3]
+macintosh_stats_intentos_l3  <- intentos_estadi$stat_1[4]
+
+tbl_estad_dolor_b <- laryngoscope |>
+  select(Randomization, sore_throat) |>
+  tbl_summary(by = Randomization, statistic = list(all_categorical() ~ "{n} ({p}%)"))
+dolor_estadi                <- as_tibble(tbl_estad_dolor_b$table_body)
+pentax_aws_stats_dolor_l1   <- dolor_estadi$stat_2[2]
+pentax_aws_stats_dolor_l2   <- dolor_estadi$stat_2[3]
+pentax_aws_stats_dolor_l3   <- dolor_estadi$stat_2[4]
+pentax_aws_stats_dolor_l4   <- dolor_estadi$stat_2[5]
+macintosh_stats_dolor_l1    <- dolor_estadi$stat_1[2]
+macintosh_stats_dolor_l2    <- dolor_estadi$stat_1[3]
+macintosh_stats_dolor_l3    <- dolor_estadi$stat_1[4]
+macintosh_stats_dolor_l4    <- dolor_estadi$stat_1[5]
+
+final_results <- data.frame(
+  `Variable` = c(
+    "**Respuesta primaria**","Tiempo total de intubación (med, Q1-Q3)",
+    "**Respuesta secundaria**","Nivel de dificultad (media ± DE)"," ",
+    "Éxito en 1er intento","Éxito global de intubación",
+    "Número de intentos","  1","  2","  3",
+    "Vista de la glotis (buena)","Sangrado",
+    "Dolor de garganta","  Ninguno","  Leve","  Moderado","  Severo"
+  ),
+  `Pentax AWS` = c(
+    " ", pentax_aws_stats_tiem, " ", pentax_aws_stats_exito1, " ",
+    pentax_aws_stats_exito1, pentax_aws_stats_sangrado, " ",
+    pentax_aws_stats_intentos_l1, pentax_aws_stats_intentos_l2, pentax_aws_stats_intentos_l3,
+    pentax_aws_stats_glotis, pentax_aws_stats_sangrado, " ",
+    pentax_aws_stats_dolor_l1, pentax_aws_stats_dolor_l2,
+    pentax_aws_stats_dolor_l3, pentax_aws_stats_dolor_l4
+  ),
+  `Macintosh` = c(
+    " ", macintosh_stats_tiem, " ", macintosh_stats_exito1, " ",
+    macintosh_stats_exito1, macintosh_stats_sangrado, " ",
+    macintosh_stats_intentos_l1, macintosh_stats_intentos_l2, macintosh_stats_intentos_l3,
+    macintosh_stats_glotis, macintosh_stats_sangrado, " ",
+    macintosh_stats_dolor_l1, macintosh_stats_dolor_l2,
+    macintosh_stats_dolor_l3, macintosh_stats_dolor_l4
+  ),
+  `Efecto (IC 95%)` = c(
+    "Hazard ratio", paste0(oddR_tiem," (",ConfLo_tiem,"-",ConfSu_tiem,")"),
+    "Diferencia de medias", " ", "Odds ratio",
+    paste0(oddR_exito1," (",ConfLo_exito1,"-",ConfSu_exito1,")"),
+    "Inestimable","N/A"," "," "," ",
+    paste0(oddR_glotis," (",ConfLo_glotis,"-",ConfSu_glotis,")"),
+    "Inestimable",
+    paste0(oddR_dolor," (",ConfLo_dolor,"-",ConfSu_dolor,")"),
+    " "," "," "," "
+  ),
+  `Valor p` = c(
+    " ", p_value_tiem, " ", p_value_nivel, " ",
+    p_value_exito1, valorp_exitoGe, valorp_intentos,
+    " "," "," ", p_value_glotis, valorp_sangrado, valor_p_dolorg,
+    " "," "," "," "
+  )
+)
+
+kbl(final_results,
+    col.names = c("Variable","Pentax AWS","Macintosh","Efecto (IC 95%)","Valor p"),
+    escape = FALSE) |>
+  kable_styling(bootstrap_options = c("striped","hover"), full_width = FALSE) |>
+  row_spec(c(1,3), bold = TRUE, background = "#f0f4f8")
+```
+
+---
+
+## Análisis de resultados y conclusiones {#sec-laringoscopia-conclusiones}
+
+::: {.callout-note icon=false}
+### Hallazgos principales
+
+**Tiempo de intubación (variable primaria):** El Macintosh logra la intubación en menor tiempo (mediana ~26 s) frente al Pentax AWS (~38 s). El modelo de Cox estima HR ≈ 0.34 (IC 95%: 0.23–0.55, $p < 0.001$): el Pentax AWS tiene un 66% menos de probabilidad de lograr la intubación en cualquier instante dado.
+
+**Dificultad de intubación:** El grupo Pentax AWS reportó mayor dificultad (media ~53 vs ~35 del Macintosh; $p = 0.02$), en línea con los valores del artículo original (52 vs 40).
+
+**Éxito global:** Con Macintosh todos los pacientes fueron intubados exitosamente; con Pentax AWS hubo 4 fracasos. La diferencia no es estadísticamente significativa ($p$ inestimable por celda vacía con Fisher).
+
+**Variables secundarias:** No se encontraron diferencias estadísticamente significativas en número de intentos ($p = 0.48$), sangrado ($p = 0.49$) ni dolor de garganta ($p = 0.07$), concordando con el artículo original.
+
+:::
+
+La reproducción de los resultados del artículo fue exitosa: las cifras son similares y las tendencias y conclusiones se mantienen. El laringoscopio Macintosh resultó ser más rápido y más fácil de usar que el Pentax AWS en pacientes con obesidad mórbida, en manos de anestesiólogos con experiencia limitada con el videolaringoscopio.
+
+El software R demostró ser una herramienta suficiente y valiosa para el análisis estadístico en ciencias de la salud, con una amplia variedad de paquetes especializados (`survival`, `gtsummary`, `survminer`).
+
+---
+
+## Referencias {.unnumbered}
+
+- Abdallah, R. et al. (2011). A Randomized Comparison Between the Pentax AWS Video Laryngoscope and the Macintosh Laryngoscope in Morbidly Obese Patients. *Anesthesia & Analgesia*, 113(5), 1082–1087.
+- Higgins, J. (2021). *medicaldata: Data Package for Medical Datasets*. R package version 0.2.0.
+- Sjoberg, D. D. et al. (2021). Reproducible Summary Tables with the gtsummary Package. *The R Journal*, 13(1), 570.
+
