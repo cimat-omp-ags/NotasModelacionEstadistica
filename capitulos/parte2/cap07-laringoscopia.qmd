@@ -47,30 +47,16 @@ La proporción de pacientes con obesidad mórbida que requieren intubación traq
 
 # Instalación automática de paquetes faltantes
 list.of.packages <- c(
-  "Hmisc", "janitor", "dplyr", "ggplot2", "cowplot",
-  "gmodels", "rstatix", "psych", "RColorBrewer", "ggpubr", "car",
-  "stats", "corrplot", "tidyverse", "MVN", "DescTools", "broom",
-  "survival", "survminer", "kableExtra", "gtsummary", "forcats",
-  "MASS", "smd"
+  "dplyr", "ggplot2", "forcats",
+  "survival", "gtsummary", "kableExtra",
+  "MASS", "smd", "medicaldata"
 )
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if (length(new.packages)) install.packages(new.packages, repos = "https://cran.rstudio.com")
 
-# Manejo de datos
-library(dplyr); library(Hmisc); library(janitor); library(gmodels)
-library(rstatix); library(car); library(stats); library(tidyverse)
-library(MVN); library(DescTools); library(broom)
-library(survival); library(survminer); library(forcats); library(MASS); library(smd)
-
-# Visualización
-library(ggplot2); library(cowplot); library(psych)
-library(RColorBrewer); library(ggpubr); library(corrplot); library(gtsummary)
-
-# Tablas
-library(kableExtra)
-
-# Base de datos
-library(medicaldata)
+library(dplyr); library(ggplot2); library(forcats)
+library(survival); library(gtsummary); library(kableExtra)
+library(MASS); library(smd); library(medicaldata)
 ```
 
 ---
@@ -268,8 +254,18 @@ Antes de elegir entre métodos paramétricos y no paramétricos, evaluamos la no
 
 ```{r}
 #| label: normalidad
-normalidad <- mvn(laryngoscope[, c(17, 20)], univariateTest = "SW", desc = FALSE)
-normalidad$univariateNormality
+# Prueba de Shapiro-Wilk (base R) para tiempo de intubación y nivel de dificultad
+sw_tiempo     <- shapiro.test(laryngoscope$total_intubation_time)
+sw_dificultad <- shapiro.test(laryngoscope$ease)
+
+data.frame(
+  Variable  = c("total_intubation_time", "ease"),
+  Estadístico = round(c(sw_tiempo$statistic, sw_dificultad$statistic), 4),
+  `Valor p`   = c(format.pval(sw_tiempo$p.value, digits = 3),
+                  format.pval(sw_dificultad$p.value, digits = 3)),
+  Normalidad  = c(ifelse(sw_tiempo$p.value > 0.05, "Sí", "No"),
+                  ifelse(sw_dificultad$p.value > 0.05, "Sí", "No"))
+)
 ```
 
 ::: {.callout-important icon=false}
@@ -484,14 +480,25 @@ fit        <- survfit(survObject ~ Randomization, data = laryngoscope)
 logRank    <- survdiff(survObject ~ Randomization)
 pval       <- pchisq(logRank$chisq, length(logRank$n) - 1)
 
-ggsurvplot(fit, data = laryngoscope,
-           pval        = round(pval, 4),
-           conf.int    = TRUE,
-           xlab        = "Tiempo (segundos)",
-           ylab        = "Éxito de intubación (%)",
-           legend.labs = c("Macintosh","Pentax AWS"),
-           palette     = c("#2196F3","#F44336"),
-           ggtheme     = theme_bw())
+# Gráfica de supervivencia con ggplot2 + broom::tidy
+km_df <- do.call(rbind, lapply(c("0","1"), function(g) {
+  s <- survfit(Surv(total_intubation_time, intubation_overall_S_F) ~ 1,
+               data = laryngoscope[laryngoscope$Randomization == as.integer(g), ])
+  data.frame(time = c(0, s$time), surv = c(1, s$surv),
+             upper = c(1, s$upper), lower = c(1, s$lower),
+             grupo = ifelse(g == "0", "Macintosh", "Pentax AWS"))
+}))
+
+ggplot(km_df, aes(x = time, y = surv, colour = grupo, fill = grupo)) +
+  geom_step(linewidth = 0.9) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.15, colour = NA) +
+  annotate("text", x = 80, y = 0.15,
+           label = paste0("Log-rank p = ", round(pval, 4)), size = 3.5) +
+  scale_colour_manual(values = c("Macintosh" = "#2196F3", "Pentax AWS" = "#F44336")) +
+  scale_fill_manual(values   = c("Macintosh" = "#2196F3", "Pentax AWS" = "#F44336")) +
+  labs(x = "Tiempo (segundos)", y = "Probabilidad de éxito de intubación",
+       colour = "Grupo", fill = "Grupo") +
+  theme_bw() + theme(legend.position = "bottom")
 ```
 
 > Las curvas muestran que el laringoscopio Macintosh logra la intubación en menor tiempo que el Pentax AWS. La diferencia es estadísticamente significativa según la prueba log-rank.
