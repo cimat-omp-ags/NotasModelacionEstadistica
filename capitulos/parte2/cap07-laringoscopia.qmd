@@ -45,15 +45,6 @@ La proporción de pacientes con obesidad mórbida que requieren intubación traq
 #| code-fold: true
 #| code-summary: "Ver paquetes"
 
-# Instalación automática de paquetes faltantes
-list.of.packages <- c(
-  "dplyr", "ggplot2", "forcats",
-  "survival", "gtsummary", "kableExtra",
-  "MASS", "smd", "medicaldata"
-)
-new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
-if (length(new.packages)) install.packages(new.packages, repos = "https://cran.rstudio.com")
-
 library(dplyr); library(ggplot2); library(forcats)
 library(survival); library(gtsummary); library(kableExtra)
 library(MASS); library(smd); library(medicaldata)

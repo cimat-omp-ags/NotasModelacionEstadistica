@@ -4025,7 +4025,7 @@ Se utiliza para modelar el tiempo o la distancia que transcurre hasta que ocurre
 ::: {.callout-note icon=false}
 ### Relación con el Capítulo 5
 
-Esta sección introduce los conceptos de muestra aleatoria, estadísticos muestrales y distribuciones muestrales ($\chi^2$, $t$, $F$) desde una perspectiva aplicada. El **@cap-inferencia** retoma estos temas con mayor rigor formal, cubre los métodos de estimación puntual (momentos y máxima verosimilitud), las propiedades de estimadores y el Teorema del Límite Central con demostraciones completas. Se recomienda leer ambas secciones de manera complementaria.
+Esta sección introduce los conceptos de muestra aleatoria, estadísticos muestrales y distribuciones muestrales ($\chi^2$, $t$, $F$) desde una perspectiva aplicada. El **Capítulo 5 — Inferencia Estadística** retoma estos temas con mayor rigor formal, cubre los métodos de estimación puntual (momentos y máxima verosimilitud), las propiedades de estimadores y el Teorema del Límite Central con demostraciones completas. Se recomienda leer ambas secciones de manera complementaria.
 
 :::
 
