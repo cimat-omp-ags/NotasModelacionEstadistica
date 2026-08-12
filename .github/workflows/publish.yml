@@ -56,7 +56,8 @@ jobs:
             "kableExtra",
             "gtsummary",
             "smd",
-            "medicaldata"
+            "medicaldata",
+            "broom", "broom.helpers"
           ), repos = "https://packagemanager.posit.co/cran/__linux__/noble/latest")
         shell: Rscript {0}
 
