@@ -45,9 +45,10 @@ La proporción de pacientes con obesidad mórbida que requieren intubación traq
 #| code-fold: true
 #| code-summary: "Ver paquetes"
 
+library(MASS)  # cargado primero para que dplyr::select lo enmascare
 library(dplyr); library(ggplot2); library(forcats)
 library(survival); library(gtsummary); library(kableExtra)
-library(MASS); library(smd); library(medicaldata)
+library(smd); library(medicaldata)
 ```
 
 ---
