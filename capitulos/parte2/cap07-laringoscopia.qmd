@@ -130,8 +130,12 @@ diccionario <- data.frame(
                   "Dolor de garganta posoperatorio (Ninguno/Leve/Moderado/Severo)",
                   "Vista de la glotis — Cormack-Lehane (Malo/Bueno)")
 )
-kbl(diccionario, col.names = c("Variable", "Descripción")) |>
-  kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+if (knitr::is_html_output()) {
+  kbl(diccionario, col.names = c("Variable", "Descripción")) |>
+    kable_styling(bootstrap_options = c("striped", "hover"), full_width = FALSE)
+} else {
+  knitr::kable(diccionario, col.names = c("Variable", "Descripción"))
+}
 ```
 
 ---
@@ -652,11 +656,18 @@ final_results <- data.frame(
   )
 )
 
-kbl(final_results,
-    col.names = c("Variable","Pentax AWS","Macintosh","Efecto (IC 95%)","Valor p"),
-    escape = FALSE) |>
-  kable_styling(bootstrap_options = c("striped","hover"), full_width = FALSE) |>
-  row_spec(c(1,3), bold = TRUE, background = "#f0f4f8")
+if (knitr::is_html_output()) {
+  kbl(final_results,
+      col.names = c("Variable","Pentax AWS","Macintosh","Efecto (IC 95%)","Valor p"),
+      escape = FALSE) |>
+    kable_styling(bootstrap_options = c("striped","hover"), full_width = FALSE) |>
+    row_spec(c(1,3), bold = TRUE, background = "#f0f4f8")
+} else {
+  final_results_plain <- final_results
+  final_results_plain$Variable <- gsub("\\*\\*", "", final_results_plain$Variable)
+  knitr::kable(final_results_plain,
+               col.names = c("Variable","Pentax AWS","Macintosh","Efecto (IC 95%)","Valor p"))
+}
 ```
 
 ---
