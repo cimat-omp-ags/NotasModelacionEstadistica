@@ -1,3 +1,7 @@
+---
+prefer-html: true
+---
+
 # Caso de Estudio: Laringoscopia en Pacientes con Obesidad Mórbida {#cap-laringoscopia}
 
 [📖 Humberto Martínez Bautista]{.fuente-badge .fuente-humberto}
