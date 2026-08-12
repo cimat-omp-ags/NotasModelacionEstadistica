@@ -78,14 +78,6 @@ format:
     include-before-body: latex/portada.tex
     echo: false
 
-  docx:
-    toc: true
-    number-sections: true
-    include-before-body: latex/portada-docx.md
-    echo: false
-
-prefer-html: true
-
 execute:
   echo: true
   cache: true

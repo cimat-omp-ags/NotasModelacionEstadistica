@@ -1,7 +1,3 @@
----
-prefer-html: true
----
-
 # Caso de Estudio: Laringoscopia en Pacientes con Obesidad Mórbida {#cap-laringoscopia}
 
 [📖 Humberto Martínez Bautista]{.fuente-badge .fuente-humberto}
@@ -53,21 +49,6 @@ library(MASS)  # cargado primero para que dplyr::select lo enmascare
 library(dplyr); library(ggplot2); library(forcats)
 library(survival); library(gtsummary); library(kableExtra)
 library(smd); library(medicaldata)
-
-# En formatos no-HTML (DOCX, PDF), gtsummary produce HTML que knitr rechaza.
-# Registramos en el namespace de knitr un método alternativo que usa kable.
-if (!knitr::is_html_output()) {
-  registerS3method(
-    "knit_print", "gtsummary",
-    function(x, ...) {
-      knitr::asis_output(
-        paste(knitr::kable(gtsummary::as_tibble(x), format = "pipe"),
-              collapse = "\n")
-      )
-    },
-    envir = asNamespace("knitr")
-  )
-}
 ```
 
 ---
