@@ -36,7 +36,13 @@ jobs:
           use-public-rspm: true
 
       - name: Instalar dependencias de sistema
-        run: sudo apt-get install -y libglpk40 libxml2-dev libicu-dev
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y \
+            libglpk40 libxml2-dev libicu-dev \
+            libcurl4-openssl-dev \
+            libfontconfig1-dev libfreetype6-dev \
+            libharfbuzz-dev libfribidi-dev
 
       - name: Instalar paquetes R
         run: |
@@ -44,7 +50,13 @@ jobs:
             "knitr", "rmarkdown",
             "ggplot2", "igraph", "VennDiagram",
             "pheatmap", "car", "dplyr", "tidyr",
-            "corrplot", "gridExtra"
+            "corrplot", "gridExtra",
+            "forcats", "MASS",
+            "survival",
+            "kableExtra",
+            "gtsummary",
+            "smd",
+            "medicaldata"
           ), repos = "https://packagemanager.posit.co/cran/__linux__/noble/latest")
         shell: Rscript {0}
 
