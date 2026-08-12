@@ -53,6 +53,23 @@ library(MASS)  # cargado primero para que dplyr::select lo enmascare
 library(dplyr); library(ggplot2); library(forcats)
 library(survival); library(gtsummary); library(kableExtra)
 library(smd); library(medicaldata)
+
+# En formatos no-HTML (DOCX, PDF), gtsummary produce HTML que knitr rechaza.
+# Registramos un método alternativo que convierte a kable simple.
+if (!knitr::is_html_output()) {
+  .gtsummary_orig <- getS3method("knit_print", "gtsummary",
+                                  envir = asNamespace("gtsummary"))
+  registerS3method(
+    "knit_print", "gtsummary",
+    function(x, ...) {
+      knitr::asis_output(
+        knitr::kable(gtsummary::as_tibble(x), format = "pipe") |>
+          paste(collapse = "\n")
+      )
+    },
+    envir = asNamespace("knitr")
+  )
+}
 ```
 
 ---
