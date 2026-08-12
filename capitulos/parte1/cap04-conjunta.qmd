@@ -3,7 +3,6 @@
 ## Independencia de variables aleatorias {#sec-41-independencia}
 
 ::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 :::
 
 ::: {#def-cap04-independencia-va}
@@ -72,12 +71,10 @@ $$E[XY] = \sum_i \sum_j a_i b_j\, p(a_i, b_j) = \sum_i \sum_j a_i b_j\, p(a_i) p
 ## Densidad conjunta {#sec-42-densidad-conjunta}
 
 ::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 :::
 
 
 :::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 ::::
 
@@ -265,7 +262,6 @@ $$F(x_1,\ldots,x_n) = \prod_{i=1}^n F_{X_i}(x_i)$$
 ## Esperanza de la suma de variables aleatorias {#sec-43-esp-suma}
 
 ::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 :::
 
 
@@ -391,7 +387,6 @@ $$\operatorname{Var}(X) = E[X^2] - (E[X])^2.$$
 3. $\operatorname{Var}(X) = E[X^2] - \mu^2$.
 
 :::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 ::::
 
@@ -457,7 +452,6 @@ ggplot(df_comp, aes(x=x, fill=dist)) +
 ## Covarianza, varianza de sumas y correlaciones {#sec-44-covarianza}
 
 ::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 :::
 
 
@@ -540,7 +534,6 @@ ggplot(df_rho, aes(x=x, y=y)) +
 ## Esperanza condicional y varianza condicional {#sec-45-esp-condicional}
 
 ::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 :::
 
 
@@ -632,7 +625,6 @@ Este es el caso del **par conjugado** Poisson–Gamma.
 ## Función generatriz de momentos {#sec-47-fgm}
 
 ::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 :::
 
 
@@ -686,12 +678,10 @@ tan cerca de $\mu$ como se quiera. Esta es la base filosófica de la
 ## Ley débil de los grandes números {#sec-48-lgn-debil}
 
 ::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 :::
 
 
 ::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 :::
 

@@ -24,7 +24,6 @@ Se denominan ___variables___ a las características particulares de cualquier el
 Una variable aleatoria (v.a) es aquella cuyos valores son números reales asignados a los resultados de un experimento aleatorio.
 
 :::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 ::::
 
@@ -532,7 +531,6 @@ Y su varianza:
 $\text{Var}(X) = p(1-p)$
 
 :::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 ::::
 
@@ -838,7 +836,6 @@ La Binomial supone ensayos *independientes* con probabilidad de éxito constante
 ## Distribución Binomial {#sec-binomial}
 
 :::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 ::::
 
@@ -1912,7 +1909,6 @@ Esta sección presenta, a partir de los apuntes del Prof. Magín Zúñiga Estrad
 La **distribución geométrica** modela el número de fracasos que ocurren *antes* de obtener el primer éxito en ensayos Bernoulli independientes, cada uno con probabilidad de éxito $p$. Se denota $X \sim \text{geo}(p)$.
 
 :::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 ::::
 
@@ -2100,7 +2096,6 @@ cat("P(S = 7) =", 6/36, "\n")
 ```
 
 :::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 ::::
 
@@ -2142,7 +2137,6 @@ cat("P(S = 7) =", 6/36, "\n")
 ## Distribuciones discretas conjuntas {#sec-conjuntas-discretas}
 
 ::: {.content-visible when-format="html"}
-[📖 Sergio Nava Muñoz]{.fuente-badge .fuente-sergio}
 :::
 
 ::: {.callout-tip icon=false}

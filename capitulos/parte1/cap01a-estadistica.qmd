@@ -13,7 +13,6 @@ La estadística descriptiva y la probabilidad son complementarias. Con los datos
 ## Estadística descriptiva {#sec-estadistica-descriptiva}
 
 ::: {.content-visible when-format="html"}
-[📖 Humberto Martínez Bautista]{.fuente-badge .fuente-humberto}
 :::
 
 La estadística descriptiva se ocupa de organizar, resumir y presentar la información contenida en un conjunto de datos sin ir más allá de lo que los datos mismos muestran. Es el punto de partida de todo análisis: antes de modelar o inferir, es indispensable conocer la distribución y el comportamiento de las variables de interés.

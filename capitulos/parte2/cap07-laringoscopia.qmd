@@ -1,6 +1,5 @@
 # Caso de Estudio: Laringoscopia en Pacientes con Obesidad Mórbida {#cap-laringoscopia}
 
-[📖 Humberto Martínez Bautista]{.fuente-badge .fuente-humberto}
 
 Este capítulo presenta una revisión estadística aplicada del ensayo clínico aleatorizado *"A Randomized Comparison Between the Pentax AWS Video Laryngoscope and the Macintosh Laryngoscope in Morbidly Obese Patients"*, publicado en *Anesthesia & Analgesia* (2011). El objetivo es ilustrar cómo los métodos estadísticos del curso —estadística descriptiva, pruebas de hipótesis, regresión y análisis de supervivencia— se aplican a datos reales en ciencias de la salud.
 

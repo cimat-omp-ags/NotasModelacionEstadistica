@@ -59,7 +59,6 @@ $$P(Y=y)=0 \text{ para todo valor específico de } y$$
 > **Definición:** Una variable aleatoria $Y$ se dice que es *continua* si su función de distribución acumulada $F(y)$ es continua para todo $y \in \mathbb{R}$. Esto implica que la variable puede tomar cualquier valor en un intervalo y la probabilidad de observar cualquier punto específico es nula.
 
 :::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 ::::
 
@@ -1343,7 +1342,6 @@ El resultado muestra que hay un 86.5% de probabilidad de que la terminal respond
 ## Distribución Gamma {#sec-gamma}
 
 ::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 :::
 
@@ -1457,7 +1455,6 @@ legend("topright", legend=c("f(x)", "Media = 1.5 min"),
 ## Distribución Pareto {#sec-pareto}
 
 ::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 :::
 
@@ -1688,7 +1685,6 @@ Se utiliza para modelar el tiempo o la distancia que transcurre hasta que ocurre
 ## Distribuciones conjuntas {#sec-conjuntas}
 
 :::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 ::::
 
@@ -1996,7 +1992,6 @@ $$\text{Var}(X) = E[X^2] - (E[X])^2.$$
 3. $\text{Var}(X) = E[X^2] - \mu^2$.
 
 :::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 ::::
 
@@ -2216,7 +2211,6 @@ tan cerca de $\mu$ como se quiera. Esta es la base filosófica de la
 ## Estadísticos muestrales {#sec-estadisticos-muestrales}
 
 ::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 :::
 
@@ -2306,7 +2300,6 @@ ggplot(df_stats, aes(x=valor)) +
 ## Convergencia en probabilidad y TCL {#sec-convergencia-tcl}
 
 ::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 :::
 

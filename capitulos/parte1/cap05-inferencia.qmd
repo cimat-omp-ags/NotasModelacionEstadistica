@@ -1,6 +1,5 @@
 # Introducción a la Inferencia Estadística {#cap-inferencia}
 
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 La inferencia estadística es el proceso de usar datos para inferir la distribución que genera los datos. Una observación $x$ obtenida de un experimento aleatorio se considera un valor de una variable aleatoria $X$ cuya distribución es al menos parcialmente desconocida; los métodos de inferencia utilizan esa observación para obtener información sobre dicha distribución.
 
@@ -19,7 +18,6 @@ Al finalizar este capítulo el estudiante será capaz de:
 
 ## Muestras aleatorias {#sec-muestras-aleatorias}
 
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 A menudo la recolección de datos en un experimento consiste en varias observaciones de la variable de interés. El **modelo de muestreo aleatorio** asigna una distribución de probabilidad $f(x)$ a la variable de interés. Si se realizan $n>1$ observaciones repetidas de la variable, la primera es $X_1$, la segunda $X_2$, y así sucesivamente. Como resultado del muestreo aleatorio, cada $X_i$ tiene la misma distribución marginal $f(x)$ y el valor de una observación no afecta a ninguna otra; es decir, $X_1,\ldots,X_n$ son mutuamente independientes.
 
@@ -55,7 +53,6 @@ $$P(X_1>2,\ldots,X_n>2)=[P(X_1>2)]^n=\left(e^{-2/\beta}\right)^n=e^{-2n/\beta}$$
 
 ## Estadísticos y distribuciones muestrales {#sec-estadisticos}
 
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 Un investigador usa la información contenida en $X_1,\ldots,X_n$ para obtener conclusiones sobre la población. Con frecuencia se resumen los datos calculando **estadísticos**: funciones de la muestra.
 
@@ -100,7 +97,6 @@ $$E[S^2]=\frac{1}{n-1}\!\left(n(\sigma^2+\mu^2)-n\!\left(\frac{\sigma^2}{n}+\mu^
 
 ## Parámetros y estimadores {#sec-parametros-estimadores}
 
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 ### Modelo estadístico
 
@@ -160,7 +156,6 @@ Si $\lim_{n\to\infty}E[\hat\theta_n]=\theta$ y $\lim_{n\to\infty}\operatorname{V
 
 ## Métodos de estimación {#sec-cap05-metodos}
 
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 ### Método de momentos
 
@@ -328,7 +323,6 @@ ggplot(df_ecdf, aes(x = x)) +
 
 ## Distribución muestral para la media {#sec-dist-muestral-media}
 
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 ### Muestreo de una población normal
 
@@ -437,7 +431,6 @@ cat("P(Xbar > 75) =", round(prob_mayor_75, 4))
 
 ## Teorema del Límite Central {#sec-tlc}
 
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 Esta sección aborda el comportamiento de $\bar{X}_n$ cuando $n\to\infty$. La convergencia en probabilidad y la Ley Débil de los Grandes Números se estudiaron en detalle en la @sec-48-lgn-debil — en particular, $\bar{X}_n\xrightarrow{P}\mu$ bajo la sola condición $\operatorname{Var}(X_i)<\infty$. Aquí damos un paso más y caracterizamos la **distribución límite** de $\bar{X}_n$ estandarizada.
 

@@ -921,7 +921,6 @@ cat("Probabilidad Total de Positivo P(B):", (0.96 * 0.001) + (0.05 * 0.999))
 ## Material complementario: métodos y aplicaciones
 
 :::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 ::::
 
@@ -1094,7 +1093,6 @@ el presentador aporta información adicional sobre la ubicación del premio.
 ## Ejemplos adicionales de probabilidad {#sec-ejemplos-probabilidad}
 
 ::: {.content-visible when-format="html"}
-[📖 Sergio Nava Muñoz]{.fuente-badge .fuente-sergio}
 
 :::
 
@@ -1247,7 +1245,6 @@ condicionar en el evento "es fumador".
 ## Ejercicios propuestos {#sec-ejercicios-prob-sergio}
 
 ::: {.content-visible when-format="html"}
-[📖 Sergio Nava Muñoz]{.fuente-badge .fuente-sergio}
 :::
 
 Los siguientes ejercicios fueron propuestos por el Dr. Sergio Nava Muñoz. Practican probabilidad condicional, independencia, Probabilidad Total y el Teorema de Bayes.

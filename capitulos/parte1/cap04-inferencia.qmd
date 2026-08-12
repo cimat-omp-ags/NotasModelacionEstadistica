@@ -774,7 +774,6 @@ ggplot(df_prop, aes(x = x, y = densidad)) +
 ## Distribuciones de muestreo {#sec-distribuciones-muestreo}
 
 ::: {.content-visible when-format="html"}
-[📖 Humberto Martínez Bautista]{.fuente-badge .fuente-humberto}
 
 :::
 
@@ -952,7 +951,6 @@ ggplot(df_F, aes(x = x, y = dens, color = dist)) +
 ## Estadísticas de orden {#sec-order-stats}
 
 :::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 ::::
 
@@ -1038,7 +1036,6 @@ ggplot(df_os, aes(x=valor, color=stat)) +
 ## Métodos de estimación puntual {#sec-metodos-estimacion}
 
 ::: {.content-visible when-format="html"}
-[📖 Humberto Martínez Bautista]{.fuente-badge .fuente-humberto}
 
 :::
 
@@ -1174,7 +1171,6 @@ ggplot(df_ll, aes(x=theta, y=ll)) +
 ## Propiedades de los estimadores {#sec-propiedades-estimadores}
 
 ::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 :::
 
@@ -1651,7 +1647,6 @@ legend("bottomright", c("F_n(x) empírica", "F_0(x) = Exp(λ̂)"),
 ## Intervalos de confianza {#sec-intervalos-confianza}
 
 ::: {.content-visible when-format="html"}
-[📖 Humberto Martínez Bautista]{.fuente-badge .fuente-humberto}
 
 :::
 
@@ -1680,7 +1675,6 @@ contendría al verdadero $\theta$.
 ## Métodos para encontrar pruebas {#sec-metodos-pruebas}
 
 ::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 :::
 

@@ -27,7 +27,6 @@ Se denominan ___variables___ a las características particulares de cualquier el
 Una variable aleatoria (v.a) es aquella cuyos valores son números reales asignados a los resultados de un experimento aleatorio.
 
 :::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 ::::
 
@@ -541,7 +540,6 @@ Y su varianza:
 $\operatorname{Var}(X) = p(1-p)$
 
 :::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 ::::
 
@@ -847,7 +845,6 @@ La Binomial supone ensayos *independientes* con probabilidad de éxito constante
 ### Distribución Binomial {#sec-binomial}
 
 :::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 ::::
 
@@ -1921,7 +1918,6 @@ Esta sección presenta, a partir de los apuntes del Prof. Magín Zúñiga Estrad
 La **distribución geométrica** modela el número de fracasos que ocurren *antes* de obtener el primer éxito en ensayos Bernoulli independientes, cada uno con probabilidad de éxito $p$. Se denota $X \sim \text{geo}(p)$.
 
 :::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 ::::
 
@@ -2109,7 +2105,6 @@ cat("P(S = 7) =", 6/36, "\n")
 ```
 
 :::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 ::::
 
@@ -2151,7 +2146,6 @@ cat("P(S = 7) =", 6/36, "\n")
 ### Distribuciones discretas conjuntas {#sec-conjuntas-discretas}
 
 ::: {.content-visible when-format="html"}
-[📖 Sergio Nava Muñoz]{.fuente-badge .fuente-sergio}
 :::
 
 ::: {.callout-tip icon=false}
@@ -2390,7 +2384,6 @@ $$P(Y=y)=0 \text{ para todo valor específico de } y$$
 > **Definición:** Una variable aleatoria $Y$ se dice que es *continua* si su función de distribución acumulada $F(y)$ es continua para todo $y \in \mathbb{R}$. Esto implica que la variable puede tomar cualquier valor en un intervalo y la probabilidad de observar cualquier punto específico es nula.
 
 :::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 ::::
 
@@ -3677,7 +3670,6 @@ El resultado muestra que hay un 86.5% de probabilidad de que la terminal respond
 ### Distribución Gamma {#sec-gamma}
 
 ::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 :::
 
@@ -3791,7 +3783,6 @@ legend("topright", legend=c("f(x)", "Media = 1.5 min"),
 ### Distribución Pareto {#sec-pareto}
 
 ::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 :::
 
@@ -4803,7 +4794,6 @@ ggplot(df_prop, aes(x = x, y = densidad)) +
 ### Distribuciones de muestreo {#sec-distribuciones-muestreo}
 
 ::: {.content-visible when-format="html"}
-[📖 Humberto Martínez Bautista]{.fuente-badge .fuente-humberto}
 
 :::
 
@@ -4981,7 +4971,6 @@ ggplot(df_F, aes(x = x, y = dens, color = dist)) +
 ### Estadísticas de orden {#sec-order-stats}
 
 :::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 ::::
 
@@ -5067,7 +5056,6 @@ ggplot(df_os, aes(x=valor, color=stat)) +
 ### Métodos de estimación puntual {#sec-metodos-estimacion}
 
 ::: {.content-visible when-format="html"}
-[📖 Humberto Martínez Bautista]{.fuente-badge .fuente-humberto}
 
 :::
 
@@ -5203,7 +5191,6 @@ ggplot(df_ll, aes(x=theta, y=ll)) +
 ### Propiedades de los estimadores {#sec-propiedades-estimadores}
 
 ::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 :::
 
@@ -5680,7 +5667,6 @@ legend("bottomright", c("F_n(x) empírica", "F_0(x) = Exp(λ̂)"),
 ### Intervalos de confianza {#sec-intervalos-confianza}
 
 ::: {.content-visible when-format="html"}
-[📖 Humberto Martínez Bautista]{.fuente-badge .fuente-humberto}
 
 :::
 
@@ -5709,7 +5695,6 @@ contendría al verdadero $\theta$.
 ### Métodos para encontrar pruebas {#sec-metodos-pruebas}
 
 ::: {.content-visible when-format="html"}
-[📖 Magín Zúñiga Estrada]{.fuente-badge .fuente-magin}
 
 :::
 
