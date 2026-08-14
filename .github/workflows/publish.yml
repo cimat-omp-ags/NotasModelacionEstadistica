@@ -57,7 +57,8 @@ jobs:
             "gtsummary",
             "smd",
             "medicaldata",
-            "broom", "broom.helpers"
+            "broom", "broom.helpers",
+            "cardx", "labelled", "effectsize"
           ), repos = "https://packagemanager.posit.co/cran/__linux__/noble/latest")
         shell: Rscript {0}
 

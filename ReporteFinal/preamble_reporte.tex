@@ -1,0 +1,107 @@
+%% ================================================================
+%%  PREAMBLE — Reporte Final Estancia Académica CIMAT
+%%  Compilar con: xelatex
+%% ================================================================
+
+%% ---- Fuentes (xelatex) ----
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+
+%% ---- Idioma ----
+\usepackage{polyglossia}
+\setdefaultlanguage{spanish}
+
+%% ---- Colores ----
+\usepackage{xcolor}
+\definecolor{cimatred}{RGB}{123, 40, 55}
+
+%% ---- Gráficos ----
+\usepackage{graphicx}
+
+%% ---- Encabezado de página ----
+\usepackage{fancyhdr}
+\setlength{\headheight}{2.8cm}
+\setlength{\headsep}{0.5cm}
+
+\pagestyle{fancy}
+\fancyhf{}
+
+\fancyhead[L]{%
+  \vspace{2pt}%
+  \begin{tabular}{@{}l@{\hspace{10pt}}l@{}}
+    \raisebox{-0.25cm}{\includegraphics[height=1.25cm]{logo-cimat.png}} &
+    \begin{tabular}[b]{@{}l@{}}
+      {\color{cimatred}\large\textsc{Centro de Investigación en Matemáticas, A.C.}}\\[2pt]
+      \textcolor{cimatred}{\rule{0.80\textwidth}{0.55pt}}
+    \end{tabular}
+  \end{tabular}%
+}
+\renewcommand{\headrulewidth}{0pt}
+
+%% ---- Decoración TikZ esquina inferior izquierda ----
+\usepackage{tikz}
+\usepackage{eso-pic}
+
+\AddToShipoutPictureBG{%
+  \begin{tikzpicture}[remember picture, overlay]
+    %% Forma gris exterior
+    \fill[gray!22]
+      (current page.south west)
+      -- ([xshift=10cm]current page.south west)
+      -- ([xshift=4.2cm, yshift=6.2cm]current page.south west)
+      -- ([yshift=6.2cm]current page.south west)
+      -- cycle;
+    %% Forma gris media
+    \fill[gray!40]
+      (current page.south west)
+      -- ([xshift=7cm]current page.south west)
+      -- ([xshift=2.2cm, yshift=5.0cm]current page.south west)
+      -- ([yshift=5.0cm]current page.south west)
+      -- cycle;
+    %% Triángulo guinda (acento CIMAT)
+    \fill[cimatred]
+      (current page.south west)
+      -- ([xshift=4.6cm]current page.south west)
+      -- ([yshift=3.6cm]current page.south west)
+      -- cycle;
+  \end{tikzpicture}%
+}
+
+%% ---- Formato de secciones ----
+\usepackage{titlesec}
+\titleformat{\section}[block]
+  {\large\itshape\centering}{}{0em}{}
+\titlespacing*{\section}{0pt}{1.8em}{0.6em}
+
+\titleformat{\subsection}[block]
+  {\normalsize\bfseries\itshape\centering}{}{0em}{}
+\titlespacing*{\subsection}{0pt}{1.2em}{0.4em}
+
+%% ---- Párrafos ----
+\usepackage{parskip}
+\setlength{\parskip}{7pt}
+\setlength{\parindent}{0pt}
+\usepackage{microtype}
+
+%% ---- Tablas ----
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{makecell}
+
+%% ---- Listas ----
+\usepackage{enumitem}
+\setlist[itemize]{leftmargin=1.8cm, itemsep=2pt, topsep=4pt}
+\setlist[enumerate]{leftmargin=1.8cm, itemsep=2pt, topsep=4pt}
+
+%% ---- Cajas de portada ----
+\setlength{\fboxsep}{8pt}
+\setlength{\fboxrule}{0.5pt}
+
+%% ---- Hipervínculos ----
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  urlcolor=cimatred,
+  linkcolor=black
+}
