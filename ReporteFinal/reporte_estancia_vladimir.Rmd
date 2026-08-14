@@ -1,0 +1,281 @@
+---
+output:
+  pdf_document:
+    latex_engine: xelatex
+    number_sections: false
+    keep_tex: false
+    includes:
+      in_header: preamble_reporte.tex
+geometry: "top=3.8cm, bottom=3cm, left=2.5cm, right=2.5cm"
+fontsize: 11pt
+---
+
+<!-- ================================================================
+     PORTADA
+     ================================================================ -->
+
+\vspace{0.8cm}
+
+\begin{center}
+  {\LARGE\bfseries REPORTE FINAL\\[0.5cm] ESTANCIA ACADÉMICA}
+\end{center}
+
+\vspace{1.8cm}
+
+<!-- Nombre y CVU -->
+\noindent
+\begin{tabular}{@{}r@{\ }p{8.5cm}@{\quad}r@{\ }p{2.8cm}@{}}
+  \makecell[r]{\small\bfseries NOMBRE\\\small\bfseries COMPLETO:} &
+  \fbox{\parbox[c][1.3cm][c]{8.3cm}{\centering\small Vladimir Jiménez}} &
+  \small\bfseries CVU: &
+  \fbox{\parbox[c][1.3cm][c]{2.6cm}{\centering\small \phantom{0000000}}} \\[1em]
+\end{tabular}
+
+\vspace{0.6cm}
+
+<!-- Título del proyecto -->
+\noindent
+\begin{tabular}{@{}r@{\ }p{13.0cm}@{}}
+  \makecell[r]{\small\bfseries TITULO DEL\\\small\bfseries PROYECTO\\\small\bfseries DE ESTANCIA:} &
+  \fbox{\parbox[c][2.0cm][c]{12.8cm}{\centering\small
+    Desarrollo de Notas del Curso de Modelación Estadística\\[4pt]
+    para la Maestría OMP, CIMAT Unidad Aguascalientes,\\[4pt]
+    usando R, R~Markdown y Quarto}} \\[0.8em]
+\end{tabular}
+
+\vspace{0.6cm}
+
+<!-- Empresa / Institución -->
+\noindent
+\begin{tabular}{@{}r@{\ }p{13.0cm}@{}}
+  \makecell[r]{\small\bfseries EMPRESA /\\\small\bfseries INSTITUCIÓN:} &
+  \fbox{\parbox[c][1.5cm][c]{12.8cm}{\centering\small
+    Centro de Investigación en Matemáticas, A.C. Unidad Aguascalientes}} \\[0.8em]
+\end{tabular}
+
+\vspace{2.2cm}
+
+<!-- Firmas -->
+\noindent
+\begin{tabular}{|p{4.7cm}|p{4.7cm}|p{4.7cm}|}
+  \hline
+  \rule{0pt}{2.8cm} & & \\
+  \hline
+  \centering{\small Vladimir Jiménez} &
+  \centering{\small Dr. Humberto Martínez Bautista} &
+  {\centering\small Dr. Sergio M. Nava Muñoz} \\[4pt]
+  \hline
+\end{tabular}
+
+\vspace{1.2cm}
+
+\begin{flushright}
+  Aguascalientes, Ags., 11 de agosto de 2026
+\end{flushright}
+
+\clearpage
+
+<!-- ================================================================
+     INSTITUCIÓN
+     ================================================================ -->
+
+# Institución
+
+El *Centro de Investigación en Matemáticas, A.C.* (CIMAT) es una institución pública de investigación en México dedicada al estudio y desarrollo de las matemáticas, la estadística y las ciencias de la computación. Su misión principal consiste en generar conocimiento, formar recursos humanos altamente especializados y aplicar dichos saberes para la solución de problemas en distintos sectores de la sociedad.
+
+Con el propósito de ampliar su alcance académico y científico, en 1998 el CIMAT estableció su primera sede externa en la ciudad de Aguascalientes, lo que permitió extender sus actividades sustantivas a esta región. Desde entonces, la Unidad Aguascalientes ha contribuido al fortalecimiento de los sectores sociales y productivos mediante la atención de problemáticas vinculadas con las matemáticas aplicadas, la estadística y la computación científica, impulsando así la competitividad regional.
+
+Dentro de esta sede se desarrolla la *Maestría en Modelación y Optimización de Procesos* (OMP), programa reconocido en el Sistema Nacional de Posgrados. Su objetivo es formar profesionales multidisciplinarios capaces de aplicar técnicas de modelación matemática y estadística, cómputo científico y métodos de optimización para analizar, proponer y evaluar soluciones avanzadas a los procesos que operan en organizaciones públicas y privadas. De esta manera, los egresados adquieren herramientas que fortalecen la toma de decisiones y contribuyen a la mejora de sistemas y estructuras en diversos ámbitos.
+
+El curso de *Modelación Estadística* forma parte del programa OMP y cubre temas fundamentales como probabilidad, distribuciones de probabilidad, inferencia estadística y modelación con datos reales. La formación en este curso es crucial para que los estudiantes desarrollen habilidades de análisis cuantitativo aplicado, esenciales en la práctica profesional y en la investigación estadística.
+
+\clearpage
+
+<!-- ================================================================
+     DESCRIPCIÓN DE LA PROBLEMÁTICA
+     ================================================================ -->
+
+# Descripción de la problemática atendida
+
+El curso de Modelación Estadística de la Maestría OMP en el CIMAT Unidad Aguascalientes es impartido colaborativamente por tres académicos: el Dr. Sergio M. Nava Muñoz, el Dr. Magín Zúñiga Estrada y el Dr. Humberto Martínez Bautista. Cada catedrático desarrolló sus materiales de forma independiente, lo que resultó en una dispersión de recursos en formatos heterogéneos: presentaciones en \LaTeX\ (\texttt{.tex}), archivos R~Markdown (\texttt{.Rmd}) y documentos PDF estáticos.
+
+Esta fragmentación generó diversas dificultades de orden pedagógico y técnico. En primer lugar, los estudiantes carecían de una fuente de consulta unificada que integrara los contenidos, ejemplos y demostraciones de los tres catedráticos bajo una notación matemática consistente. En segundo lugar, los materiales existentes no permitían reproducir el código R directamente desde las notas, lo que limitaba la práctica computacional autónoma. Por último, la ausencia de un repositorio centralizado y de un mecanismo de publicación automática dificultaba la actualización y distribución oportuna del material a lo largo del semestre.
+
+Adicionalmente, no existía ningún caso de estudio integrado que conectara los métodos estadísticos del curso con datos reales de aplicación profesional, lo cual representaba una brecha importante para contextualizar los temas teóricos en situaciones concretas de modelación. La elaboración de material didáctico de este tipo requería dominio simultáneo de herramientas de publicación científica reproducible, control de versiones, integración continua y análisis estadístico avanzado en R.
+
+\clearpage
+
+<!-- ================================================================
+     OBJETIVOS
+     ================================================================ -->
+
+# Objetivos
+
+## Objetivo general
+
+Desarrollar un libro digital interactivo de notas del curso de Modelación Estadística para la Maestría en Modelación y Optimización de Procesos (OMP) del CIMAT Unidad Aguascalientes, integrando los materiales de los tres catedráticos en un formato reproducible, con acceso en línea mediante GitHub Pages y exportable a PDF vía \LaTeX, utilizando las herramientas R, R~Markdown y Quarto.
+
+## Objetivos específicos
+
+\begin{enumerate}
+
+  \item Revisar, sistematizar y analizar los materiales existentes de los tres catedráticos (presentaciones \LaTeX, archivos \texttt{.Rmd} y documentos PDF) para identificar contenidos, notaciones y ejemplos a integrar.
+
+  \item Convertir y unificar todos los materiales al formato Quarto (\texttt{.qmd}), estableciendo una notación matemática consistente y una estructura pedagógica homogénea a lo largo de todos los capítulos.
+
+  \item Estructurar los contenidos del curso en capítulos temáticos que cubran estadística descriptiva, probabilidad, distribuciones de probabilidad, distribución conjunta e inferencia estadística, con ejemplos reproducibles en R.
+
+  \item Desarrollar un capítulo de caso de estudio clínico con datos reales que ilustre la aplicación conjunta de los métodos estadísticos del curso, incluyendo estadística descriptiva, regresión logística, análisis de supervivencia de Kaplan-Meier y modelo de Cox.
+
+  \item Configurar e implementar un flujo de integración y despliegue continuos (CI/CD) con GitHub Actions para la compilación automática del libro en formatos HTML y PDF y su publicación en GitHub Pages con cada actualización del repositorio.
+
+  \item Crear el paquete auxiliar \texttt{modelEstCIMAT} en R, que contenga las funciones estadísticas y los conjuntos de datos utilizados en los ejemplos y ejercicios del libro.
+
+\end{enumerate}
+
+\clearpage
+
+<!-- ================================================================
+     PROCEDIMIENTO Y ACTIVIDADES
+     ================================================================ -->
+
+# Procedimiento y descripción de las actividades realizadas
+
+**1. Revisión y análisis del material fuente:**
+
+Se realizó una revisión exhaustiva de los materiales existentes: presentaciones en \LaTeX\ del Dr. Magín Zúñiga (distribuciones de probabilidad, variables aleatorias, inferencia, métodos de estimación), archivos \texttt{.Rmd} del Dr. Humberto Martínez Bautista (estadística descriptiva, caso clínico de laringoscopia) y notas PDF del Dr. Sergio M. Nava Muñoz (probabilidad, distribuciones discretas, ejercicios). Se identificaron contenidos, estructura, notación y ejemplos de código en cada fuente para planificar la integración.
+
+**2. Configuración del entorno y repositorio:**
+
+Se creó el repositorio público \texttt{mop-cimat-ags/NotasModelacionEstadistica} en GitHub. Se configuró el proyecto Quarto como libro con salida simultánea a HTML y PDF (vía Lua\LaTeX), se definió la estructura de capítulos en \texttt{\_quarto.yml} y se estableció el flujo CI/CD en \texttt{.github/workflows/publish.yml}, incluyendo la instalación automatizada de R, Quarto, TinyTeX y los paquetes R necesarios.
+
+**3. Conversión y unificación de contenidos:**
+
+Los archivos fuente fueron convertidos al formato Quarto (\texttt{.qmd}). Se unificó la notación matemática (variables aleatorias, funciones de densidad, estimadores, intervalos de confianza) en todos los capítulos. Los bloques de código R se estandarizaron con opciones de chunk de Quarto (\texttt{label}, \texttt{fig-cap}, \texttt{code-fold}). Las definiciones, teoremas, ejemplos y ejercicios se migraron a los entornos Quarto correspondientes.
+
+**4. Integración y complementación del contenido:**
+
+Se integraron progresivamente los materiales de los tres catedráticos. Se añadieron secciones de objetivos de aprendizaje, resúmenes de capítulo, errores comunes y conexiones entre temas. Los capítulos de distribuciones, distribución conjunta e inferencia se enriquecieron con demostraciones matemáticas formales, propiedades de estimadores, pruebas de Neyman-Pearson, estadísticas de orden y el Teorema Central del Límite.
+
+**5. Desarrollo del caso de estudio de laringoscopia:**
+
+Se convirtió el análisis del ensayo clínico aleatorizado *"A Randomized Comparison Between the Pentax AWS Video Laryngoscope and the Macintosh Laryngoscope in Morbidly Obese Patients"* (Anesthesia \& Analgesia, 2011) de formato \texttt{.Rmd} a Quarto. El capítulo incorpora la Tabla 1 de características basales con \texttt{gtsummary}, modelos de regresión logística binaria y ordinal, análisis de Kaplan-Meier, modelo de Cox con \texttt{survival}, y una tabla resumen de resultados compatible con los formatos de salida HTML y PDF.
+
+**6. Depuración del flujo CI/CD:**
+
+Se resolvieron múltiples ciclos de fallo en GitHub Actions: dependencias faltantes de sistema (\texttt{libfontconfig}, \texttt{libharfbuzz}), conflictos de espacio de nombres entre \texttt{MASS} y \texttt{dplyr}, dependencias no declaradas de \texttt{gtsummary} (\texttt{broom.helpers}, \texttt{cardx}), e incompatibilidad entre la salida HTML de \texttt{gtsummary}/\texttt{kableExtra} y el motor knitr en modo DOCX. La solución definitiva fue eliminar el formato DOCX del flujo y condicionar las llamadas a \texttt{kable\_styling()} según el formato de salida activo.
+
+\clearpage
+
+<!-- ================================================================
+     RESULTADOS
+     ================================================================ -->
+
+# Resultados
+
+El principal resultado de la estancia es el libro digital *Modelación Estadística — Notas del Curso, Maestría OMP, CIMAT*, publicado y accesible en línea en la dirección:
+
+\begin{center}
+  \href{https://mop-cimat-ags.github.io/NotasModelacionEstadistica/}%
+       {\texttt{https://mop-cimat-ags.github.io/NotasModelacionEstadistica/}}
+\end{center}
+
+El libro integra el contenido de los tres catedráticos en once archivos Quarto organizados en tres partes temáticas y un apéndice:
+
+\textbf{Parte I — Probabilidad, Variables Aleatorias y Distribuciones Muestrales} (cinco capítulos): estadística descriptiva con ejemplos computacionales en R; fundamentos de probabilidad, Bayes, probabilidad condicional y simulación; distribuciones discretas y continuas (Bernoulli, Binomial, Poisson, Geométrica, Binomial Negativa, Normal, Exponencial, Gamma, Pareto, Weibull); distribución conjunta, esperanza, varianza, covarianza y Ley de los Grandes Números; inferencia estadística, métodos de estimación (momentos, máxima verosimilitud), intervalos de confianza y pruebas de hipótesis (Neyman-Pearson).
+
+\textbf{Parte II — Aplicaciones con Datos Reales} (tres capítulos): análisis de precios de casas; modelación de precios de automóviles; caso clínico de laringoscopia en pacientes con obesidad mórbida.
+
+\textbf{Apéndice} de distribuciones de probabilidad y sección de referencias bibliográficas.
+
+Desde el punto de vista técnico, el flujo de CI/CD con GitHub Actions compila automáticamente el libro en HTML (publicado en GitHub Pages) y PDF (via Lua\LaTeX) con cada \textit{push} al repositorio principal. El paquete auxiliar \texttt{modelEstCIMAT} fue creado con la estructura estándar de paquete R e incluye funciones de estadística descriptiva, inferencia y simulación, así como los conjuntos de datos \texttt{laringoscopia} y \texttt{casas} usados en los capítulos de casos de estudio.
+
+\clearpage
+
+<!-- ================================================================
+     CONCLUSIONES Y RECOMENDACIONES
+     ================================================================ -->
+
+# Conclusiones y recomendaciones
+
+El proyecto alcanzó su objetivo general: el curso de Modelación Estadística de la Maestría OMP cuenta ahora con un libro digital unificado, reproducible y accesible en línea que integra los materiales de los tres catedráticos. La adopción del formato Quarto demostró ser adecuada para este tipo de material, ya que permite combinar texto matemático en \LaTeX, código R ejecutable y salidas gráficas interactivas en un mismo documento, con publicación automática en la web.
+
+La implementación del flujo CI/CD con GitHub Actions representó el reto técnico más significativo de la estancia. La compilación simultánea a múltiples formatos de salida (HTML, PDF) con paquetes R que producen salida HTML (como \texttt{gtsummary} y \texttt{kableExtra}) requirió una comprensión profunda del mecanismo de despacho S3 de knitr y del ciclo de compilación de Quarto. Las soluciones adoptadas son generalizables a otros proyectos Quarto con tablas clínicas.
+
+Se recomienda continuar la expansión del libro con capítulos adicionales de casos de estudio en áreas como manufactura, ciencias ambientales y finanzas, con el fin de diversificar los contextos de aplicación de los métodos estadísticos. Asimismo, se sugiere incorporar ejercicios interactivos usando el paquete \texttt{learnr} o widgets de Shiny, y mantener actualizadas las versiones de los paquetes R en el flujo de CI/CD para evitar incompatibilidades futuras. Finalmente, se recomienda crear un repositorio espejo con el código fuente del paquete \texttt{modelEstCIMAT} para facilitar su instalación directa desde GitHub.
+
+\clearpage
+
+<!-- ================================================================
+     CONOCIMIENTOS Y COMPETENCIAS
+     ================================================================ -->
+
+# Conocimientos y competencias desarrolladas y/o aplicadas
+
+Durante la estancia se consolidaron y aplicaron conocimientos técnicos y pedagógicos en diversas áreas. En el ámbito de la publicación científica reproducible, se adquirió dominio del sistema Quarto para la creación de libros multi-formato, incluyendo el uso de referencias cruzadas, entornos de callout, teoremas y ejercicios, opciones de chunk avanzadas (\texttt{cache}, \texttt{freeze}), y personalización de temas HTML y plantillas \LaTeX.
+
+En el ámbito de la ingeniería de software, se desarrollaron competencias en control de versiones con Git y GitHub, incluyendo el diseño e implementación de flujos de trabajo CI/CD con GitHub Actions, la gestión de dependencias de sistema en Ubuntu y la resolución de conflictos de paquetes R en entornos de integración continua.
+
+Respecto al desarrollo de paquetes R, se aplicaron las convenciones del sistema R para la creación de paquetes con funciones documentadas (\texttt{roxygen2}), conjuntos de datos empaquetados y estructura de directorio estándar (\texttt{R/}, \texttt{data/}, \texttt{data-raw/}, \texttt{man/}).
+
+En el área del análisis estadístico aplicado, se profundizó en el uso de paquetes especializados para la presentación de resultados clínicos (\texttt{gtsummary}), el análisis de supervivencia (\texttt{survival}), la regresión logística y ordinal (\texttt{MASS}), y la visualización estadística (\texttt{ggplot2}, \texttt{kableExtra}). La integración de estos paquetes en un documento Quarto multi-formato requirió comprender los mecanismos internos de knitr para el manejo de salida HTML en distintos contextos de compilación.
+
+\clearpage
+
+<!-- ================================================================
+     ANEXO DE EVIDENCIAS
+     ================================================================ -->
+
+# Anexo de evidencias
+
+Las siguientes imágenes documentan el estado final del libro publicado en GitHub Pages y el repositorio del proyecto en GitHub.
+
+\vspace{0.5cm}
+
+\noindent\textbf{Libro publicado en GitHub Pages}
+
+\vspace{0.3cm}
+
+\noindent La figura siguiente muestra la página principal del libro digital accesible en
+\href{https://mop-cimat-ags.github.io/NotasModelacionEstadistica/}{\texttt{mop-cimat-ags.github.io/NotasModelacionEstadistica/}},
+con la tabla de contenido lateral que refleja la estructura final de once capítulos organizados en tres partes temáticas.
+
+\vspace{0.5cm}
+
+\begin{center}
+  \fbox{\parbox[c][5cm][c]{0.85\textwidth}{\centering
+    \textit{[Captura de pantalla: página principal del libro en GitHub Pages]}
+  }}
+\end{center}
+
+\vspace{0.8cm}
+
+\noindent\textbf{Flujo CI/CD — GitHub Actions}
+
+\vspace{0.3cm}
+
+\noindent La siguiente imagen muestra el historial de ejecuciones del workflow \texttt{publish.yml} en GitHub Actions, donde se aprecia la compilación exitosa (marca verde) tras la resolución de los errores de compatibilidad entre \texttt{gtsummary}/\texttt{kableExtra} y el motor knitr.
+
+\vspace{0.5cm}
+
+\begin{center}
+  \fbox{\parbox[c][5cm][c]{0.85\textwidth}{\centering
+    \textit{[Captura de pantalla: historial de GitHub Actions con ejecución exitosa]}
+  }}
+\end{center}
+
+\vspace{0.8cm}
+
+\noindent\textbf{Capítulo de caso de estudio — Laringoscopia}
+
+\vspace{0.3cm}
+
+\noindent La imagen siguiente muestra el capítulo de laringoscopia renderizado en HTML, incluyendo la Tabla 1 de características basales generada con \texttt{gtsummary} y las curvas de Kaplan-Meier por grupo de tratamiento.
+
+\vspace{0.5cm}
+
+\begin{center}
+  \fbox{\parbox[c][5cm][c]{0.85\textwidth}{\centering
+    \textit{[Captura de pantalla: capítulo de laringoscopia con Tabla 1 y curvas de K-M]}
+  }}
+\end{center}
