@@ -21,9 +21,9 @@ Libro en línea: https://mop-cimat-ags.github.io/NotasModelacionEstadistica
 
 ## Contenido
 
-1. [Herramientas necesarias](#1-herramientas-necesarias)
-2. [Configurar Git y GitHub desde cero](#2-configurar-git-y-github-desde-cero)
-3. [Clonar y abrir el proyecto](#3-clonar-y-abrir-el-proyecto)
+1. [Herramientas necesarias](#1-herramientas-necesarias) — comunes, VS Code, RStudio
+2. [Configurar Git y GitHub desde cero](#2-configurar-git-y-github-desde-cero) — VS Code y RStudio
+3. [Clonar y abrir el proyecto](#3-clonar-y-abrir-el-proyecto) — VS Code y RStudio
 4. [Estructura del proyecto](#4-estructura-del-proyecto)
 5. [Renderizar localmente con Quarto](#5-renderizar-localmente-con-quarto)
 6. [Cómo editar un capítulo](#6-cómo-editar-un-capítulo)
@@ -42,191 +42,170 @@ Libro en línea: https://mop-cimat-ags.github.io/NotasModelacionEstadistica
 
 ## 1. Herramientas necesarias
 
-Instala todo lo siguiente antes de empezar. El orden importa.
+Instala **Git**, **R** y **Quarto** sin importar qué editor elijas.
+Luego instala solo el editor que vayas a usar — no es necesario tener ambos.
+
+### Herramientas comunes (todos)
 
 | Herramienta | Descarga | Para qué sirve |
 |---|---|---|
 | **Git** | https://git-scm.com/download/win | Control de versiones |
 | **R** (≥ 4.1) | https://cran.r-project.org | Ejecutar código del libro |
 | **Quarto** | https://quarto.org/docs/get-started | Renderizar el libro |
-| **VS Code** | https://code.visualstudio.com | Editor principal |
-| **RStudio** (opcional) | https://posit.co/download/rstudio-desktop | Alternativa a VS Code para R |
 
-> **Nota:** En Windows, al instalar Git selecciona la opción
+> **Nota:** Al instalar Git en Windows selecciona la opción
 > *"Git from the command line and also from 3rd-party software"*
-> para que VS Code lo detecte automáticamente.
+> para que cualquier editor lo detecte automáticamente.
 
-### Extensiones de VS Code recomendadas
+### Opción A — VS Code
 
-Abre VS Code, ve a Extensiones (`Ctrl+Shift+X`) e instala:
+| Herramienta | Descarga |
+|---|---|
+| **VS Code** | https://code.visualstudio.com |
+
+Extensiones recomendadas (`Ctrl+Shift+X`):
 
 - **Quarto** — soporte para archivos `.qmd` con previsualización
 - **R** — resaltado de sintaxis y autocompletado para R
-- **GitLens** — visualización avanzada de cambios y historial Git
+- **GitLens** — visualización avanzada de cambios e historial Git
 - **GitHub Pull Requests** — revisar y crear Pull Requests desde VS Code
 
-### Paquetes de R necesarios
+### Opción B — RStudio
 
-Abre R o RStudio y ejecuta una sola vez:
+| Herramienta | Descarga |
+|---|---|
+| **RStudio** | https://posit.co/download/rstudio-desktop |
+
+RStudio incluye una interfaz gráfica de Git integrada (panel Git) que
+permite hacer Pull, Commit y Push sin escribir ningún comando.
+
+### Paquetes de R necesarios (todos)
 
 ```r
-install.packages(c("devtools", "knitr", "rmarkdown", "here"),
-                 repos = "https://cloud.r-project.org")
+install.packages(c(
+  "devtools", "knitr", "rmarkdown", "here",
+  "usethis", "gitcreds"
+), repos = "https://cloud.r-project.org")
 ```
 
 ---
 
 ## 2. Configurar Git y GitHub desde cero
 
-Esta sección cubre todo desde crear tu cuenta hasta autenticarte
-con GitHub. Solo se hace una vez.
+Estos pasos solo se hacen una vez por computadora.
 
 ### 2.1 Crear cuenta en GitHub
 
-1. Ve a https://github.com
-2. Clic en **Sign up**
-3. Elige un nombre de usuario (recomendado: `nombre-cimat` o similar)
-4. Usa tu correo institucional `@cimat.mx`
-5. Verifica tu correo al terminar el registro
-
-Después de crear tu cuenta, comparte tu **nombre de usuario** con el
-coordinador del repositorio para que te den acceso.
+1. Ve a https://github.com → clic en **Sign up**
+2. Usa tu correo institucional `@cimat.mx`
+3. Verifica tu correo al terminar el registro
+4. Comparte tu **nombre de usuario** con el coordinador del repositorio
+   para que te den acceso
 
 ### 2.2 Verificar que Git está instalado
 
-Abre la terminal de VS Code con `Ctrl+ñ` (o `Ctrl+backtick`) y escribe:
-
 ```bash
 git --version
+# Debe mostrar: git version 2.xx.x
 ```
 
-Debe mostrar algo como `git version 2.44.0`. Si no aparece, reinstala Git.
+Si no aparece, reinstala Git y reinicia el editor.
 
 ### 2.3 Configurar tu identidad en Git
 
-Git necesita saber quién eres para registrar los cambios. Ejecuta:
+Git necesita saber quién eres para registrar cada cambio.
+
+**En VS Code — abre la terminal con `Ctrl+ñ` y ejecuta:**
 
 ```bash
 git config --global user.name "Tu Nombre Completo"
 git config --global user.email "tu.correo@cimat.mx"
-```
 
-Verifica que quedó bien:
-
-```bash
+# Verificar que quedó bien:
 git config --global --list
 ```
 
-Debe mostrar tu nombre y correo.
-
-### 2.4 Configurar el editor por defecto
-
-Para que Git use VS Code cuando necesites escribir mensajes:
-
-```bash
-git config --global core.editor "code --wait"
-```
-
-### 2.5 Autenticación con GitHub — Personal Access Token (PAT)
-
-GitHub ya **no acepta contraseñas normales** para operaciones Git.
-Necesitas crear un Token de acceso personal.
-
-**Pasos para crear el PAT:**
-
-1. En GitHub, clic en tu foto → **Settings**
-2. Baja hasta el final → **Developer settings**
-3. **Personal access tokens** → **Tokens (classic)**
-4. **Generate new token (classic)**
-5. En *Note* escribe: `cimat-modelacion`
-6. En *Expiration* elige `No expiration` o `1 year`
-7. Marca el permiso **`repo`** (control total de repositorios privados)
-8. Clic en **Generate token**
-9. **Copia el token ahora** — solo se muestra una vez
-
-El token tiene este aspecto: `ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
-
-**Guardar el token para no escribirlo cada vez:**
-
-```bash
-git config --global credential.helper store
-```
-
-La primera vez que hagas `git push`, Git te pedirá usuario y contraseña.
-Escribe tu **usuario de GitHub** y pega el **token** como contraseña.
-Git lo guardará automáticamente para las siguientes veces.
-
-### 2.6 Configurar Git dentro de RStudio
-
-Si usas RStudio en lugar de VS Code, sigue estos pasos adicionales.
-
-**Verificar que RStudio detecta Git:**
-
-1. Ve a **Tools → Global Options → Git/SVN**
-2. El campo *Git executable* debe mostrar la ruta de git, por ejemplo:
-   `C:/Program Files/Git/bin/git.exe`
-3. Si está vacío, haz clic en **Browse** y navega hasta `git.exe`
-4. Reinicia RStudio
-
-**Configurar nombre y correo desde RStudio:**
-
-En la consola de R, instala `usethis` y configura tu identidad:
+**En RStudio — ejecuta en la consola de R:**
 
 ```r
-install.packages("usethis", repos = "https://cloud.r-project.org")
 usethis::use_git_config(
   user.name  = "Tu Nombre Completo",
   user.email = "tu.correo@cimat.mx"
 )
 ```
 
-**Crear el token de acceso desde RStudio:**
+### 2.4 Verificar que el editor detecta Git
 
+**VS Code:**
+
+No requiere configuración extra si Git se instaló antes que VS Code.
+Verifica en el ícono de rama en la barra lateral (`Ctrl+Shift+G`) —
+debe mostrar los archivos del repositorio.
+
+Para que Git use VS Code al escribir mensajes de commit:
+```bash
+git config --global core.editor "code --wait"
+```
+
+**RStudio:**
+
+1. Ve a **Tools → Global Options → Git/SVN**
+2. El campo *Git executable* debe mostrar la ruta, por ejemplo:
+   `C:/Program Files/Git/bin/git.exe`
+3. Si está vacío, clic en **Browse** → navega hasta `git.exe`
+4. Reinicia RStudio
+
+### 2.5 Autenticación con GitHub — Token (PAT)
+
+GitHub no acepta contraseñas normales. Necesitas un token de acceso personal.
+
+**Crear el token:**
+
+*Desde RStudio (más fácil):*
 ```r
 usethis::create_github_token()
 ```
+Abre directamente la página de GitHub con los permisos correctos marcados.
+Copia el token generado (`ghp_xxxx...`).
 
-Este comando abre directamente la página correcta de GitHub con los
-permisos recomendados ya marcados. Copia el token generado.
+*Manualmente en GitHub:*
+Foto → **Settings → Developer settings → Personal access tokens →
+Tokens (classic) → Generate new token (classic)** → marca el permiso
+**`repo`** → genera y copia el token.
 
-Para que RStudio lo recuerde:
+**Guardar el token en VS Code / terminal:**
+
+```bash
+git config --global credential.helper store
+```
+La primera vez que hagas `git push`, escribe tu usuario y pega el token
+como contraseña. Git lo guarda automáticamente para las siguientes veces.
+
+**Guardar el token en RStudio:**
 
 ```r
 gitcreds::gitcreds_set()
 # Pega el token cuando te lo pida
 ```
 
-### 2.7 Alternativa: autenticación por SSH (avanzado)
+### 2.6 Alternativa: autenticación por SSH (avanzado)
 
-SSH es más seguro y cómodo que el PAT para uso frecuente.
-
-**Generar clave SSH:**
+SSH evita escribir credenciales y funciona con cualquier editor.
 
 ```bash
-ssh-keygen -t ed25519 -C "tu.correo@cimat.mx"
+ssh-keygen -t ed25519 -C "tu.correo@cimat.mx"   # presiona Enter en todo
+cat ~/.ssh/id_ed25519.pub                         # copia la clave completa
 ```
 
-Presiona Enter en todo (acepta la ruta y deja la contraseña vacía).
+En GitHub → **Settings → SSH and GPG keys → New SSH key** → pega la clave.
 
-**Agregar la clave pública a GitHub:**
-
-```bash
-# Muestra tu clave publica (cópiala completa)
-cat ~/.ssh/id_ed25519.pub
-```
-
-1. En GitHub → **Settings** → **SSH and GPG keys**
-2. **New SSH key**
-3. Pega la clave y guarda
-
-**Verificar que funciona:**
-
+Verifica:
 ```bash
 ssh -T git@github.com
 # Respuesta esperada: Hi usuario! You've successfully authenticated...
 ```
 
-A partir de aquí usa URLs SSH al clonar:
+Usa URL SSH al clonar:
 ```bash
 git clone git@github.com:mop-cimat-ags/NotasModelacionEstadistica.git
 ```
@@ -235,83 +214,64 @@ git clone git@github.com:mop-cimat-ags/NotasModelacionEstadistica.git
 
 ## 3. Clonar y abrir el proyecto
 
-### 3.1 Clonar el repositorio
+### Opción A — VS Code
 
-Navega a la carpeta donde quieres guardar el proyecto y ejecuta:
+**Clonar el repositorio (solo la primera vez):**
+
+Abre la terminal (`Ctrl+ñ`) y ejecuta:
 
 ```bash
 git clone https://github.com/mop-cimat-ags/NotasModelacionEstadistica.git
-```
-
-Esto descarga todo el proyecto. **Solo se hace una vez.**
-
-### 3.2 Entrar a la carpeta del proyecto
-
-```bash
 cd NotasModelacionEstadistica
-```
-
-### 3.3 Abrir en VS Code
-
-```bash
 code .
 ```
 
-O desde VS Code: **File → Open Folder** y selecciona la carpeta.
+O desde VS Code: **File → Open Folder** y selecciona la carpeta clonada.
 
-### 3.4 Clonar desde RStudio (alternativa a la terminal)
+**Volver a abrir el proyecto después de cerrarlo:**
 
-Si prefieres RStudio, puedes clonar sin usar la terminal:
+File → **Open Recent** → selecciona `NotasModelacionEstadistica`, o
+arrastra la carpeta al icono de VS Code.
+
+> Siempre haz **Pull** al iniciar (`Ctrl+Shift+G` → botón ↓) antes de editar.
+
+### Opción B — RStudio
+
+**Clonar el repositorio (solo la primera vez):**
 
 1. **File → New Project → Version Control → Git**
 2. En *Repository URL* pega:
    `https://github.com/mop-cimat-ags/NotasModelacionEstadistica.git`
-3. Elige la carpeta donde quieres guardarlo
-4. Clic en **Create Project**
+3. Elige la carpeta donde guardarlo → **Create Project**
 
-RStudio clona el repositorio y abre el proyecto automáticamente con el
-panel Git activo en la esquina superior derecha.
+RStudio clona el repositorio y activa el panel Git automáticamente.
 
-### 3.5 Crear el archivo de proyecto RStudio (solo una vez)
+**Si el repositorio ya existe en tu computadora (clonado desde terminal o VS Code):**
 
-Si el repositorio fue clonado desde la terminal o VS Code, no existe el
-archivo `.Rproj` todavía. Créalo así:
+Crea el archivo de proyecto desde RStudio:
 
-**File → New Project → Existing Directory → Browse**
+**File → New Project → Existing Directory → Browse** → selecciona la
+carpeta `NotasModelacionEstadistica` → **Create Project**
 
-Navega a la carpeta `NotasModelacionEstadistica` → **Create Project**
+RStudio genera `NotasModelacionEstadistica.Rproj` y detecta el repositorio.
 
-RStudio crea `NotasModelacionEstadistica.Rproj` y detecta automáticamente
-el repositorio Git. Solo se hace una vez.
-
-> **Nota:** El archivo `.Rproj` está en `.gitignore` por defecto.
-> Si quieres subirlo al repositorio para que otros colaboradores lo usen:
+> Si quieres subir el `.Rproj` al repositorio para que otros colaboradores
+> también lo usen:
 > ```bash
 > git add -f NotasModelacionEstadistica.Rproj
 > git commit -m "agrego proyecto RStudio"
 > git push
 > ```
 
-### 3.6 Volver a abrir el proyecto después de cerrarlo
+**Volver a abrir el proyecto después de cerrarlo:**
 
-Cada vez que quieras editar el repositorio en una sesión nueva:
+- File → **Recent Projects** → `NotasModelacionEstadistica`
+- O doble clic en `NotasModelacionEstadistica.Rproj` en el explorador de Windows
 
-**Opción A — Desde RStudio:**
+> Siempre haz **Pull** (flecha azul ↓ en el panel Git) al iniciar la sesión
+> antes de editar.
 
-File → **Recent Projects** → selecciona `NotasModelacionEstadistica`
-
-**Opción B — Desde el explorador de archivos de Windows:**
-
-Navega a la carpeta del repositorio y haz doble clic en el archivo
-`NotasModelacionEstadistica.Rproj`
-
-Esto abre RStudio directamente en el proyecto con el panel Git listo.
-
-> **Importante:** Siempre haz **Pull** (flecha azul ↓ en el panel Git)
-> al inicio de cada sesión para traer los cambios más recientes antes
-> de empezar a editar.
-
-### 3.6 Generar los datasets de la librería (solo la primera vez)
+### Generar los datasets de la librería (solo la primera vez)
 
 ```r
 setwd("libreria")
