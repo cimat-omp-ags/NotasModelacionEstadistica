@@ -272,7 +272,27 @@ Si prefieres RStudio, puedes clonar sin usar la terminal:
 RStudio clona el repositorio y abre el proyecto automáticamente con el
 panel Git activo en la esquina superior derecha.
 
-### 3.5 Volver a abrir el proyecto después de cerrarlo
+### 3.5 Crear el archivo de proyecto RStudio (solo una vez)
+
+Si el repositorio fue clonado desde la terminal o VS Code, no existe el
+archivo `.Rproj` todavía. Créalo así:
+
+**File → New Project → Existing Directory → Browse**
+
+Navega a la carpeta `NotasModelacionEstadistica` → **Create Project**
+
+RStudio crea `NotasModelacionEstadistica.Rproj` y detecta automáticamente
+el repositorio Git. Solo se hace una vez.
+
+> **Nota:** El archivo `.Rproj` está en `.gitignore` por defecto.
+> Si quieres subirlo al repositorio para que otros colaboradores lo usen:
+> ```bash
+> git add -f NotasModelacionEstadistica.Rproj
+> git commit -m "agrego proyecto RStudio"
+> git push
+> ```
+
+### 3.6 Volver a abrir el proyecto después de cerrarlo
 
 Cada vez que quieras editar el repositorio en una sesión nueva:
 
@@ -1188,6 +1208,12 @@ Si el conflicto es complejo, consulta al coordinador antes de resolverlo.
 File → **Recent Projects** → `NotasModelacionEstadistica`. O doble clic
 en el archivo `NotasModelacionEstadistica.Rproj` desde el explorador de
 Windows. Siempre haz Pull al inicio de la sesión antes de editar.
+
+**No tengo el archivo `.Rproj` porque el proyecto se creó en VS Code.**  
+Créalo desde RStudio: **File → New Project → Existing Directory → Browse**,
+selecciona la carpeta `NotasModelacionEstadistica` y haz clic en
+**Create Project**. RStudio genera el `.Rproj` y detecta el repositorio Git
+automáticamente. Solo se hace una vez.
 
 **¿Por qué RStudio no muestra el panel Git?**  
 Revisa que Git esté configurado: Tools → Global Options → Git/SVN → el
