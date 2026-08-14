@@ -15,7 +15,7 @@ Libro en línea: https://mop-cimat-ags.github.io/NotasModelacionEstadistica
 | Dr. Magin Zúñiga Estrada | magin.zuniga@cimat.mx |
 | Dr. Humberto Martínez Bautista | humberto.martinez@cimat.mx |
 
-**Compilación y edición del repositorio:** Vladimir Jiménez Pérez (alumno) — vladimir.jimenez@cimat.mx
+**Compilación y edición del repositorio:** Vladimir Jiménez Pérez — vladimir.jimenez@cimat.mx
 
 ---
 
@@ -33,9 +33,10 @@ Libro en línea: https://mop-cimat-ags.github.io/NotasModelacionEstadistica
 10. [Agregar funciones y datos a la librería](#10-agregar-funciones-y-datos-a-la-librería)
 11. [Flujo de trabajo con Git](#11-flujo-de-trabajo-con-git)
 12. [Git en VS Code (sin terminal)](#12-git-en-vs-code-sin-terminal)
-13. [Trabajo con ramas (branches)](#13-trabajo-con-ramas-branches)
-14. [Subir cambios a GitHub](#14-subir-cambios-a-github)
-15. [Preguntas frecuentes y errores comunes](#15-preguntas-frecuentes-y-errores-comunes)
+13. [Git en RStudio (sin terminal)](#13-git-en-rstudio-sin-terminal)
+14. [Trabajo con ramas (branches)](#14-trabajo-con-ramas-branches)
+15. [Subir cambios a GitHub](#15-subir-cambios-a-github)
+16. [Preguntas frecuentes y errores comunes](#16-preguntas-frecuentes-y-errores-comunes)
 
 ---
 
@@ -155,7 +156,47 @@ La primera vez que hagas `git push`, Git te pedirá usuario y contraseña.
 Escribe tu **usuario de GitHub** y pega el **token** como contraseña.
 Git lo guardará automáticamente para las siguientes veces.
 
-### 2.6 Alternativa: autenticación por SSH (avanzado)
+### 2.6 Configurar Git dentro de RStudio
+
+Si usas RStudio en lugar de VS Code, sigue estos pasos adicionales.
+
+**Verificar que RStudio detecta Git:**
+
+1. Ve a **Tools → Global Options → Git/SVN**
+2. El campo *Git executable* debe mostrar la ruta de git, por ejemplo:
+   `C:/Program Files/Git/bin/git.exe`
+3. Si está vacío, haz clic en **Browse** y navega hasta `git.exe`
+4. Reinicia RStudio
+
+**Configurar nombre y correo desde RStudio:**
+
+En la consola de R, instala `usethis` y configura tu identidad:
+
+```r
+install.packages("usethis", repos = "https://cloud.r-project.org")
+usethis::use_git_config(
+  user.name  = "Tu Nombre Completo",
+  user.email = "tu.correo@cimat.mx"
+)
+```
+
+**Crear el token de acceso desde RStudio:**
+
+```r
+usethis::create_github_token()
+```
+
+Este comando abre directamente la página correcta de GitHub con los
+permisos recomendados ya marcados. Copia el token generado.
+
+Para que RStudio lo recuerde:
+
+```r
+gitcreds::gitcreds_set()
+# Pega el token cuando te lo pida
+```
+
+### 2.7 Alternativa: autenticación por SSH (avanzado)
 
 SSH es más seguro y cómodo que el PAT para uso frecuente.
 
@@ -218,7 +259,39 @@ code .
 
 O desde VS Code: **File → Open Folder** y selecciona la carpeta.
 
-### 3.4 Generar los datasets de la librería (solo la primera vez)
+### 3.4 Clonar desde RStudio (alternativa a la terminal)
+
+Si prefieres RStudio, puedes clonar sin usar la terminal:
+
+1. **File → New Project → Version Control → Git**
+2. En *Repository URL* pega:
+   `https://github.com/mop-cimat-ags/NotasModelacionEstadistica.git`
+3. Elige la carpeta donde quieres guardarlo
+4. Clic en **Create Project**
+
+RStudio clona el repositorio y abre el proyecto automáticamente con el
+panel Git activo en la esquina superior derecha.
+
+### 3.5 Volver a abrir el proyecto después de cerrarlo
+
+Cada vez que quieras editar el repositorio en una sesión nueva:
+
+**Opción A — Desde RStudio:**
+
+File → **Recent Projects** → selecciona `NotasModelacionEstadistica`
+
+**Opción B — Desde el explorador de archivos de Windows:**
+
+Navega a la carpeta del repositorio y haz doble clic en el archivo
+`NotasModelacionEstadistica.Rproj`
+
+Esto abre RStudio directamente en el proyecto con el panel Git listo.
+
+> **Importante:** Siempre haz **Pull** (flecha azul ↓ en el panel Git)
+> al inicio de cada sesión para traer los cambios más recientes antes
+> de empezar a editar.
+
+### 3.6 Generar los datasets de la librería (solo la primera vez)
 
 ```r
 setwd("libreria")
@@ -775,6 +848,25 @@ Agrega en `libreria/R/datos.R`:
 Git registra todos los cambios del proyecto como fotografías (commits).
 Si algo sale mal, siempre puedes regresar a una versión anterior.
 
+### ¿Qué es Pull?
+
+**Pull** = descargar al tu computadora los cambios que existen en GitHub.
+
+El repositorio en GitHub es la versión compartida del proyecto. Si otro
+colaborador subió cambios mientras tú no estabas trabajando, tu copia
+local quedó desactualizada. Pull trae esas actualizaciones para que
+estés al día.
+
+```
+GitHub ──(pull)──► tu computadora
+tu computadora ──(push)──► GitHub
+```
+
+Por eso el flujo siempre es: **Pull → editar → Commit → Push**.
+Si editas sin hacer Pull primero y alguien más también editó los mismos
+archivos, puede surgir un **conflicto** que tendrás que resolver
+manualmente. La regla de oro: **Pull al iniciar, Push al terminar**.
+
 ### Comandos esenciales
 
 | Comando | Qué hace |
@@ -875,7 +967,84 @@ Cuando hay un conflicto, VS Code lo muestra con botones de ayuda:
 
 ---
 
-## 13. Trabajo con ramas (branches)
+## 13. Git en RStudio (sin terminal)
+
+RStudio tiene un panel Git integrado que permite hacer Pull, Commit y
+Push sin escribir ningún comando. Es la opción más sencilla para quien
+no está familiarizado con la terminal.
+
+### Abrir el panel Git
+
+Al abrir el proyecto (`.Rproj`), el panel **Git** aparece automáticamente
+en la esquina superior derecha de RStudio (junto a Environment e History).
+Si no aparece, ve a **View → Show Git**.
+
+### Flujo diario en RStudio
+
+**1. Pull — traer cambios al iniciar la sesión**
+
+Haz clic en la **flecha azul ↓ (Pull)** en la barra del panel Git.
+Esto descarga los cambios que otros colaboradores hayan subido.
+Hazlo siempre antes de empezar a editar.
+
+**2. Editar los archivos `.qmd`**
+
+Abre el capítulo desde el panel *Files* (esquina inferior derecha) y
+edita normalmente.
+
+**3. Stage — marcar los cambios para guardar**
+
+Los archivos modificados aparecen en el panel Git con una `M` (modified)
+en la columna de estado. Marca la casilla ✓ de cada archivo que quieras
+incluir en el commit (equivale a `git add`).
+
+**4. Commit — guardar los cambios con descripción**
+
+Haz clic en el botón **Commit** en la barra del panel Git. Se abre una
+ventana con:
+- Vista de los cambios (verde = líneas agregadas, rojo = eliminadas)
+- Campo de texto para el mensaje de commit
+
+Escribe un mensaje descriptivo y haz clic en **Commit**.
+
+**5. Push — subir los cambios a GitHub**
+
+Haz clic en la **flecha verde ↑ (Push)**. Sube tus commits a GitHub.
+La primera vez te pedirá usuario y token (ver sección 2.6).
+
+### Resumen visual del panel
+
+```
+[Pull ↓]  [Push ↑]  [Commit]  [Diff]  [History]
+─────────────────────────────────────────────────
+ ✓  M  capitulos/parte1/cap02-distribuciones.qmd
+    ?  archivo-nuevo-sin-rastrear.qmd
+```
+
+- **M** (modified) — archivo modificado
+- **A** (added) — archivo nuevo ya en staging
+- **?** — archivo nuevo sin rastrear (haz clic en ✓ para agregarlo)
+- **D** — archivo eliminado
+
+### Resolver conflictos en RStudio
+
+Si al hacer Pull hay un conflicto, RStudio lo marca con `U` (unmerged).
+Abre el archivo — verás las marcas de conflicto:
+
+```
+<<<<<<< HEAD
+Tu versión
+=======
+Versión de GitHub
+>>>>>>> origin/main
+```
+
+Edita el archivo dejando solo la versión correcta, elimina las tres
+marcas (`<<<<<<<`, `=======`, `>>>>>>>`), haz Stage + Commit.
+
+---
+
+## 14. Trabajo con ramas (branches)
 
 Una rama es una copia independiente del proyecto donde puedes trabajar
 sin afectar la versión principal (`main`).
@@ -963,7 +1132,7 @@ git stash pop       # recupera tus cambios
 
 ---
 
-## 14. Subir cambios a GitHub
+## 15. Subir cambios a GitHub
 
 ### Flujo estándar
 
@@ -1013,7 +1182,17 @@ Si el conflicto es complejo, consulta al coordinador antes de resolverlo.
 
 ---
 
-## 15. Preguntas frecuentes y errores comunes
+## 16. Preguntas frecuentes y errores comunes
+
+**¿Cómo vuelvo a abrir el proyecto en RStudio si lo cerré?**  
+File → **Recent Projects** → `NotasModelacionEstadistica`. O doble clic
+en el archivo `NotasModelacionEstadistica.Rproj` desde el explorador de
+Windows. Siempre haz Pull al inicio de la sesión antes de editar.
+
+**¿Por qué RStudio no muestra el panel Git?**  
+Revisa que Git esté configurado: Tools → Global Options → Git/SVN → el
+campo *Git executable* debe tener la ruta de `git.exe`. Si está vacío,
+instala Git (https://git-scm.com) y reinicia RStudio.
 
 **¿Cómo veo el libro publicado?**  
 En https://mop-cimat-ags.github.io/NotasModelacionEstadistica
