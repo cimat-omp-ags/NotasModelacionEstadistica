@@ -470,15 +470,16 @@ El estimador de Kaplan-Meier estima la función de supervivencia $S(t)=P(T>t)$, 
 #| fig-width: 8
 #| fig-height: 5
 
-survObject <- Surv(total_intubation_time, intubation_overall_S_F)
+survObject <- with(laryngoscope, Surv(total_intubation_time, intubation_overall_S_F))
 fit        <- survfit(survObject ~ Randomization, data = laryngoscope)
 logRank    <- survdiff(survObject ~ Randomization)
 pval       <- pchisq(logRank$chisq, length(logRank$n) - 1)
 
 # Gráfica de supervivencia con ggplot2 + broom::tidy
 km_df <- do.call(rbind, lapply(c("0","1"), function(g) {
-  s <- survfit(Surv(total_intubation_time, intubation_overall_S_F) ~ 1,
-               data = laryngoscope[laryngoscope$Randomization == as.integer(g), ])
+  sub <- laryngoscope[laryngoscope$Randomization == as.integer(g), ]
+  s <- survfit(with(sub, Surv(total_intubation_time, intubation_overall_S_F)) ~ 1,
+               data = sub)
   data.frame(time = c(0, s$time), surv = c(1, s$surv),
              upper = c(1, s$upper), lower = c(1, s$lower),
              grupo = ifelse(g == "0", "Macintosh", "Pentax AWS"))
@@ -516,7 +517,7 @@ El **Hazard Ratio (HR)** para el grupo Pentax AWS se interpreta como:
 ```{r}
 #| label: cox-model
 
-surv_obj   <- Surv(total_intubation_time, intubation_overall_S_F)
+surv_obj   <- with(laryngoscope, Surv(total_intubation_time, intubation_overall_S_F))
 modelo_cox <- coxph(surv_obj ~ Randomization + asa + Mallampati, data = laryngoscope)
 summary(modelo_cox)
 
